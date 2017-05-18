@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="match_parent"
+	android:gravity="center_vertical"
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:showIn="@layout/activity_feed">
+
+    <TextView
+        android:id="@+id/dayNumView"
+        android:layout_width="@dimen/size_date_cell"
+        android:layout_height="@dimen/size_date_cell"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+	    android:gravity="center"
+	    android:textSize="@dimen/size_date_cell_day_num"
+	    android:textColor="@android:color/white"
+	    android:background="@drawable/bg_date_cell"
+        tools:text="13" />
+
+	<TextView
+		android:id="@+id/weekDayView"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_above="@+id/dayNumView"
+		android:layout_centerHorizontal="true"
+		android:layout_marginBottom="@dimen/margin_date_cell_weekday_to_day_num"
+		android:textSize="@dimen/size_date_cell_weekday"
+		android:textColor="@android:color/white"
+		tools:text="FRI" />
+</RelativeLayout>

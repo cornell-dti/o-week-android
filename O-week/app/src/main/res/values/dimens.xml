@@ -1,3 +1,9 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+	<dimen name="margin">16dp</dimen>
+	<dimen name="margin_date_cell_weekday_to_day_num">5dp</dimen>
+	<dimen name="margin_horiz_date_cell">24dp</dimen>
+    <dimen name="size_date_cell">36dp</dimen>
+	<dimen name="size_date_cell_day_num">17sp</dimen>
+	<dimen name="size_date_cell_weekday">10sp</dimen>
+	<dimen name="height_date_picker">70dp</dimen>
 </resources>
