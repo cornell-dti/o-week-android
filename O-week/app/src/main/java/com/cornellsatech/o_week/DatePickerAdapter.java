@@ -4,19 +4,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.eventbus.Subscribe;
-
-import org.joda.time.LocalDate;
 
 public class DatePickerAdapter extends RecyclerView.Adapter<DateCell>
 {
-	LocalDate[] sortedDates = new LocalDate[UserData.dates.size()];
-	DateCell selectedCell;
+	private DateCell selectedCell;
 
 	public DatePickerAdapter()
 	{
-		ImmutableSortedSet.copyOf(UserData.dates).toArray(sortedDates);
 		NotificationCenter.DEFAULT.register(this);
 	}
 
@@ -31,13 +26,13 @@ public class DatePickerAdapter extends RecyclerView.Adapter<DateCell>
 	@Override
 	public void onBindViewHolder(DateCell holder, int position)
 	{
-		holder.configure(sortedDates[position]);
+		holder.configure(UserData.dates.get(position));
 	}
 
 	@Override
 	public int getItemCount()
 	{
-		return sortedDates.length;
+		return UserData.dates.size();
 	}
 
 	@Subscribe

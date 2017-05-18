@@ -5,8 +5,11 @@ import android.util.Log;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +17,7 @@ public class UserData
 {
 	public static Map<LocalDate, Set<Event>> allEvents = new HashMap<>();
 	public static Map<LocalDate, Set<Event>> selectedEvents = new HashMap<>();
-	public static Set<LocalDate> dates = new HashSet<>();
+	public static List<LocalDate> dates;
 
 	static boolean allEventsContains(Event event)
 	{
@@ -91,12 +94,16 @@ public class UserData
 						new DateTime(2017, 8, 24, 11, 0), new DateTime(2017, 8, 24, 13, 0), false, 12)
 		};
 
+		Set<LocalDate> dates = new HashSet<>();
 		for (Event event : events)
 		{
 			appendToAllEvents(event);
 			if (!dates.contains(event.startTime.toLocalDate()))
 				dates.add(event.startTime.toLocalDate());
 		}
+
+		UserData.dates = new ArrayList<>(dates);
+		Collections.sort(UserData.dates);
 
 		//Telling other classes to reload their data
 		NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());

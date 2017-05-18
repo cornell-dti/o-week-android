@@ -10,6 +10,7 @@ import org.joda.time.format.DateTimeFormat;
 
 public class DateCell extends RecyclerView.ViewHolder implements View.OnClickListener
 {
+	private boolean configured = false;
 	private TextView dayNum;
 	private TextView weekDay;
 
@@ -25,6 +26,18 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	{
 		dayNum.setText(Integer.toString(date.getDayOfMonth()));
 		weekDay.setText(DateTimeFormat.forPattern("E").print(date).toUpperCase());
+
+		if (!configured)
+		{
+			LocalDate today = LocalDate.now();
+			if (date.equals(today))
+				onClick(dayNum);
+			//if it isn't the orientation week rn, select the 1st date
+			if (!UserData.dates.contains(today))
+				if (UserData.dates.indexOf(date) == 0)
+					onClick(dayNum);
+		}
+		configured = true;
 	}
 
 
