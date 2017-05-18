@@ -2,8 +2,15 @@
 	<dimen name="margin">16dp</dimen>
 	<dimen name="margin_date_cell_weekday_to_day_num">5dp</dimen>
 	<dimen name="margin_horiz_date_cell">24dp</dimen>
+	<dimen name="margin_feed_cell">20dp</dimen>
+	<dimen name="margin_feed_cell_text">17dp</dimen>
+	<dimen name="margin_bottom_feed_cell_title">2dp</dimen>
     <dimen name="size_date_cell">36dp</dimen>
 	<dimen name="size_date_cell_day_num">17sp</dimen>
 	<dimen name="size_date_cell_weekday">10sp</dimen>
+	<dimen name="size_feed_secondary_text">10sp</dimen>
+	<dimen name="size_feed_cell_title">12sp</dimen>
 	<dimen name="height_date_picker">70dp</dimen>
+	<dimen name="height_feed_cell">116dp</dimen>
+	<dimen name="alpha_feed_secondary_text">0.5</dimen>
 </resources>

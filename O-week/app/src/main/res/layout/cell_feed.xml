@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="@dimen/height_feed_cell"
+	android:layout_marginLeft="@dimen/margin_feed_cell"
+	android:layout_marginRight="@dimen/margin_feed_cell"
+	android:orientation="horizontal"
+	tools:showIn="@layout/content_feed">
+
+	<LinearLayout
+		android:id="@+id/timeLayouts"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentLeft="true"
+		android:layout_centerVertical="true"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:alpha="@dimen/alpha_feed_secondary_text"
+			android:textSize="@dimen/size_feed_secondary_text"
+			android:id="@+id/startTimeText"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:alpha="@dimen/alpha_feed_secondary_text"
+			android:textSize="@dimen/size_feed_secondary_text"
+			android:id="@+id/endTimeText"/>
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="@dimen/margin_feed_cell_text"
+		android:layout_toRightOf="@+id/timeLayouts"
+		android:layout_centerVertical="true"
+		android:orientation="vertical">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginBottom="@dimen/margin_bottom_feed_cell_title"
+			android:textSize="@dimen/size_feed_cell_title"
+			android:textStyle="bold"
+			android:id="@+id/titleText"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:alpha="@dimen/alpha_feed_secondary_text"
+			android:textSize="@dimen/size_feed_secondary_text"
+			android:id="@+id/captionText"/>
+	</LinearLayout>
+
+	<CheckBox
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_alignParentRight="true"
+		android:layout_centerVertical="true"
+		android:layout_marginLeft="@dimen/margin_feed_cell_text"/>
+</RelativeLayout>
