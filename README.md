@@ -23,7 +23,7 @@ Contributors
  * **Julia Kruk** - Project Manager
  * **Juhwan Park** - Project Manager
  * **David Chu** - Front-End Developer
- * **Vincente Caycedo** - Front-End Developer
+ * **Vicente Caycedo** - Front-End Developer
  * **Arnav Ghosh** - Back-End Developer
  
 We are a team within **Cornell SA Tech**, a project team affiliated with Cornell Undergraduate Student Assembly led by Alice Pham. For more information, see its website [here](http://www.cornellsatech.org/).
