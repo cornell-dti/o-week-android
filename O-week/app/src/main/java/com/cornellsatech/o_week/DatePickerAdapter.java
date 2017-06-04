@@ -25,13 +25,13 @@ public class DatePickerAdapter extends RecyclerView.Adapter<DateCell>
 	@Override
 	public void onBindViewHolder(DateCell holder, int position)
 	{
-		holder.configure(UserData.dates.get(position));
+		holder.configure(UserData.DATES.get(position));
 	}
 
 	@Override
 	public int getItemCount()
 	{
-		return UserData.dates.size();
+		return UserData.DATES.size();
 	}
 
 	@Subscribe

@@ -18,7 +18,7 @@ public class UserData
 {
 	public static final Map<LocalDate, List<Event>> allEvents;
 	public static final Map<LocalDate, List<Event>> selectedEvents;
-	public static final List<LocalDate> dates;
+	public static final List<LocalDate> DATES;
 	public static LocalDate selectedDate;
 	private static final int YEAR = 2017;
 	private static final int MONTH = 8;
@@ -26,7 +26,7 @@ public class UserData
 	private static final int END_DAY = 24;      //Note: END_DAY must > START_DAY
 	public static final String TAG = "UserData";
 
-	//initialize dates
+	//initialize DATES
 	static
 	{
 		ImmutableList.Builder<LocalDate> tempDates = ImmutableList.builder();
@@ -42,12 +42,12 @@ public class UserData
 			tempAllEvents.put(date, new ArrayList<Event>());
 			tempSelectedEvents.put(date, new ArrayList<Event>());
 		}
-		dates = tempDates.build();
+		DATES = tempDates.build();
 		allEvents = tempAllEvents.build();
 		selectedEvents = tempSelectedEvents.build();
 
 		if (selectedDate == null)
-			selectedDate = dates.get(0);
+			selectedDate = DATES.get(0);
 	}
 
 	//suppress instantiation
