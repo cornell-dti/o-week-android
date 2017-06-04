@@ -11,8 +11,10 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity
 {
-	RecyclerView datePickerRecycler;
-	DatePickerAdapter datePickerAdapter;
+	private RecyclerView datePickerRecycler;
+	private DatePickerAdapter datePickerAdapter;
+	private MenuItem feedMenu;
+	private MenuItem scheduleMenu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -51,12 +53,20 @@ public class MainActivity extends AppCompatActivity
 		transaction.replace(R.id.fragmentContainer, new FeedFragment());
 		transaction.commit();
 	}
+	private void startScheduleFragment()
+	{
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.fragmentContainer, new ScheduleFragment());
+		transaction.commit();
+	}
 
 	//region Menu methods
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
 		getMenuInflater().inflate(R.menu.menu_of_feed, menu);
+		feedMenu = menu.findItem(R.id.feedMenu);
+		scheduleMenu = menu.findItem(R.id.myScheduleMenu);
 		return true;
 	}
 
@@ -68,6 +78,14 @@ public class MainActivity extends AppCompatActivity
 			case R.id.filterMenu:
 				return true;
 			case R.id.myScheduleMenu:
+				startScheduleFragment();
+				feedMenu.setVisible(true);
+				scheduleMenu.setVisible(false);
+				return true;
+			case R.id.feedMenu:
+				startFeedFragment();
+				feedMenu.setVisible(false);
+				scheduleMenu.setVisible(true);
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

@@ -8,6 +8,12 @@
 		android:title="@string/menu_filter"
 		app:showAsAction="ifRoom"/>
 	<item
+		android:id="@+id/feedMenu"
+		android:icon="@drawable/ic_view_list_white_24dp"
+		android:title="@string/feed_menu"
+		android:visible="false"
+		app:showAsAction="ifRoom"/>
+	<item
 		android:id="@+id/myScheduleMenu"
 		android:icon="@drawable/ic_event_available_white_24dp"
 		android:title="@string/menu_my_schedule"

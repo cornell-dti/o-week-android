@@ -45,6 +45,9 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	@Override
 	public void onClick(View v)
 	{
+		//can't double select
+		if (dayNum.isSelected())
+			return;
 		dayNum.setSelected(true);
 		dayNum.setTextColor(Color.BLACK);
 		NotificationCenter.DEFAULT.post(new NotificationCenter.EventDateSelected(this));
