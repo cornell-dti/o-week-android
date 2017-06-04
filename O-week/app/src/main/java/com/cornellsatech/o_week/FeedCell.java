@@ -3,15 +3,17 @@ package com.cornellsatech.o_week;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
-public class FeedCell extends RecyclerView.ViewHolder
+public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener
 {
 	private final TextView startTimeText;
 	private final TextView endTimeText;
 	private final TextView titleText;
 	private final TextView captionText;
 	private final CheckBox checkBox;
+	private Event event;
 	private static final String TIME_FORMAT = "h:mm a";  //hour:minute AM/PM
 
 	public FeedCell(View itemView)
@@ -22,14 +24,25 @@ public class FeedCell extends RecyclerView.ViewHolder
 		titleText = (TextView) itemView.findViewById(R.id.titleText);
 		captionText = (TextView) itemView.findViewById(R.id.captionText);
 		checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
+		checkBox.setOnCheckedChangeListener(this);
 	}
 
 	public void configure(Event event, boolean selected)
 	{
+		this.event = event;
 		startTimeText.setText(event.startTime.toString(TIME_FORMAT));
 		endTimeText.setText(event.endTime.toString(TIME_FORMAT));
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
 		checkBox.setChecked(selected);
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+	{
+		if (isChecked)
+			UserData.insertToSelectedEvents(event);
+		else
+			UserData.removeFromSelectedEvents(event);
 	}
 }
