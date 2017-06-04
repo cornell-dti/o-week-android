@@ -6,60 +6,70 @@
 	android:layout_height="@dimen/height_feed_cell"
 	android:layout_marginLeft="@dimen/margin_feed_cell"
 	android:layout_marginRight="@dimen/margin_feed_cell"
-	android:orientation="horizontal"
-	tools:showIn="@layout/content_feed">
+	android:orientation="horizontal">
 
 	<LinearLayout
 		android:id="@+id/timeLayouts"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentLeft="true"
+		android:layout_alignParentStart="true"
 		android:layout_centerVertical="true"
+		android:gravity="right"
 		android:orientation="vertical">
 
 		<TextView
+			android:id="@+id/startTimeText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:alpha="@dimen/alpha_feed_secondary_text"
 			android:textSize="@dimen/size_feed_secondary_text"
-			android:id="@+id/startTimeText"/>
+			tools:text="8:00 AM"/>
 
 		<TextView
+			android:id="@+id/endTimeText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:alpha="@dimen/alpha_feed_secondary_text"
 			android:textSize="@dimen/size_feed_secondary_text"
-			android:id="@+id/endTimeText"/>
+			tools:text="10:00 AM"/>
 	</LinearLayout>
 
 	<LinearLayout
-		android:layout_width="wrap_content"
+		android:id="@+id/eventTextLayouts"
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="@dimen/margin_feed_cell_text"
-		android:layout_toRightOf="@+id/timeLayouts"
 		android:layout_centerVertical="true"
+		android:layout_marginLeft="@dimen/margin_feed_cell_text"
+		android:layout_toLeftOf="@+id/checkbox"
+		android:layout_toRightOf="@+id/timeLayouts"
 		android:orientation="vertical">
 
 		<TextView
+			android:id="@+id/titleText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@dimen/margin_bottom_feed_cell_title"
+			android:singleLine="true"
 			android:textSize="@dimen/size_feed_cell_title"
 			android:textStyle="bold"
-			android:id="@+id/titleText"/>
+			tools:text="Event title"/>
 
 		<TextView
+			android:id="@+id/captionText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:alpha="@dimen/alpha_feed_secondary_text"
+			android:singleLine="true"
 			android:textSize="@dimen/size_feed_secondary_text"
-			android:id="@+id/captionText"/>
+			tools:text="Event caption"/>
 	</LinearLayout>
 
 	<CheckBox
+		android:id="@+id/checkbox"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
 		android:layout_centerVertical="true"
-		android:layout_marginLeft="@dimen/margin_feed_cell_text"/>
+		android:layout_marginLeft="@dimen/margin_feed_cell_text"
+		tools:text=""/>
 </RelativeLayout>

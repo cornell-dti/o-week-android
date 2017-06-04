@@ -2,12 +2,13 @@ package com.cornellsatech.o_week;
 
 import android.util.Log;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -15,50 +16,83 @@ import java.util.Set;
 
 public class UserData
 {
-	public static Map<LocalDate, Set<Event>> allEvents = new HashMap<>();
-	public static Map<LocalDate, Set<Event>> selectedEvents = new HashMap<>();
-	public static List<LocalDate> dates;
+	public static final Map<LocalDate, List<Event>> allEvents;
+	public static final Map<LocalDate, List<Event>> selectedEvents;
+	public static final List<LocalDate> dates;
+	public static LocalDate selectedDate;
+	private static final int YEAR = 2017;
+	private static final int MONTH = 8;
+	private static final int START_DAY = 19;    //Dates range: [START_DAY, END_DAY], inclusive
+	private static final int END_DAY = 24;      //Note: END_DAY must > START_DAY
+	public static final String TAG = "UserData";
 
+	//initialize dates
+	static
+	{
+		ImmutableList.Builder<LocalDate> tempDates = ImmutableList.builder();
+		ImmutableMap.Builder<LocalDate, List<Event>> tempAllEvents = ImmutableMap.builder();
+		ImmutableMap.Builder<LocalDate, List<Event>> tempSelectedEvents = ImmutableMap.builder();
+		LocalDate today = LocalDate.now();
+		for (int i = START_DAY; i <= END_DAY; i++)
+		{
+			LocalDate date = new LocalDate(YEAR, MONTH, i);
+			if (date.isEqual(today))
+				selectedDate = date;
+			tempDates.add(date);
+			tempAllEvents.put(date, new ArrayList<Event>());
+			tempSelectedEvents.put(date, new ArrayList<Event>());
+		}
+		dates = tempDates.build();
+		allEvents = tempAllEvents.build();
+		selectedEvents = tempSelectedEvents.build();
+
+		if (selectedDate == null)
+			selectedDate = dates.get(0);
+	}
+
+	//suppress instantiation
+	private UserData(){}
+	
 	static boolean allEventsContains(Event event)
 	{
 		LocalDate date = event.startTime.toLocalDate();
-		Set<Event> eventsForDate = allEvents.get(date);
+		List<Event> eventsForDate = allEvents.get(date);
 		return eventsForDate != null && eventsForDate.contains(event);
 	}
 	static boolean selectedEventsContains(Event event)
 	{
 		LocalDate date = event.startTime.toLocalDate();
-		Set<Event> eventsForDate = selectedEvents.get(date);
+		List<Event> eventsForDate = selectedEvents.get(date);
 		return eventsForDate != null && eventsForDate.contains(event);
 	}
 	static void appendToAllEvents(Event event)
 	{
 		LocalDate date = event.startTime.toLocalDate();
-		Set<Event> eventsForDate = allEvents.get(date);
+		List<Event> eventsForDate = allEvents.get(date);
 		if (eventsForDate == null)
 		{
-			eventsForDate = new HashSet<>();
-			allEvents.put(date, eventsForDate);
+			Log.e(TAG, "appendToAllEvents: attempted to add event with date outside orientation");
+			return;
 		}
 		eventsForDate.add(event);
 	}
 	static void insertToSelectedEvents(Event event)
 	{
 		LocalDate date = event.startTime.toLocalDate();
-		Set<Event> eventsForDate = selectedEvents.get(date);
+		List<Event> eventsForDate = selectedEvents.get(date);
 		if (eventsForDate == null)
 		{
-			eventsForDate = new HashSet<>();
-			selectedEvents.put(date, eventsForDate);
+			Log.e(TAG, "insertToSelectedEvents: attempted to add event with date outside orientation");
+			return;
 		}
 		eventsForDate.add(event);
 	}
 	static void removeFromSelectedEvents(Event event)
 	{
 		LocalDate date = event.startTime.toLocalDate();
-		Set<Event> eventsForDate = selectedEvents.get(date);
+		List<Event> eventsForDate = selectedEvents.get(date);
 		if (eventsForDate == null)
-			Log.e("UserData", "removeFromSelectedEvents: No selected events for date");
+			Log.e(TAG, "removeFromSelectedEvents: No selected events for date");
 		else
 			eventsForDate.remove(event);
 	}
@@ -102,11 +136,7 @@ public class UserData
 				dates.add(event.startTime.toLocalDate());
 		}
 
-		UserData.dates = new ArrayList<>(dates);
-		Collections.sort(UserData.dates);
-
 		//Telling other classes to reload their data
 		NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventReloadDateData());
 	}
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item
+		android:id="@+id/filterMenu"
+		android:icon="@drawable/ic_tune_white_24dp"
+		android:title="@string/menu_filter"
+		app:showAsAction="ifRoom"/>
+	<item
+		android:id="@+id/myScheduleMenu"
+		android:icon="@drawable/ic_event_available_white_24dp"
+		android:title="@string/menu_my_schedule"
+		app:showAsAction="ifRoom"/>
+</menu>

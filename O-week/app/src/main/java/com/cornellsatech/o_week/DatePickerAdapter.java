@@ -19,7 +19,6 @@ public class DatePickerAdapter extends RecyclerView.Adapter<DateCell>
 	public DateCell onCreateViewHolder(ViewGroup parent, int viewType)
 	{
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
 		return new DateCell(inflater.inflate(R.layout.cell_date_picker, parent, false));
 	}
 
@@ -41,5 +40,12 @@ public class DatePickerAdapter extends RecyclerView.Adapter<DateCell>
 		if (selectedCell != null)
 			selectedCell.unClick();
 		selectedCell = event.selectedCell;
+		UserData.selectedDate = selectedCell.getDate();
+	}
+
+	@Override
+	public void onDetachedFromRecyclerView(RecyclerView recyclerView)
+	{
+		NotificationCenter.DEFAULT.unregister(this);
 	}
 }

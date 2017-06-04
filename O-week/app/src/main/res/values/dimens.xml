@@ -12,5 +12,5 @@
 	<dimen name="size_feed_cell_title">12sp</dimen>
 	<dimen name="height_date_picker">70dp</dimen>
 	<dimen name="height_feed_cell">116dp</dimen>
-	<dimen name="alpha_feed_secondary_text">0.5</dimen>
+	<item name="alpha_feed_secondary_text" type="dimen" format="float">0.5</item>
 </resources>

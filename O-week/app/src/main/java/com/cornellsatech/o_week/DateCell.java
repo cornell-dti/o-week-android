@@ -1,6 +1,7 @@
 package com.cornellsatech.o_week;
 
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -13,6 +14,7 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	private boolean configured = false;
 	private TextView dayNum;
 	private TextView weekDay;
+	private LocalDate date;
 
 	public DateCell(View view)
 	{
@@ -24,22 +26,21 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 
 	public void configure(LocalDate date)
 	{
+		this.date = date;
 		dayNum.setText(Integer.toString(date.getDayOfMonth()));
 		weekDay.setText(DateTimeFormat.forPattern("E").print(date).toUpperCase());
 
 		if (!configured)
-		{
-			LocalDate today = LocalDate.now();
-			if (date.equals(today))
+			if (UserData.selectedDate.isEqual(date))
 				onClick(dayNum);
-			//if it isn't the orientation week rn, select the 1st date
-			if (!UserData.dates.contains(today))
-				if (UserData.dates.indexOf(date) == 0)
-					onClick(dayNum);
-		}
 		configured = true;
 	}
 
+	@Nullable
+	public LocalDate getDate()
+	{
+		return date;
+	}
 
 	@Override
 	public void onClick(View v)
