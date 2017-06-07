@@ -1,11 +1,12 @@
 package com.cornellsatech.o_week;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
-public class Event
+public class Event implements Comparable<Event>
 {
 	public final String title;
 	public final String caption;
@@ -43,5 +44,23 @@ public class Event
 			return false;
 		Event other = (Event) obj;
 		return other.title.equals(title) && other.startTime.isEqual(startTime) && other.date.isEqual(date);
+	}
+
+	//Events ordered by start time
+	@Override
+	public int compareTo(@NonNull Event o)
+	{
+		if (!date.isEqual(o.date))
+			return date.compareTo(o.date);
+		//If this event starts in the next day, and event "o" starts in the previous day
+		if (startTime.getHourOfDay() <= ScheduleFragment.END_HOUR && o.startTime.getHourOfDay() >= ScheduleFragment.START_HOUR)
+			return 1;
+		//If this event starts in the previous day, and event "o" starts in the next day
+		if (o.startTime.getHourOfDay() <= ScheduleFragment.END_HOUR && startTime.getHourOfDay() >= ScheduleFragment.START_HOUR)
+			return -1;
+		//if the times are the same, return 0. This is done because LocalTime.compareTo also looks at things like milliseconds
+		if (startTime.isEqual(o.startTime))
+			return 0;
+		return startTime.compareTo(o.startTime);
 	}
 }

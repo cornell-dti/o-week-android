@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:layout_width="match_parent"
-	android:layout_height="wrap_content">
+	android:layout_height="@dimen/size_hour_textview">
 
 	<TextView
 		android:id="@+id/hourText"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginLeft="@dimen/margin_hour"
 		android:textSize="@dimen/size_hour"
+		android:layout_gravity="center_vertical"
+		android:layout_toLeftOf="@+id/timeLine"
+		android:layout_marginRight="@dimen/margin_right_hour"
+		android:layout_centerVertical="true"
 		tools:text="11 AM"/>
 
 	<View
@@ -19,6 +22,7 @@
 		android:alpha="@dimen/alpha_time_line"
 		android:background="@android:color/black"
 		android:layout_marginLeft="@dimen/margin_left_time_line"
-		android:layout_marginRight="@dimen/margin_hour"
-		android:layout_gravity="center_vertical"/>
-</FrameLayout>
+		android:layout_marginRight="@dimen/margin_right_time_line"
+		android:layout_centerVertical="true"
+		android:id="@+id/timeLine"/>
+</RelativeLayout>

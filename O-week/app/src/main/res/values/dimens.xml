@@ -5,18 +5,22 @@
 	<dimen name="margin_feed_cell">20dp</dimen>
 	<dimen name="margin_feed_cell_text">17dp</dimen>
 	<dimen name="margin_bottom_feed_cell_title">2dp</dimen>
-	<dimen name="margin_hour">19dp</dimen>
+	<dimen name="margin_right_time_line">19dp</dimen>
 	<dimen name="margin_left_time_line">70dp</dimen>
+	<dimen name="margin_right_hour">-51dp</dimen>   <!-- margin left - margin right -->
     <dimen name="size_date_cell">36dp</dimen>
 	<dimen name="size_date_cell_day_num">17sp</dimen>
 	<dimen name="size_date_cell_weekday">10sp</dimen>
-	<dimen name="size_feed_secondary_text">10sp</dimen>
-	<dimen name="size_feed_cell_title">12sp</dimen>
+	<dimen name="size_caption">10sp</dimen>
+	<dimen name="size_title">12sp</dimen>
 	<dimen name="size_hour">12sp</dimen>
+	<dimen name="size_hour_textview">16sp</dimen>
 	<dimen name="height_date_picker">70dp</dimen>
 	<dimen name="height_feed_cell">116dp</dimen>
 	<dimen name="height_time_line">1dp</dimen>
-	<dimen name="distance_between_time_lines">40dp</dimen>
+	<dimen name="width_schedule_cell_border">1dp</dimen>
+	<dimen name="corner_radius_schedule_cell">3dp</dimen>
+	<dimen name="distance_between_time_lines">64dp</dimen>
 	<item name="alpha_feed_secondary_text" type="dimen" format="float">0.5</item>
 	<item name="alpha_time_line" type="dimen" format="float">0.2</item>
 </resources>

@@ -22,7 +22,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:alpha="@dimen/alpha_feed_secondary_text"
-			android:textSize="@dimen/size_feed_secondary_text"
+			android:textSize="@dimen/size_caption"
 			tools:text="8:00 AM"/>
 
 		<TextView
@@ -30,7 +30,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:alpha="@dimen/alpha_feed_secondary_text"
-			android:textSize="@dimen/size_feed_secondary_text"
+			android:textSize="@dimen/size_caption"
 			tools:text="10:00 AM"/>
 	</LinearLayout>
 
@@ -50,7 +50,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@dimen/margin_bottom_feed_cell_title"
 			android:singleLine="true"
-			android:textSize="@dimen/size_feed_cell_title"
+			android:textSize="@dimen/size_title"
 			android:textStyle="bold"
 			tools:text="Event title"/>
 
@@ -60,7 +60,7 @@
 			android:layout_height="wrap_content"
 			android:alpha="@dimen/alpha_feed_secondary_text"
 			android:singleLine="true"
-			android:textSize="@dimen/size_feed_secondary_text"
+			android:textSize="@dimen/size_caption"
 			tools:text="Event caption"/>
 	</LinearLayout>
 
