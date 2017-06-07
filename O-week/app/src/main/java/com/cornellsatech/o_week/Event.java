@@ -17,6 +17,7 @@ public class Event implements Comparable<Event>
 	public final LocalTime endTime;
 	public final boolean required;
 	public final int pk;
+	public static final String TIME_FORMAT = "h:mm a";  //hour:minute AM/PM
 
 	public Event(String title, String caption, @Nullable String description, @Nullable String category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, int pk)
 	{

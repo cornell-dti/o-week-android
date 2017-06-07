@@ -6,7 +6,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener
+public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener, View.OnClickListener
 {
 	private final TextView startTimeText;
 	private final TextView endTimeText;
@@ -14,7 +14,6 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 	private final TextView captionText;
 	private final CheckBox checkBox;
 	private Event event;
-	private static final String TIME_FORMAT = "h:mm a";  //hour:minute AM/PM
 
 	public FeedCell(View itemView)
 	{
@@ -25,13 +24,14 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 		captionText = (TextView) itemView.findViewById(R.id.captionText);
 		checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
 		checkBox.setOnCheckedChangeListener(this);
+		itemView.setOnClickListener(this);
 	}
 
 	public void configure(Event event, boolean selected)
 	{
 		this.event = event;
-		startTimeText.setText(event.startTime.toString(TIME_FORMAT));
-		endTimeText.setText(event.endTime.toString(TIME_FORMAT));
+		startTimeText.setText(event.startTime.toString(Event.TIME_FORMAT));
+		endTimeText.setText(event.endTime.toString(Event.TIME_FORMAT));
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
 		checkBox.setChecked(selected);
@@ -44,5 +44,10 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 			UserData.insertToSelectedEvents(event);
 		else
 			UserData.removeFromSelectedEvents(event);
+	}
+	@Override
+	public void onClick(View v)
+	{
+		NotificationCenter.DEFAULT.post(new NotificationCenter.EventEventClicked(event));
 	}
 }

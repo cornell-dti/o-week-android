@@ -13,4 +13,12 @@ public class NotificationCenter
 			this.selectedCell = selectedCell;
 		}
 	}
+	static class EventEventClicked
+	{
+		public final Event event;
+		public EventEventClicked(Event event)
+		{
+			this.event = event;
+		}
+	}
 }

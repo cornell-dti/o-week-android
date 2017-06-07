@@ -100,7 +100,7 @@
 				android:layout_height="wrap_content"
 				android:textSize="@dimen/size_detail"
 				android:layout_margin="@dimen/margin"
-				android:id="@+id/detailText"
+				android:id="@+id/descriptionText"
 				tools:text="No description available at this time."/>
 
 		</LinearLayout>
