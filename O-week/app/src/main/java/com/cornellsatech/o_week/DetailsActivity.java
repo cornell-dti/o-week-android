@@ -1,13 +1,18 @@
 package com.cornellsatech.o_week;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class DetailsActivity extends AppCompatActivity
+public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener
 {
 	public static Event event;
 	private ImageView eventImage;
@@ -16,6 +21,7 @@ public class DetailsActivity extends AppCompatActivity
 	private TextView startTimeText;
 	private TextView endTimeText;
 	private TextView descriptionText;
+	private CheckBox checkBox;
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 
 	@Override
@@ -54,5 +60,33 @@ public class DetailsActivity extends AppCompatActivity
 		descriptionText.setText(event.description);
 		startTimeText.setText(event.startTime.toString(Event.TIME_FORMAT));
 		endTimeText.setText(event.endTime.toString(Event.TIME_FORMAT));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		getMenuInflater().inflate(R.menu.menu_details, menu);
+
+		checkBox = (CheckBox) menu.findItem(R.id.checkbox).getActionView();
+		//hacky way to set right margin of check box
+		checkBox.setText("   ");
+		//set checkbox to white
+		int[][] states = {{android.R.attr.state_checked}, {}};
+		int[] colors = {Color.WHITE, Color.WHITE};
+		checkBox.setButtonTintList(new ColorStateList(states, colors));
+		//set checkbox checked based on whether event is selected
+		checkBox.setChecked(UserData.selectedEventsContains(event));
+		checkBox.setOnCheckedChangeListener(this);
+
+		return true;
+	}
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+	{
+		if (isChecked)
+			UserData.insertToSelectedEvents(event);
+		else
+			UserData.removeFromSelectedEvents(event);
 	}
 }
