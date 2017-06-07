@@ -88,5 +88,6 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 			UserData.insertToSelectedEvents(event);
 		else
 			UserData.removeFromSelectedEvents(event);
+		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event));
 	}
 }

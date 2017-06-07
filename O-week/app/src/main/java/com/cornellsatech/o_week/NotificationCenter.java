@@ -21,4 +21,12 @@ public class NotificationCenter
 			this.event = event;
 		}
 	}
+	static class EventSelectionChanged
+	{
+		public final Event event;
+		public EventSelectionChanged(Event event)
+		{
+			this.event = event;
+		}
+	}
 }

@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 
 import com.google.common.eventbus.Subscribe;
 
+import org.joda.time.LocalDate;
+
 import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
@@ -38,11 +40,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	}
 
 	@Subscribe
-	public void onDateChanged(NotificationCenter.EventDateSelected event)
+	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
 	{
-		events = UserData.allEvents.get(UserData.selectedDate);
-		selectedEvents = UserData.selectedEvents.get(UserData.selectedDate);
+		LocalDate date = eventDateSelected.selectedCell.getDate();
+		events = UserData.allEvents.get(date);
+		selectedEvents = UserData.selectedEvents.get(date);
 		notifyDataSetChanged();
+	}
+	@Subscribe
+	public void onSelectionChanged(NotificationCenter.EventSelectionChanged eventSelectionChanged)
+	{
+		Event event = eventSelectionChanged.event;
+		int index = events.indexOf(event);
+		notifyItemChanged(index);
 	}
 
 	@Override
