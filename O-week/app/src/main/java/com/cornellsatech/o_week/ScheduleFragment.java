@@ -142,7 +142,7 @@ public class ScheduleFragment extends Fragment
 		//set top of layout
 		layoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
 
-		int topMargin = HOUR_HEIGHT * (minutesSinceStart(time) / 60);
+		int topMargin = HOUR_HEIGHT * (minutesBetween(HOURS.get(0), time) / 60);
 		topMargin += HOUR_HEIGHT / 2;    //extra padding at top
 		topMargin -= HOUR_TEXT_HEIGHT / 2; //turn "topMargin" into "centerMargin." Makes aligning events easier
 		layoutParams.topMargin = topMargin;
@@ -204,12 +204,13 @@ public class ScheduleFragment extends Fragment
 	}
 	private boolean canUseSlot(int slot, Event event, SparseArray<Event> eventForSlot)
 	{
-		//TODO account for hours past midnight
-		return eventForSlot.get(slot) == null || !eventForSlot.get(slot).startTime.isBefore(event.endTime) || !eventForSlot.get(slot).endTime.isAfter(event.startTime);
+		return eventForSlot.get(slot) == null
+				|| minutesBetween(event.endTime, eventForSlot.get(slot).startTime) >= 0
+				|| minutesBetween(eventForSlot.get(slot).endTime, event.startTime) >= 0;
 	}
 	private float marginTopForStartTime(LocalTime startTime)
 	{
-		int minutesFrom7 = minutesSinceStart(startTime);
+		int minutesFrom7 = minutesBetween(HOURS.get(0), startTime);
 		return ((float) HOUR_HEIGHT) / 60.0f * ((float) minutesFrom7) + ((float) HOUR_HEIGHT) / 2;
 	}
 	private float widthPercent(Event event, int slot, int numSlots, SparseArray<Event> eventForSlot)
@@ -225,17 +226,12 @@ public class ScheduleFragment extends Fragment
 	}
 	private int heightForEvent(Event event)
 	{
-		//TODO account for events that cross the night
-		int minutes = Minutes.minutesBetween(event.startTime, event.endTime).getMinutes();
+		int minutes = minutesBetween(event.startTime, event.endTime);
 		double height = ((double) HOUR_HEIGHT) / 60.0 * ((double) minutes);
 		return (int) height;
 	}
 
 	//hour - view id conversion. Required since view ids must be positive (hour 0 should have id 1)
-	private int idToHour(@IdRes int id)
-	{
-		return id - 1;
-	}
 	@IdRes
 	private int hourToId(int hour)
 	{
@@ -247,11 +243,14 @@ public class ScheduleFragment extends Fragment
 		return event.hashCode() + 31;
 	}
 
-	private int minutesSinceStart(LocalTime time)
+	private int minutesBetween(LocalTime startTime, LocalTime endTime)
 	{
-		if (time.getHourOfDay() <= END_HOUR)
-			return 24*60 - Minutes.minutesBetween(time, HOURS.get(0)).getMinutes();
+		//check if we're crossing over the midnight mark. If we are, reverse the minutes
+		if (endTime.getHourOfDay() < START_HOUR && startTime.getHourOfDay() >= START_HOUR)      //Ex: 23:00 to 1:00 = 2hr
+			return 24*60 - Minutes.minutesBetween(endTime, startTime).getMinutes();
+		else if (startTime.getHourOfDay() < START_HOUR && endTime.getHourOfDay() >= START_HOUR) //Ex: 1:00 to 23:00 = -2hr
+			return Minutes.minutesBetween(endTime, startTime).getMinutes();
 		else
-			return Minutes.minutesBetween(HOURS.get(0), time).getMinutes();
+			return Minutes.minutesBetween(startTime, endTime).getMinutes();
 	}
 }

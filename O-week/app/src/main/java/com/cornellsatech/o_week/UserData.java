@@ -107,7 +107,9 @@ public class UserData
 				new Event("H", "H", "", null, date, new LocalTime(15, 30), new LocalTime(16, 0), false, 8),
 				new Event("I", "I", "", null, date, new LocalTime(16, 0), new LocalTime(16, 30), false, 9),
 				new Event("J", "J", "", null, date, new LocalTime(15, 50), new LocalTime(16, 40), false, 10),
-				new Event("K", "K", "", null, date, new LocalTime(17, 0), new LocalTime(17, 30), false, 11)
+				new Event("K", "K", "", null, date, new LocalTime(17, 0), new LocalTime(17, 30), false, 11),
+				new Event("L", "L", "", null, date, new LocalTime(23, 0), new LocalTime(0, 30), false, 12),
+				new Event("M", "M", "", null, date, new LocalTime(0, 0), new LocalTime(1, 30), false, 13)
 		};
 		/*Event[] events = new Event[]{
 				new Event("Move In", "Multiple locations", "Students should plan to move into their residence halls between 9:00am and 12:00pm on Thursday, January 19. Orientation volunteers will help you move your belongings and answer any questions that you may have. Plan on picking up your key to your room at your service center before heading over to your residence hall. If you are living off campus, we also recommend moving in on Thursday so you can attend First Night at 8:00pm that evening.", null,
