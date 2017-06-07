@@ -34,7 +34,7 @@ public class Event implements Comparable<Event>
 	@Override
 	public int hashCode()
 	{
-		return (title.hashCode() + 31 * startTime.hashCode() * 31 + date.hashCode());
+		return pk;
 	}
 
 	@Override
@@ -43,7 +43,7 @@ public class Event implements Comparable<Event>
 		if (!(obj instanceof Event))
 			return false;
 		Event other = (Event) obj;
-		return other.title.equals(title) && other.startTime.isEqual(startTime) && other.date.isEqual(date);
+		return other.pk == pk;
 	}
 
 	//Events ordered by start time

@@ -232,7 +232,7 @@ public class ScheduleFragment extends Fragment
 	@IdRes
 	private int eventToId(Event event)
 	{
-		return event.hashCode();
+		return event.hashCode() + 31;
 	}
 
 	private int minutesSinceStart(LocalTime time)

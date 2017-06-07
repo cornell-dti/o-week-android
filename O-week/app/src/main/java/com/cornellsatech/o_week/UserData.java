@@ -69,7 +69,8 @@ public class UserData
 			Log.e(TAG, "appendToAllEvents: attempted to add event with date outside orientation");
 			return;
 		}
-		eventsForDate.add(event);
+		if (!eventsForDate.contains(event))
+			eventsForDate.add(event);
 	}
 	static void insertToSelectedEvents(Event event)
 	{
@@ -79,7 +80,8 @@ public class UserData
 			Log.e(TAG, "insertToSelectedEvents: attempted to add event with date outside orientation");
 			return;
 		}
-		eventsForDate.add(event);
+		if (!eventsForDate.contains(event))
+			eventsForDate.add(event);
 	}
 	static void removeFromSelectedEvents(Event event)
 	{
@@ -92,9 +94,22 @@ public class UserData
 
 	static void loadData()
 	{
-		//TODO Fix conditional statement, fetch data from DB and compare to Core Data to remove outdated events or add new events. Adding temp data for testing
+		//TODO fetch data from DB and compare to saved to remove outdated events or add new events. Adding temp data for testing
+		LocalDate date = new LocalDate(2017, 8, 19);
 		Event[] events = new Event[]{
-
+				new Event("A", "A", "", null, date, new LocalTime(9, 30), new LocalTime(10, 30), false, 1),
+				new Event("B", "B", "", null, date, new LocalTime(10, 30), new LocalTime(12, 0), false, 2),
+				new Event("C", "C", "", null, date, new LocalTime(11, 45), new LocalTime(15, 30), false, 3),
+				new Event("D", "D", "", null, date, new LocalTime(12, 0), new LocalTime(14, 0), false, 4),
+				new Event("E", "E", "", null, date, new LocalTime(13, 30), new LocalTime(14, 0), false, 5),
+				new Event("F", "F", "", null, date, new LocalTime(14, 0), new LocalTime(15, 40), false, 6),
+				new Event("G", "G", "", null, date, new LocalTime(14, 30), new LocalTime(15, 0), false, 7),
+				new Event("H", "H", "", null, date, new LocalTime(15, 30), new LocalTime(16, 0), false, 8),
+				new Event("I", "I", "", null, date, new LocalTime(16, 0), new LocalTime(16, 30), false, 9),
+				new Event("J", "J", "", null, date, new LocalTime(15, 50), new LocalTime(16, 40), false, 10),
+				new Event("K", "K", "", null, date, new LocalTime(17, 0), new LocalTime(17, 30), false, 11)
+		};
+		/*Event[] events = new Event[]{
 				new Event("Move In", "Multiple locations", "Students should plan to move into their residence halls between 9:00am and 12:00pm on Thursday, January 19. Orientation volunteers will help you move your belongings and answer any questions that you may have. Plan on picking up your key to your room at your service center before heading over to your residence hall. If you are living off campus, we also recommend moving in on Thursday so you can attend First Night at 8:00pm that evening.", null,
 						new LocalDate(2017, 8, 19), new LocalTime(9, 0), new LocalTime(12, 0), false, 1),
 				new Event("New Student Check-In and Welcome Reception", "Willard Straight Hall, 4th Floor Rooms", "You are required to attend New Student Check-In in the Memorial Room to verify your matriculation and registration requirements. Please arrive anytime between 1:00pm and 2:30pm as representatives from across campus will also be available to answer questions and to better acquaint you with university services. Light refreshments will be available for students and parents throughout the fourth floor of Willard Straight Hall.", null,
@@ -119,10 +134,13 @@ public class UserData
 						new LocalDate(2017, 8, 23), new LocalTime(16, 0), new LocalTime(17, 0), false, 11),
 				new Event("Orientation Finale at the Tatkon Center", "Tatkon Center", "Join us for a celebration! Orientation may be coming to a close, but your first semester at Cornell is just getting started. Mingle with friends, meet current students, and get excited for a great semester. Don’t miss the refreshments and giveaways. JOLs will also introduce you to the Tatkon Center, Cornell’s academic resource center for first-year students.", null,
 						new LocalDate(2017, 8, 24), new LocalTime(11, 0), new LocalTime(13, 0), false, 12)
-		};
+		};*/
 
 		for (Event event : events)
+		{
 			appendToAllEvents(event);
+			insertToSelectedEvents(event);
+		}
 
 		//Telling other classes to reload their data
 		NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
