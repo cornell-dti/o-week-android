@@ -1,11 +1,13 @@
 package com.cornellsatech.o_week;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
@@ -28,15 +31,17 @@ import java.util.Queue;
  * 1. For time lines: ID = hour the time line represents + 1
  * 2. For events: the event's hashcode
  */
-public class ScheduleFragment extends Fragment
+public class ScheduleFragment extends Fragment implements View.OnClickListener
 {
 	private RelativeLayout scheduleContainer;
 	private PercentRelativeLayout eventsContainer;
+	private SparseArray<Event> pkToEvent = new SparseArray<>();
 	private int HOUR_HEIGHT;
 	private int HOUR_TEXT_HEIGHT;
 	private static final List<LocalTime> HOURS;
 	public static final int START_HOUR = 7;    //Hours range: [START_HOUR, END_HOUR], inclusive
 	public static final int END_HOUR = 2;      //Note: Hours wrap around, from 7~23, then 0~2. END_HOUR must < START_HOUR
+	private static final String TAG = ScheduleFragment.class.getSimpleName();
 
 	static
 	{
@@ -54,6 +59,8 @@ public class ScheduleFragment extends Fragment
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
+		NotificationCenter.DEFAULT.register(this);
+
 		View view = inflater.inflate(R.layout.fragment_schedule, container, false);
 		scheduleContainer = (RelativeLayout) view.findViewById(R.id.scheduleContainer);
 		eventsContainer = (PercentRelativeLayout) view.findViewById(R.id.eventsContainer);
@@ -62,6 +69,12 @@ public class ScheduleFragment extends Fragment
 		drawTimeLines();
 		drawCells();
 		return view;
+	}
+	@Override
+	public void onDestroyView()
+	{
+		super.onDestroyView();
+		NotificationCenter.DEFAULT.unregister(this);
 	}
 
 	private void drawTimeLines()
@@ -117,11 +130,13 @@ public class ScheduleFragment extends Fragment
 		}
 
 		scheduleCell.setLayoutParams(scheduleCellMargins(scheduleCell, event, slot, newNumSlots, eventForSlot, newEventForSlot));
+		scheduleCell.setOnClickListener(this);
 		TextView title = (TextView) scheduleCell.findViewById(R.id.titleText);
 		TextView caption = (TextView) scheduleCell.findViewById(R.id.captionText);
 		title.setText(event.title);
 		caption.setText(event.caption);
 		eventsContainer.addView(scheduleCell);
+		pkToEvent.put(event.pk, event);
 
 		//the parent event wants to know if any new events have been added to the right of it, but not beneath it. Therefore, only let the parent know of slots that are added, not replaced. This way it expands to the right by the correct value.
 		SparseArray<Event> parentEventForSlot = eventForSlot.clone();
@@ -242,6 +257,11 @@ public class ScheduleFragment extends Fragment
 	{
 		return event.hashCode() + 31;
 	}
+	private Event idToEvent(int id)
+	{
+		int pk = id - 31;
+		return pkToEvent.get(pk);
+	}
 
 	private int minutesBetween(LocalTime startTime, LocalTime endTime)
 	{
@@ -252,5 +272,34 @@ public class ScheduleFragment extends Fragment
 			return Minutes.minutesBetween(endTime, startTime).getMinutes();
 		else
 			return Minutes.minutesBetween(startTime, endTime).getMinutes();
+	}
+	@Override
+	public void onClick(View v)
+	{
+		Event event = idToEvent(v.getId());
+		if (event == null)
+		{
+			Log.e(TAG, "onClick: non-scheduleCell view clicked");
+			return;
+		}
+
+		//start details
+		DetailsActivity.event = event;
+		startActivity(new Intent(getContext(), DetailsActivity.class));
+	}
+
+	@Subscribe
+	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
+	{
+		//redraw events
+		eventsContainer.removeAllViews();
+		drawCells();
+	}
+	@Subscribe
+	public void onEventSelectionChanged(NotificationCenter.EventSelectionChanged eventSelectionChanged)
+	{
+		//redraw events
+		eventsContainer.removeAllViews();
+		drawCells();
 	}
 }
