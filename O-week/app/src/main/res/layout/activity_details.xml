@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	tools:context=".DetailsActivity">
+
+	<android.support.design.widget.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:theme="@style/AppTheme.AppBarOverlay">
+
+			<android.support.v7.widget.Toolbar
+				android:id="@+id/toolbar"
+				android:layout_width="match_parent"
+				android:layout_height="?attr/actionBarSize"
+				app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<android.support.v4.widget.NestedScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical">
+
+			<android.support.percent.PercentRelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<ImageView
+					android:id="@+id/eventImage"
+					android:scaleType="centerCrop"
+					app:layout_aspectRatio="178%"
+					app:layout_widthPercent="100%"
+					tools:src="@mipmap/ic_launcher"/>
+			</android.support.percent.PercentRelativeLayout>
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginTop="@dimen/margin"
+					android:layout_marginLeft="@dimen/margin"
+					android:layout_marginRight="@dimen/margin"
+					android:layout_toLeftOf="@+id/startTimeText"
+					android:id="@+id/titleText"
+					android:textSize="@dimen/size_title_details"
+					android:textStyle="bold"
+					android:lines="1"
+					tools:text="Title"/>
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/captionText"
+					android:layout_below="@+id/titleText"
+					android:layout_toLeftOf="@+id/endTimeText"
+					android:layout_marginLeft="@dimen/margin"
+					android:layout_marginBottom="@dimen/margin"
+					android:layout_marginRight="@dimen/margin"
+					android:textSize="@dimen/size_secondary_details"
+					android:lines="1"
+					tools:text="Caption"/>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentRight="true"
+					android:layout_alignBottom="@+id/titleText"
+					android:layout_marginRight="@dimen/margin"
+					android:id="@+id/startTimeText"
+					android:textSize="@dimen/size_secondary_details"
+					tools:text="10:00 AM"/>
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentRight="true"
+					android:layout_alignBottom="@+id/captionText"
+					android:layout_marginRight="@dimen/margin"
+					android:id="@+id/endTimeText"
+					android:textSize="@dimen/size_secondary_details"
+					tools:text="11:30 AM"/>
+			</RelativeLayout>
+
+			<fragment
+				android:id="@+id/map"
+				android:name="com.google.android.gms.maps.MapFragment"
+				android:layout_width="match_parent"
+				android:layout_height="@dimen/height_map"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textSize="@dimen/size_detail"
+				android:layout_margin="@dimen/margin"
+				android:id="@+id/detailText"
+				tools:text="No description available at this time."/>
+
+		</LinearLayout>
+
+	</android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
