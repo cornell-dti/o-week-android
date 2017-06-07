@@ -100,7 +100,7 @@ public class ScheduleFragment extends Fragment
 		//before processing future events, create the schedule cell for this event so future schedule cells can reference it in recursion
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		View scheduleCell = inflater.inflate(R.layout.cell_schedule, eventsContainer, false);
-		scheduleCell.setId(event.hashCode());
+		scheduleCell.setId(eventToId(event));
 
 		//if there's a later event, process that before we can calculate the position of the current event
 		if (!events.isEmpty())
@@ -116,7 +116,7 @@ public class ScheduleFragment extends Fragment
 				drawEvent(1, new SparseArray<Event>(), events);
 		}
 
-		scheduleCell.setLayoutParams(scheduleCellMargins(scheduleCell, event, slot, newNumSlots, newEventForSlot));
+		scheduleCell.setLayoutParams(scheduleCellMargins(scheduleCell, event, slot, newNumSlots, eventForSlot, newEventForSlot));
 		TextView title = (TextView) scheduleCell.findViewById(R.id.titleText);
 		TextView caption = (TextView) scheduleCell.findViewById(R.id.captionText);
 		title.setText(event.title);
@@ -154,7 +154,18 @@ public class ScheduleFragment extends Fragment
 		return layoutParams;
 	}
 
-	private PercentRelativeLayout.LayoutParams scheduleCellMargins(View scheduleCell, Event event, int slot, int numSlots, SparseArray<Event> eventForSlot)
+	/**
+	 * Layout the margins for a scheduleCell
+	 *
+	 * @param scheduleCell Cell for which the event is represented. MUST be child of {@link PercentRelativeLayout}
+	 * @param event Event used to find height and top margin.
+	 * @param slot The column the schedule cell is in. Range from [0, numSlots)
+	 * @param numSlots Number of columns of schedule cells.
+	 * @param eventForSlot Required to left side of current scheduleCell. newEventForSlot may have different cell to the left of the event.
+	 * @param newEventForSlot Required to see how much more space current scheduleCell can expand to on its right side.
+	 * @return LayoutParams for a scheduleCell
+	 */
+	private PercentRelativeLayout.LayoutParams scheduleCellMargins(View scheduleCell, Event event, int slot, int numSlots, SparseArray<Event> eventForSlot, SparseArray<Event> newEventForSlot)
 	{
 		PercentRelativeLayout.LayoutParams layoutParams = (PercentRelativeLayout.LayoutParams) scheduleCell.getLayoutParams();
 
@@ -169,7 +180,7 @@ public class ScheduleFragment extends Fragment
 		layoutParams.topMargin = (int) marginTopForStartTime(event.startTime);
 
 		//width
-		layoutParams.getPercentLayoutInfo().widthPercent = widthPercent(event, slot, numSlots, eventForSlot);
+		layoutParams.getPercentLayoutInfo().widthPercent = widthPercent(event, slot, numSlots, newEventForSlot);
 
 		//height
 		layoutParams.height = heightForEvent(event);
@@ -193,6 +204,7 @@ public class ScheduleFragment extends Fragment
 	}
 	private boolean canUseSlot(int slot, Event event, SparseArray<Event> eventForSlot)
 	{
+		//TODO account for hours past midnight
 		return eventForSlot.get(slot) == null || !eventForSlot.get(slot).startTime.isBefore(event.endTime) || !eventForSlot.get(slot).endTime.isAfter(event.startTime);
 	}
 	private float marginTopForStartTime(LocalTime startTime)
