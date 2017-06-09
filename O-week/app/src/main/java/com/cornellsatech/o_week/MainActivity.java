@@ -1,5 +1,6 @@
 package com.cornellsatech.o_week;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -86,6 +87,9 @@ public class MainActivity extends AppCompatActivity
 				startFeedFragment();
 				feedMenu.setVisible(false);
 				scheduleMenu.setVisible(true);
+				return true;
+			case R.id.settingsMenu:
+				startActivity(new Intent(this, SettingsActivity.class));
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

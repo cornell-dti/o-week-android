@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<PreferenceCategory
+		android:title="@string/settings_category_notifications">
+		<ListPreference
+			android:key="@string/settings_receive_reminders"
+			android:title="@string/settings_receive_reminders"
+			android:entries="@array/settings_receive_reminders_titles"
+			android:entryValues="@array/settings_receive_reminders_titles"
+			android:negativeButtonText="@null"
+			android:positiveButtonText="@null"/>
+		<ListPreference
+			android:key="@string/settings_notify_me"
+			android:title="@string/settings_notify_me"
+			android:entries="@array/settings_notify_me_titles"
+			android:entryValues="@array/settings_notify_me_titles"
+			android:negativeButtonText="@null"
+			android:positiveButtonText="@null"/>
+	</PreferenceCategory>
+	<PreferenceCategory
+		android:title="@string/settings_category_events">
+		<Preference
+			android:title="@string/settings_add_required_events"/>
+		<Preference
+			android:title="@string/settings_remove_events"/>
+	</PreferenceCategory>
+
+</PreferenceScreen>
