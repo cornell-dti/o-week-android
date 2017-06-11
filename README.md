@@ -7,18 +7,20 @@ The preview pictures have yet to be updated for Android.
 
 Getting Started
 ------
-You will need **Android Studio 2.3.2** to run the latest version of this app, which uses the following SDKs. Last Update **6/8/2017**:
+You will need **Android Studio 2.3.2** to run the latest version of this app, which uses the following SDKs. Last Update **6/11/2017** (remember to check "Show Package Details" in the Android SDK dialog):
  * Android 7.1.1 (Nougat) API 25.0.3
- * Android SDK Build-Tools 26.0.0 rc2
- * Android SDK Platform Tools 25.0.6
- * Android Support Library 23.2.1
+   * Android SDK Platform
+   * Sources for Android
+ * Android SDK Build-Tools 26.0.0
+ * Android SDK Platform Tools 26.0.0
+ * Android Support Library 23.2.1 (Windows only)
  * Android SDK Tools 26.0.2
- * Google Play Services 41.0.0
+ * Google Play Services 41
  * Support Repository
    * ConstraintLayout for Android 1.0.2
    * Solver for ConstraintLayout 1.0.2
    * Android Support Repository 47.0.0
-   * Google Repository 52.0.0
+   * Google Repository 53
 
 Contributors
 ------
