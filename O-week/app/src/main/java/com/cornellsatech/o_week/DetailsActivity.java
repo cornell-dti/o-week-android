@@ -58,8 +58,8 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
 		descriptionText.setText(event.description);
-		startTimeText.setText(event.startTime.toString(Event.TIME_FORMAT));
-		endTimeText.setText(event.endTime.toString(Event.TIME_FORMAT));
+		startTimeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT));
+		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
 	}
 
 	@Override

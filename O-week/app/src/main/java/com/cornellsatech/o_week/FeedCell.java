@@ -30,8 +30,8 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 	public void configure(Event event, boolean selected)
 	{
 		this.event = event;
-		startTimeText.setText(event.startTime.toString(Event.TIME_FORMAT));
-		endTimeText.setText(event.endTime.toString(Event.TIME_FORMAT));
+		startTimeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT));
+		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
 		checkBox.setChecked(selected);

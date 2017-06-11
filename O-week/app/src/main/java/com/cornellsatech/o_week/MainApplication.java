@@ -12,6 +12,6 @@ public class MainApplication extends Application
 	{
 		super.onCreate();
 		JodaTimeAndroid.init(this);
-		UserData.loadData();
+		UserData.loadData(this);
 	}
 }
