@@ -291,14 +291,20 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	@Subscribe
 	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
 	{
-		//redraw events
-		eventsContainer.removeAllViews();
-		drawCells();
+		redrawEvents();
 	}
 	@Subscribe
 	public void onEventSelectionChanged(NotificationCenter.EventSelectionChanged eventSelectionChanged)
 	{
-		//redraw events
+		redrawEvents();
+	}
+	@Subscribe
+	public void onEventReload(NotificationCenter.EventReload eventReload)
+	{
+		redrawEvents();
+	}
+	private void redrawEvents()
+	{
 		eventsContainer.removeAllViews();
 		drawCells();
 	}

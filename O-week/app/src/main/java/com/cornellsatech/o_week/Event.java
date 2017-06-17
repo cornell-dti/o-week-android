@@ -2,6 +2,7 @@ package com.cornellsatech.o_week;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -25,6 +26,7 @@ public class Event implements Comparable<Event>
 	private static final String DATABASE_DATE_FORMAT = "yyyy-MM-dd";
 	private static final DateTimeFormatter DATABASE_TIME_FORMATTER = DateTimeFormat.forPattern(DATABASE_TIME_FORMAT);
 	private static final DateTimeFormatter DATABASE_DATE_FORMATTER = DateTimeFormat.forPattern(DATABASE_DATE_FORMAT);
+	private static final String TAG = Event.class.getSimpleName();
 
 	public Event(String title, String caption, @Nullable String description, @Nullable String category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, int pk)
 	{
@@ -100,7 +102,7 @@ public class Event implements Comparable<Event>
 
 	public static Event fromString(String string)
 	{
-		String[] parts = string.split("|");
+		String[] parts = string.split("\\|");
 		String title = parts[0];
 		String caption = parts[1];
 		String description = parts[2];
@@ -110,6 +112,7 @@ public class Event implements Comparable<Event>
 		String endTime = parts[6];
 		String required = parts[7];
 		String pk = parts[8];
+		Log.i(TAG, "fromString: " + string);
 		return new Event(title, caption, description, category, LocalDate.parse(date, DATABASE_DATE_FORMATTER),
 				LocalTime.parse(startTime, DATABASE_TIME_FORMATTER), LocalTime.parse(endTime, DATABASE_TIME_FORMATTER),
 				required.equals("1"), Integer.valueOf(pk));

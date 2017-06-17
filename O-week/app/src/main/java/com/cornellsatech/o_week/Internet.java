@@ -44,7 +44,6 @@ public class Internet
 						UserData.saveEvent(new Event(jsonObject), context);
 					}
 
-					//FIXME Notification not getting sent out?
 					if (date.isEqual(UserData.selectedDate))
 						NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
 				}

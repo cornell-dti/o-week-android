@@ -6,8 +6,7 @@ import android.view.ViewGroup;
 
 import com.google.common.eventbus.Subscribe;
 
-import org.joda.time.LocalDate;
-
+import java.util.Collections;
 import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
@@ -18,8 +17,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	public FeedAdapter()
 	{
 		NotificationCenter.DEFAULT.register(this);
-		events = UserData.allEvents.get(UserData.selectedDate);
-		selectedEvents = UserData.selectedEvents.get(UserData.selectedDate);
+		loadData();
 	}
 	@Override
 	public FeedCell onCreateViewHolder(ViewGroup parent, int i)
@@ -42,9 +40,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	@Subscribe
 	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
 	{
-		LocalDate date = eventDateSelected.selectedCell.getDate();
-		events = UserData.allEvents.get(date);
-		selectedEvents = UserData.selectedEvents.get(date);
+		loadData();
 		notifyDataSetChanged();
 	}
 	@Subscribe
@@ -54,10 +50,23 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 		int index = events.indexOf(event);
 		notifyItemChanged(index);
 	}
+	@Subscribe
+	public void onEventReload(NotificationCenter.EventReload eventReload)
+	{
+		loadData();
+		notifyDataSetChanged();
+	}
 
 	@Override
 	public void onDetachedFromRecyclerView(RecyclerView recyclerView)
 	{
 		NotificationCenter.DEFAULT.unregister(this);
+	}
+
+	private void loadData()
+	{
+		events = UserData.allEvents.get(UserData.selectedDate);
+		Collections.sort(events);
+		selectedEvents = UserData.selectedEvents.get(UserData.selectedDate);
 	}
 }
