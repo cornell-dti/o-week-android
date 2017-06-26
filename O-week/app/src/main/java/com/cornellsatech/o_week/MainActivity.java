@@ -98,4 +98,11 @@ public class MainActivity extends AppCompatActivity
 		}
 	}
 	//endregion
+
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		Settings.setSelectedEvents(this);
+	}
 }

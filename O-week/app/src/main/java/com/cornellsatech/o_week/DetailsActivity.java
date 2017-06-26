@@ -112,4 +112,11 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
 			Internet.getImageForEvent(event, eventImage, coordinatorLayout, true);
 	}
+
+	@Override
+	protected void onStop()
+	{
+		super.onStop();
+		Settings.setSelectedEvents(this);
+	}
 }
