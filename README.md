@@ -1,9 +1,8 @@
 O-Week v1.0
 ======
 An **Android** app for incoming freshmen to use during their first week as a Cornell student. The **iOS** branch can be found [here](https://github.com/Cornell-SA-Tech/o-week-ios).
-The preview pictures have yet to be updated for Android.
 
-<img src="http://www.cornellsatech.org/img/oweek1.png" width="250px">  <img src="http://www.cornellsatech.org/img/oweek2.png" width="250px">  <img src="http://www.cornellsatech.org/img/oweek3.png" width="250px">
+<img src="https://raw.githubusercontent.com/Cornell-SA-Tech/o-week-android/master/Screenshots/app-screenshots/Phone%20Screenshot%202.jpg" width="250px">  <img src="https://raw.githubusercontent.com/Cornell-SA-Tech/o-week-android/master/Screenshots/app-screenshots/Phone%20Screenshot%201.jpg" width="250px">  <img src="https://raw.githubusercontent.com/Cornell-SA-Tech/o-week-android/master/Screenshots/app-screenshots/Phone%20Screenshot%203.jpg" width="250px">
 
 Getting Started
 ------
