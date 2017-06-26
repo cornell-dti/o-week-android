@@ -1,16 +1,17 @@
 <resources>
 	<string name="app_name">O-week</string>
-	<string name="action_settings">Settings</string>
 	<string name="menu_filter">Filter</string>
 	<string name="menu_my_schedule">My Schedule</string>
-	<string name="feed_menu">Feed</string>
-	<string name="title_activity_details">Details</string>
+	<string name="menu_feed">Feed</string>
 	<string name="menu_select_event">Select Event</string>
 	<string name="menu_settings">Settings</string>
+	<string name="title_activity_details">Details</string>
 	<string name="title_activity_settings">Settings</string>
 	<string name="title_fragment_feed">O-week Schedule</string>
 	<string name="title_fragment_my_schedule">My Schedule</string>
 	<string name="snackbar_image_error">Image could not be downloaded</string>
+	<string name="dialog_positive_button">Ok</string>
+	<string name="dialog_negative_button">Cancel</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>
@@ -18,7 +19,11 @@
 	<string name="settings_receive_reminders">Receive reminders for…</string>
 	<string name="settings_notify_me">Notify me…</string>
 	<string name="settings_add_required_events">Add all required events to my schedule</string>
+	<string name="dialog_title_add_required_events">Add All Required Events</string>
+	<string name="dialog_message_add_required_events">Do you want to add all required events to your schedule?</string>
 	<string name="settings_remove_events">Remove all events from my schedule</string>
+	<string name="dialog_title_remove_events">Remove All Events</string>
+	<string name="dialog_message_remove_events">Do you want to remove all events from your schedule?</string>
 
 	<string-array name="settings_receive_reminders_titles">
 		<item>No events</item>
@@ -28,11 +33,9 @@
 	<string-array name="settings_notify_me_titles">
 		<item>At time of event</item>
 		<item>1 hour before</item>
-		<item>2 hour before</item>
-		<item>3 hour before</item>
-		<item>5 hour before</item>
-		<item>Morning of (7 am)</item>
+		<item>2 hours before</item>
+		<item>3 hours before</item>
+		<item>5 hours before</item>
 		<item>1 day before</item>
-		<item>2 days before</item>
 	</string-array>
 </resources>
