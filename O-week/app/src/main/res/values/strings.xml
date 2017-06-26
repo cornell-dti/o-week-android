@@ -4,10 +4,11 @@
 	<string name="menu_filter">Filter</string>
 	<string name="menu_my_schedule">My Schedule</string>
 	<string name="feed_menu">Feed</string>
-	<string name="title_activity_details">DetailsActivity</string>
+	<string name="title_activity_details">Details</string>
 	<string name="menu_select_event">Select Event</string>
 	<string name="menu_settings">Settings</string>
 	<string name="title_activity_settings">Settings</string>
+	<string name="snackbar_image_error">Image could not be downloaded</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>

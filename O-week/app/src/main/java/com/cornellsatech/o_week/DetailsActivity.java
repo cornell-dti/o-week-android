@@ -1,8 +1,14 @@
 package com.cornellsatech.o_week;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,6 +21,7 @@ import android.widget.TextView;
 public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener
 {
 	public static Event event;
+	private CoordinatorLayout coordinatorLayout;
 	private ImageView eventImage;
 	private TextView titleText;
 	private TextView captionText;
@@ -40,6 +47,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	}
 	private void findViews()
 	{
+		coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
 		eventImage = (ImageView) findViewById(R.id.eventImage);
 		titleText = (TextView) findViewById(R.id.titleText);
 		captionText = (TextView) findViewById(R.id.captionText);
@@ -60,6 +68,12 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		descriptionText.setText(event.description);
 		startTimeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT));
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
+
+		boolean canWriteToFile = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+		if (!canWriteToFile)
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+
+		Internet.getImageForEvent(event, eventImage, coordinatorLayout, canWriteToFile);
 	}
 
 	@Override
@@ -89,5 +103,13 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		else
 			UserData.removeFromSelectedEvents(event);
 		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event));
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+	{
+		//reload the image, this time saving to file
+		if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+			Internet.getImageForEvent(event, eventImage, coordinatorLayout, true);
 	}
 }
