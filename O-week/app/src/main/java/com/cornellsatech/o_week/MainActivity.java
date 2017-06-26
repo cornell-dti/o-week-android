@@ -53,12 +53,14 @@ public class MainActivity extends AppCompatActivity
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, new FeedFragment());
 		transaction.commit();
+		getSupportActionBar().setTitle(R.string.title_fragment_feed);
 	}
 	private void startScheduleFragment()
 	{
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, new ScheduleFragment());
 		transaction.commit();
+		getSupportActionBar().setTitle(R.string.title_fragment_my_schedule);
 	}
 
 	//region Menu methods
