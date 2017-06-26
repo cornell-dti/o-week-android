@@ -2,7 +2,6 @@ package com.cornellsatech.o_week;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -15,7 +14,7 @@ public class Event implements Comparable<Event>
 	public final String title;
 	public final String caption;
 	public final String description;
-	public final String category;
+	public final int category;
 	public final LocalDate date;
 	public final LocalTime startTime;
 	public final LocalTime endTime;
@@ -28,12 +27,12 @@ public class Event implements Comparable<Event>
 	private static final DateTimeFormatter DATABASE_DATE_FORMATTER = DateTimeFormat.forPattern(DATABASE_DATE_FORMAT);
 	private static final String TAG = Event.class.getSimpleName();
 
-	public Event(String title, String caption, @Nullable String description, @Nullable String category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, int pk)
+	public Event(String title, String caption, @Nullable String description, int category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, int pk)
 	{
 		this.title = title;
 		this.caption = caption;
 		this.description = (description == null) ? "No description available at this time" : description;
-		this.category = (category == null) ? "Default" : category;
+		this.category = category;
 		this.date = date;
 		this.startTime = startTime;
 		this.endTime = endTime;
@@ -47,16 +46,15 @@ public class Event implements Comparable<Event>
 		pk = jsonObject.optInt("pk");
 		description = jsonObject.optString("description");
 		caption = jsonObject.optString("location");
-		category = jsonObject.optString("category");
+		category = jsonObject.optInt("category");
 		String startDate = jsonObject.optString("start_date");
 		String startTime = jsonObject.optString("start_time");
 		String endTime = jsonObject.optString("end_time");
+		required = jsonObject.optBoolean("required");
 
 		date = LocalDate.parse(startDate, DATABASE_DATE_FORMATTER);
 		this.startTime = LocalTime.parse(startTime, DATABASE_TIME_FORMATTER);
 		this.endTime = LocalTime.parse(endTime, DATABASE_TIME_FORMATTER);
-		//TODO change to actual required value
-		required = false;
 	}
 
 	@Override
@@ -112,8 +110,7 @@ public class Event implements Comparable<Event>
 		String endTime = parts[6];
 		String required = parts[7];
 		String pk = parts[8];
-		Log.i(TAG, "fromString: " + string);
-		return new Event(title, caption, description, category, LocalDate.parse(date, DATABASE_DATE_FORMATTER),
+		return new Event(title, caption, description, Integer.valueOf(category), LocalDate.parse(date, DATABASE_DATE_FORMATTER),
 				LocalTime.parse(startTime, DATABASE_TIME_FORMATTER), LocalTime.parse(endTime, DATABASE_TIME_FORMATTER),
 				required.equals("1"), Integer.valueOf(pk));
 	}

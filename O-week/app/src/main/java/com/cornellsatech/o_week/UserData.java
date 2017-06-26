@@ -17,13 +17,14 @@ public class UserData
 {
 	public static final Map<LocalDate, List<Event>> allEvents;
 	public static final Map<LocalDate, List<Event>> selectedEvents;
+	public static List<Category> categories = new ArrayList<>();
 	public static final List<LocalDate> DATES;
 	public static LocalDate selectedDate;
 	private static final int YEAR = 2017;
 	private static final int MONTH = 8;
 	private static final int START_DAY = 19;    //Dates range: [START_DAY, END_DAY], inclusive
 	private static final int END_DAY = 24;      //Note: END_DAY must > START_DAY
-	public static final String TAG = "UserData";
+	private static final String TAG = UserData.class.getSimpleName();
 
 	//initialize DATES
 	static
@@ -73,6 +74,14 @@ public class UserData
 		if (!eventsForDate.contains(event))
 			eventsForDate.add(event);
 	}
+	public static void removeFromAllEvents(Event event)
+	{
+		List<Event> eventsForDate = allEvents.get(event.date);
+		if (eventsForDate == null)
+			Log.e(TAG, "removeFromAllEvents: No selected events for date");
+		else
+			eventsForDate.remove(event);
+	}
 	public static void insertToSelectedEvents(Event event)
 	{
 		List<Event> eventsForDate = selectedEvents.get(event.date);
@@ -93,35 +102,31 @@ public class UserData
 			eventsForDate.remove(event);
 	}
 
-	/**
-	 * Saves event to SharedPreferences and appends it to the array of all events.
-	 * @param event Event to save
-	 */
-	public static void saveEvent(Event event, Context context)
+	public static void loadData(final Context context)
 	{
-		appendToAllEvents(event);
-		Settings.setEvent(event, context);
-	}
+		final Set<Event> events = Settings.getAllEvents(context);
+		for (Event event : events)
+			appendToAllEvents(event);
 
-	public static void loadData(Context context)
-	{
-		Set<Event> events = Settings.getAllEvents(context);
-		Set<String> selectedEventPks = Settings.getAllSelectedEventsPks(context);
+		Set<Category> categories = Settings.getCategories(context);
+		UserData.categories = new ArrayList<>(categories);
 
-		if (events.isEmpty())
-			for (LocalDate date : DATES)
-				Internet.getEventsOnDate(date, context);
-		else
+		Internet.getUpdatesForVersion(Settings.getVersion(context), new Internet.Callback()
 		{
-			for (Event event : events)
+			//msg is the versionNUm as a String
+			@Override
+			public void execute(String msg)
 			{
-				appendToAllEvents(event);
-				if (selectedEventPks.contains(String.valueOf(event.pk)))
-					insertToSelectedEvents(event);
-			}
+				Settings.setAllEvents(context);
+				Settings.setCategories(context);
+				Settings.setVersion(Integer.valueOf(msg), context);
 
-			//Telling other classes to reload their data
-			NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
-		}
+				//all version updates have been processed. Now, load events that the user has selected into selectedEvents.
+				//this assumes selectedEvents is empty
+				Set<Event> selectedEvents = Settings.getSelectedEvents(context);
+				for (Event selectedEvent : selectedEvents)
+					insertToSelectedEvents(selectedEvent);
+			}
+		});
 	}
 }
