@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableMap;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +21,7 @@ public class UserData
 	public static List<Category> categories = new ArrayList<>();
 	public static final List<LocalDate> DATES;
 	public static LocalDate selectedDate;
+	public static int selectedFilterIndex = 0;
 	private static final int YEAR = 2017;
 	private static final int MONTH = 8;
 	private static final int START_DAY = 19;    //Dates range: [START_DAY, END_DAY], inclusive
@@ -113,19 +115,27 @@ public class UserData
 
 		Internet.getUpdatesForVersion(Settings.getVersion(context), new Internet.Callback()
 		{
-			//msg is the versionNUm as a String
+			//msg is the versionNum as a String. null if failed
 			@Override
 			public void execute(String msg)
 			{
-				Settings.setAllEvents(context);
-				Settings.setCategories(context);
-				Settings.setVersion(Integer.valueOf(msg), context);
+				//sort everything
+				for (List<Event> events : allEvents.values())
+					Collections.sort(events);
+				Collections.sort(UserData.categories);
 
 				//all version updates have been processed. Now, load events that the user has selected into selectedEvents.
 				//this assumes selectedEvents is empty
 				Set<Event> selectedEvents = Settings.getSelectedEvents(context);
 				for (Event selectedEvent : selectedEvents)
 					insertToSelectedEvents(selectedEvent);
+
+				//save all the new data if available
+				if (msg == null)
+					return;
+				Settings.setAllEvents(context);
+				Settings.setCategories(context);
+				Settings.setVersion(Integer.valueOf(msg), context);
 			}
 		});
 	}

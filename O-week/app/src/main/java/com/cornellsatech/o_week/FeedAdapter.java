@@ -6,7 +6,9 @@ import android.view.ViewGroup;
 
 import com.google.common.eventbus.Subscribe;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
@@ -38,12 +40,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	}
 
 	@Subscribe
-	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
-	{
-		loadData();
-		notifyDataSetChanged();
-	}
-	@Subscribe
 	public void onSelectionChanged(NotificationCenter.EventSelectionChanged eventSelectionChanged)
 	{
 		Event event = eventSelectionChanged.event;
@@ -51,7 +47,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 		notifyItemChanged(index);
 	}
 	@Subscribe
+	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
+	{
+		loadData();
+		notifyDataSetChanged();
+	}
+	@Subscribe
 	public void onEventReload(NotificationCenter.EventReload eventReload)
+	{
+		loadData();
+		notifyDataSetChanged();
+	}
+	@Subscribe
+	public void onFilterChanged(NotificationCenter.EventFilterChanged eventFilterChanged)
 	{
 		loadData();
 		notifyDataSetChanged();
@@ -65,8 +73,46 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 
 	private void loadData()
 	{
-		events = UserData.allEvents.get(UserData.selectedDate);
-		Collections.sort(events);
-		selectedEvents = UserData.selectedEvents.get(UserData.selectedDate);
+		//shallow copy of arrays. This is so nothing is deleted from UserData
+		events = new ArrayList<>(UserData.allEvents.get(UserData.selectedDate));
+		selectedEvents = new ArrayList<>(UserData.selectedEvents.get(UserData.selectedDate));
+		applyFilters();
+	}
+	private void applyFilters()
+	{
+		switch (UserData.selectedFilterIndex)
+		{
+			case 0: //show all events, don't do anything special
+				break;
+			case 1: //show required events
+				filterRequired(events);
+				filterRequired(selectedEvents);
+				break;
+			default:
+				Category category = UserData.categories.get(UserData.selectedFilterIndex - 2);
+				filterForCategory(category.pk, events);
+				filterForCategory(category.pk, selectedEvents);
+				break;
+		}
+	}
+	private void filterRequired(Collection<Event> events)
+	{
+		Iterator<Event> eventsIterator = events.iterator();
+		while (eventsIterator.hasNext())
+		{
+			Event event = eventsIterator.next();
+			if (!event.required)
+				eventsIterator.remove();
+		}
+	}
+	private void filterForCategory(int category, Collection<Event> events)
+	{
+		Iterator<Event> eventsIterator = events.iterator();
+		while (eventsIterator.hasNext())
+		{
+			Event event = eventsIterator.next();
+			if (event.category != category)
+				eventsIterator.remove();
+		}
 	}
 }

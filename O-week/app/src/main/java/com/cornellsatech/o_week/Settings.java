@@ -57,10 +57,9 @@ public class Settings
 		Set<String> selectedEventPks = preferences.getStringSet(KEY_SELECTED_EVENTS, new HashSet<String>());
 		Set<Event> allEvents = getAllEvents(context);
 		Set<Event> selectedEvents = new HashSet<>(selectedEventPks.size());
-		for (String selectedEventPk : selectedEventPks)
-			for (Event event : allEvents)
-				if (selectedEventPks.contains(String.valueOf(event.pk)))
-					selectedEvents.add(event);
+		for (Event event : allEvents)
+			if (selectedEventPks.contains(String.valueOf(event.pk)))
+				selectedEvents.add(event);
 		return selectedEvents;
 	}
 

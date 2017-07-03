@@ -29,4 +29,5 @@ public class NotificationCenter
 			this.event = event;
 		}
 	}
+	static class EventFilterChanged {}
 }

@@ -54,7 +54,11 @@ public class Internet
 			public void execute(String msg)
 			{
 				if (msg.isEmpty())
+				{
+					onCompletion.execute(null);
+					NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
 					return;
+				}
 				try
 				{
 					JSONObject json = new JSONObject(msg);

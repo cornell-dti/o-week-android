@@ -10,8 +10,10 @@
 	<string name="title_fragment_feed">O-week Schedule</string>
 	<string name="title_fragment_my_schedule">My Schedule</string>
 	<string name="snackbar_image_error">Image could not be downloaded</string>
-	<string name="dialog_positive_button">Ok</string>
+	<string name="dialog_positive_button">OK</string>
 	<string name="dialog_negative_button">Cancel</string>
+	<string name="filter_show_all_events">Show All Events</string>
+	<string name="filter_show_required_events">Show Required Events</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>
