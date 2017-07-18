@@ -9,6 +9,20 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONObject;
 
+/**
+ * Data-type that holds all information about an event. Designed to be immutable. This will be downloaded
+ * from the database via methods in {@link Internet}, where new events will be compared with saved ones.
+ * Notable fields are explained below:
+ *
+ * {@link #category}: The {@link Category#pk} of the {@link Category} this object belongs to.
+ * {@link #date}: The date in which this event BEGINS. If this event crosses over midnight, the date
+ *                is that of the 1st day.
+ *
+ * NOTE: Since events can cross over midnight, the {@link #endTime} may not be "after" the {@link #startTime}.
+ *       Calculations should take this into account.
+ *
+ * @see Category
+ */
 public class Event implements Comparable<Event>
 {
 	public final String title;
@@ -27,6 +41,20 @@ public class Event implements Comparable<Event>
 	private static final DateTimeFormatter DATABASE_DATE_FORMATTER = DateTimeFormat.forPattern(DATABASE_DATE_FORMAT);
 	private static final String TAG = Event.class.getSimpleName();
 
+	/**
+	 * Creates an event object in-app. This should never be done organically (without initial input
+	 * from the database in some form), or else we risk becoming out-of-sync with the database.
+	 *
+	 * @param title For example, "New Student Check-In"
+	 * @param caption For example, "Bartels Hall"
+	 * @param description For example, "You are required to attend New Student Check-In to pick up..."
+	 * @param category See class description.
+	 * @param date For example, 7/19/2017
+	 * @param startTime For example, 8:00 AM
+	 * @param endTime For example, 4:00 PM
+	 * @param required Whether this event is required for new students.
+	 * @param pk Unique positive ID given to each event starting from 1.
+	 */
 	public Event(String title, String caption, @Nullable String description, int category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, int pk)
 	{
 		this.title = title;
@@ -40,29 +68,51 @@ public class Event implements Comparable<Event>
 		this.pk = pk;
 	}
 
-	public Event(JSONObject jsonObject)
+	/**
+	 * Creates an event object using data downloaded from the database as a {@link JSONObject}.
+	 *
+	 * @param json JSON with the expected keys and values:
+	 *             name => String
+	 *             pk => int
+	 *             description => String
+	 *             category => int
+	 *             start_date => date formatted according to {@link #DATABASE_DATE_FORMAT}
+	 *             start_time => time formatted according to {@link #DATABASE_TIME_FORMAT}
+	 *             end_time => see start_time
+	 *             required => boolean
+	 */
+	public Event(JSONObject json)
 	{
-		title = jsonObject.optString("name");
-		pk = jsonObject.optInt("pk");
-		description = jsonObject.optString("description");
-		caption = jsonObject.optString("location");
-		category = jsonObject.optInt("category");
-		String startDate = jsonObject.optString("start_date");
-		String startTime = jsonObject.optString("start_time");
-		String endTime = jsonObject.optString("end_time");
-		required = jsonObject.optBoolean("required");
+		title = json.optString("name");
+		pk = json.optInt("pk");
+		description = json.optString("description");
+		caption = json.optString("location");
+		category = json.optInt("category");
+		String startDate = json.optString("start_date");
+		String startTime = json.optString("start_time");
+		String endTime = json.optString("end_time");
+		required = json.optBoolean("required");
 
 		date = LocalDate.parse(startDate, DATABASE_DATE_FORMATTER);
 		this.startTime = LocalTime.parse(startTime, DATABASE_TIME_FORMATTER);
 		this.endTime = LocalTime.parse(endTime, DATABASE_TIME_FORMATTER);
 	}
-
+	/**
+	 * Returns the {@link #pk}, which is unique to each {@link Event}.
+	 *
+	 * @return {@link #pk}
+	 */
 	@Override
 	public int hashCode()
 	{
 		return pk;
 	}
-
+	/**
+	 * Returns whether this object has the same {@link #pk} as the given object.
+	 *
+	 * @param obj {@inheritDoc}
+	 * @return See description.
+	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -71,8 +121,12 @@ public class Event implements Comparable<Event>
 		Event other = (Event) obj;
 		return other.pk == pk;
 	}
-
-	//Events ordered by start time
+	/**
+	 * Compares 2 {@link Event}s using their start times. Useful for ordering chronologically.
+	 *
+	 * @param o {@inheritDoc}
+	 * @return {@inheritDoc}
+	 */
 	@Override
 	public int compareTo(@NonNull Event o)
 	{
@@ -89,7 +143,14 @@ public class Event implements Comparable<Event>
 			return 0;
 		return startTime.compareTo(o.startTime);
 	}
-
+	/**
+	 * Returns a String containing all relevant info about this object. Each field is separated
+	 * by a pipe "|", which David Chu deemed would not be regularly used in a String and thus is a good
+	 * delimiter for splitting via {@link String#split(String)}. Useful for saving to file.
+	 *
+	 * @return {@inheritDoc}
+	 * @see #fromString(String)
+	 */
 	@Override
 	public String toString()
 	{
@@ -97,7 +158,13 @@ public class Event implements Comparable<Event>
 				"|" + DATABASE_TIME_FORMATTER.print(startTime) + "|" + DATABASE_TIME_FORMATTER.print(endTime) + "|" +
 				(required ? 1 : 0) + "|" + pk;
 	}
-
+	/**
+	 * Returns a {@link Event} from its String representation produced by {@link #toString()}.
+	 *
+	 * @param string String produced by {@link #toString()}.
+	 * @return {@link Event} created from the String.
+	 * @see #toString()
+	 */
 	public static Event fromString(String string)
 	{
 		String[] parts = string.split("\\|");

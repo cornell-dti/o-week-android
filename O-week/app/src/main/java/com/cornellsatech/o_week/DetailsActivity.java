@@ -1,6 +1,7 @@
 package com.cornellsatech.o_week;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -18,6 +19,19 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Displays a user-selected event in a separate page. An {@link android.app.Activity} is used instead
+ * of a Fragment since this page should have a back button.
+ *
+ * {@link #event}: The event displayed to the user. NOTE: This should already be set when the Activity
+ *                 is opened, set by whomever called {@link #startActivity(Intent)}. The better option
+ *                 would be to put {@link #event} in a {@link Bundle}, but then {@link Event} would
+ *                 have to extend {@link android.os.Parcelable}.
+ * {@link #coordinatorLayout}: Layout that will be passed to
+ *                             {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout, boolean)}.
+ *                             A reference to the {@link CoordinatorLayout} is necessary to display
+ *                             {@link android.support.design.widget.Snackbar}.
+ */
 public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener
 {
 	public static Event event;
@@ -31,6 +45,11 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	private CheckBox checkBox;
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 
+	/**
+	 * Link to layout, add back button to toolbar, sets up views.
+	 *
+	 * @param savedInstanceState Ignored.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -45,6 +64,9 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		findViews();
 		setEventData();
 	}
+	/**
+	 * Links {@link android.view.View}s with their pointers.
+	 */
 	private void findViews()
 	{
 		coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
@@ -55,6 +77,10 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		endTimeText = (TextView) findViewById(R.id.endTimeText);
 		descriptionText = (TextView) findViewById(R.id.descriptionText);
 	}
+	/**
+	 * Shows the {@link #event}'s data on screen. Attempts to retrieve an image from the database or
+	 * from saved files.
+	 */
 	private void setEventData()
 	{
 		if (event == null)
@@ -69,6 +95,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		startTimeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT));
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
 
+		//we must know if we can write the image we downloaded to file
 		boolean canWriteToFile = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 		if (!canWriteToFile)
 			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -76,6 +103,11 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		Internet.getImageForEvent(event, eventImage, coordinatorLayout, canWriteToFile);
 	}
 
+	/**
+	 * Put the {@link #checkBox} to the top right.
+	 * @param menu {@inheritDoc}
+	 * @return {@inheritDoc}
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -95,6 +127,11 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		return true;
 	}
 
+	/**
+	 * Handle user selection of event.
+	 * @param buttonView Ignored.
+	 * @param isChecked Whether the {@link #checkBox} is checked.
+	 */
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 	{
@@ -105,6 +142,14 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event));
 	}
 
+	/**
+	 * This runs when the user answers the dialog that asks for file-writing permissions. If the user
+	 * grants us permission this time, re-download the image and save it.
+	 *
+	 * @param requestCode {@inheritDoc}
+	 * @param permissions {@inheritDoc}
+	 * @param grantResults {@inheritDoc}
+	 */
 	@Override
 	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
 	{
@@ -113,6 +158,9 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 			Internet.getImageForEvent(event, eventImage, coordinatorLayout, true);
 	}
 
+	/**
+	 * Save the selected events to file in case the user checked/unchecked the {@link #checkBox}.
+	 */
 	@Override
 	protected void onStop()
 	{

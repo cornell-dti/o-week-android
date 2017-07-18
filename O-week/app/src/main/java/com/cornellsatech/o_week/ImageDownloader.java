@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,6 +20,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Used in {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout, boolean)}.
+ * Downloaded from <a href="https://stackoverflow.com/a/15549639/4028758">StackOverFlow</a>.
+ * Specifically, from <a href="https://github.com/vad-zuev/ImageDownloader/blob/master/app/src/main/java/com/so/example/tools/BasicImageDownloader.java">GitHub</a>.
+ *
  * @author Vadim Zuev
  * @version 1.1
  */

@@ -30,6 +30,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Handles ALL web-related activities for this app.
+ *
+ * {@link #DATABASE}: Link to the database.
+ */
 public class Internet
 {
 	public static final String DATABASE = "https://oweekapp.herokuapp.com/flow/";
@@ -40,8 +45,8 @@ public class Internet
 
 	/**
 	 * Downloads all events and categories to update the app to the database's newest version.
-	 * The Callback provided will be executed when the data has been processed. The String msg used
-	 * as the parameter for execute() will be the string for the new version
+	 * The {@link Callback} provided will be executed when the data has been processed. The String msg used
+	 * as the parameter for {@link Callback#execute(String)} will be the string for the new version (int).
 	 *
 	 * @param version Current version of database on file. Should be 0 if never downloaded from database.
 	 * @param onCompletion Function to execute when data is processed. String in parameter is new version.

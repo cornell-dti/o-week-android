@@ -6,6 +6,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+/**
+ * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
+ * is in {@link R.layout#cell_feed}.
+ *
+ * {@link #event}: The event that this object currently represents.
+ *
+ * @see FeedAdapter
+ */
 public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener, View.OnClickListener
 {
 	private final TextView startTimeText;
@@ -15,6 +23,10 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 	private final CheckBox checkBox;
 	private Event event;
 
+	/**
+	 * Stores pointers to all the subviews and sets up listeners.
+	 * @param itemView {@inheritDoc}
+	 */
 	public FeedCell(View itemView)
 	{
 		super(itemView);
@@ -26,7 +38,12 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 		checkBox.setOnCheckedChangeListener(this);
 		itemView.setOnClickListener(this);
 	}
-
+	/**
+	 * Sets the current event to display. Time display formats are specified here: {@link Event#DISPLAY_TIME_FORMAT}.
+	 *
+	 * @param event The {@link Event} this cell will represent as long as it is visible.
+	 * @param selected Whether this {@link #event} is selected.
+	 */
 	public void configure(Event event, boolean selected)
 	{
 		this.event = event;
@@ -36,7 +53,11 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 		captionText.setText(event.caption);
 		checkBox.setChecked(selected);
 	}
-
+	/**
+	 * Update {@link UserData#selectedEvents} based on the {@link #checkBox}.
+	 * @param buttonView Ignored.
+	 * @param isChecked {@inheritDoc}
+	 */
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 	{
@@ -45,6 +66,10 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 		else
 			UserData.removeFromSelectedEvents(event);
 	}
+	/**
+	 * This object has been clicked. List listeners know.
+	 * @param v Ignored.
+	 */
 	@Override
 	public void onClick(View v)
 	{
