@@ -8,8 +8,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Handles all operations involving saving and reading from disk. Every method requires {@link Context}
+ * to create a {@link SharedPreferences}. Some of these methods are costly CPU-wise, so use sparingly.
+ */
 public class Settings
 {
+	//Keys to saved data.
 	private static final String KEY_ALL_EVENTS = "allEvents";
 	private static final String KEY_SELECTED_EVENTS = "selectedEvents";
 	private static final String KEY_CATEGORIES = "categories";
@@ -18,6 +23,10 @@ public class Settings
 	//suppress default constructor
 	private Settings(){}
 
+	/**
+	 * Saves {@link UserData#allEvents} to disk.
+	 * @param context
+	 */
 	public static void setAllEvents(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -29,6 +38,11 @@ public class Settings
 		editor.putStringSet(KEY_ALL_EVENTS, eventStrings);
 		editor.apply();
 	}
+	/**
+	 * Returns all saved events.
+	 * @param context
+	 * @return A set of saved events.
+	 */
 	public static Set<Event> getAllEvents(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -39,7 +53,10 @@ public class Settings
 			allEvents.add(Event.fromString(eventString));
 		return allEvents;
 	}
-
+	/**
+	 * Saves the {@link Event#pk} of all events in {@link UserData#selectedEvents}.
+	 * @param context
+	 */
 	public static void setSelectedEvents(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -51,6 +68,17 @@ public class Settings
 		editor.putStringSet(KEY_SELECTED_EVENTS, selectedEventsPks);
 		editor.apply();
 	}
+	/**
+	 * Returns all selected events based on the saved {@link Event#pk} and events retrieved using
+	 * {@link #getAllEvents(Context)}.
+	 *
+	 * Behavior:
+	 * 1. Update - if a selected event is updated (the {@link Event#pk} is unchanged), it remains selected.
+	 * 2. Deletion - selected events are "unselected" after deletion. We simply won't find the event
+	 *               in {@link #getAllEvents(Context)}.
+	 * @param context
+	 * @return Set of all selected events.
+	 */
 	public static Set<Event> getSelectedEvents(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -62,7 +90,10 @@ public class Settings
 				selectedEvents.add(event);
 		return selectedEvents;
 	}
-
+	/**
+	 * Saves {@link UserData#categories} to disk.
+	 * @param context
+	 */
 	public static void setCategories(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -73,6 +104,11 @@ public class Settings
 		editor.putStringSet(KEY_CATEGORIES, categoryStrings);
 		editor.apply();
 	}
+	/**
+	 * Returns all saved categories.
+	 * @param context
+	 * @return Set of saved categories.
+	 */
 	public static Set<Category> getCategories(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -83,7 +119,14 @@ public class Settings
 			categories.add(Category.fromString(categoryString));
 		return categories;
 	}
-
+	/**
+	 * Saves the current event database version. If the saved version does not match the database's,
+	 * an update is in store.
+	 *
+	 * @param version The current version of events saved on disk. The version number should increase as
+	 *                changes are made on the database.
+	 * @param context
+	 */
 	public static void setVersion(int version, Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -91,6 +134,12 @@ public class Settings
 		editor.putInt(KEY_VERSION, version);
 		editor.apply();
 	}
+	/**
+	 * Returns the database version of saved events.
+	 * @param context
+	 * @return The version of events downloaded from the database, or 0 by default. This version will
+	 *         be provided to the database so it can tell us what to update.
+	 */
 	public static int getVersion(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);

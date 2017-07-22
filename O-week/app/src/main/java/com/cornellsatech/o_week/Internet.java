@@ -48,6 +48,25 @@ public class Internet
 	 * The {@link Callback} provided will be executed when the data has been processed. The String msg used
 	 * as the parameter for {@link Callback#execute(String)} will be the string for the new version (int).
 	 *
+	 * Note: {@link UserData#selectedEvents} will not be updated by this method.
+	 *       {@link UserData#categories} and {@link UserData#allEvents} should already be filled with events
+	 *       loaded from {@link android.content.SharedPreferences}.
+	 *
+	 * Expected JSON structure:
+	 * {
+	 *     version: Int,
+	 *     categories:
+	 *     {
+	 *         changed: [{@link Category#Category(JSONObject)}, category2, ...],
+	 *         deleted: [{@link Category#pk}, pk2, ...]
+	 *     },
+	 *     events:
+	 *     {
+	 *         changed: [{@link Event#Event(JSONObject)}, event2, ...],
+	 *         deleted: [{@link Event#pk}, pk2, ...]
+	 *     }
+	 * }
+	 *
 	 * @param version Current version of database on file. Should be 0 if never downloaded from database.
 	 * @param onCompletion Function to execute when data is processed. String in parameter is new version.
 	 */
@@ -151,10 +170,24 @@ public class Internet
 			}
 		});
 	}
+	/**
+	 * Try to assign an image to the given {@link ImageView}.
+	 * Attempts the following, in order:
+	 * 1. Read image from disk.
+	 * 2. If above fails, download image from the internet.
+	 * 3. Save downloaded image if saveImage is true.
+	 *
+	 * Note: Images are saved as "{@link Event#pk}.jpg"
+	 *
+	 * @param event Event to get image for
+	 * @param imageView View to display image
+	 * @param layout Layout to display {@link Snackbar}
+	 * @param saveImage If true, we'll attempt to save the image we downloaded.
+	 */
 	public static void getImageForEvent(final Event event, final ImageView imageView, final CoordinatorLayout layout, final boolean saveImage)
 	{
-		final File imageFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator
-				+ event.pk + Bitmap.CompressFormat.JPEG.name().toLowerCase());
+		final File imageFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+				+ File.separator + event.pk + Bitmap.CompressFormat.JPEG.name().toLowerCase());
 		if (imageFile.exists())
 		{
 			try
@@ -197,10 +230,14 @@ public class Internet
 			}
 		}).download(DATABASE + "event/" + event.pk + "/image", false);
 	}
-	public static void getCategories()
-	{
-
-	}
+	/**
+	 * Connects to the website given, then calls {@link Callback#execute(String)} with the output
+	 * received from the website as the String parameter.
+	 * Identical to a GET request.
+	 *
+	 * @param urlString Link to the website
+	 * @param callback Contains method to execute once the website responds
+	 */
 	private static void get(final String urlString, final Callback callback)
 	{
 		//must use AsyncTask since going on internet may lag app & should be done in bg
@@ -235,6 +272,9 @@ public class Internet
 		}.execute(null, null, null);
 	}
 
+	/**
+	 * Alternative to functional programming in Java 7. A wrapper for a function that takes a String.
+	 */
 	public interface Callback
 	{
 		void execute(String msg);

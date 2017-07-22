@@ -27,9 +27,28 @@ import java.util.List;
 import java.util.Queue;
 
 /**
+ * Displays {@link Event}s with height proportional to the event's length, laying them side by side
+ * should their times overlap.
+ *
  * Notes on how view IDs are numbered in this class:
  * 1. For time lines: ID = hour the time line represents + 1
  * 2. For events: the event's hashcode
+ * IDs are required for views to specify their positions relative to each other. A structured ID scheme
+ * allows us to know which IDs correspond to which events.
+ *
+ * {@link #scheduleContainer}: Holds all time lines, and the {@link #eventsContainer}. Never redrawn.
+ * {@link #eventsContainer}: Holds all events. Redrawn whenever a date changes or an event is selected
+ *                           or unselected. Separated from {@link #scheduleContainer} so time lines
+ *                           are not also redrawn every time, saving processing power.
+ * {@link #pkToEvent}: Returns the {@link Event} for the given {@link Event#pk}. Used in {@link #idToEvent(int)},
+ *                     which helps the app determine the event a user clicks.
+ * {@link #HOUR_HEIGHT}: The height (dp) of an event that spans 1 hour.
+ * {@link #HOUR_TEXT_HEIGHT}: The size (sp) or the hour text (for example: 1:00 PM). Used in calculation
+ *                            to find the y position of an event for its start time.
+ * {@link #HOURS}: List of hours to display. Should be the full range of start/end times for events.
+ *                 Hours range: [START_HOUR, END_HOUR], inclusive. Hours wrap around, from 7~23, then 0~2.
+ * {@link #START_HOUR}: The earliest hour an event can start.
+ * {@link #END_HOUR}: The latest hour an event can end. Note that this is in AM; END_HOUR must < START_HOUR.
  */
 public class ScheduleFragment extends Fragment implements View.OnClickListener
 {
@@ -39,10 +58,13 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	private int HOUR_HEIGHT;
 	private int HOUR_TEXT_HEIGHT;
 	private static final List<LocalTime> HOURS;
-	public static final int START_HOUR = 7;    //Hours range: [START_HOUR, END_HOUR], inclusive
-	public static final int END_HOUR = 2;      //Note: Hours wrap around, from 7~23, then 0~2. END_HOUR must < START_HOUR
+	public static final int START_HOUR = 7;
+	public static final int END_HOUR = 2;
 	private static final String TAG = ScheduleFragment.class.getSimpleName();
 
+	/**
+	 * Fill {@link #HOURS} with {@link LocalTime}s according to {@link #START_HOUR} and {@link #END_HOUR}.
+	 */
 	static
 	{
 		ImmutableList.Builder<LocalTime> tempHours = ImmutableList.builder();
@@ -55,6 +77,14 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		HOURS = tempHours.build();
 	}
 
+	/**
+	 * Sets up listener, associate views, retrieve final values from {@link R.dimen}, then draws everything.
+	 *
+	 * @param inflater {@inheritDoc}
+	 * @param container {@inheritDoc}
+	 * @param savedInstanceState Ignored.
+	 * @return {@inheritDoc}
+	 */
 	@Nullable
 	@Override
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
@@ -70,13 +100,18 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		drawCells();
 		return view;
 	}
+	/**
+	 * Unregister as listener to avoid memory leaks.
+	 */
 	@Override
 	public void onDestroyView()
 	{
 		super.onDestroyView();
 		NotificationCenter.DEFAULT.unregister(this);
 	}
-
+	/**
+	 * Draw all the time lines, one line for each hour in {@link #HOURS} and adds them to {@link #scheduleContainer}.
+	 */
 	private void drawTimeLines()
 	{
 		LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -89,6 +124,9 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 			scheduleContainer.addView(timeLine, timeLineMargins(timeLine, hour));
 		}
 	}
+	/**
+	 * Draws all selected events in order.
+	 */
 	private void drawCells()
 	{
 		List<Event> selectedEvents = UserData.selectedEvents.get(UserData.selectedDate);
@@ -97,6 +135,28 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 			return;
 		drawEvent(1, new SparseArray<Event>(), new ArrayDeque<>(selectedEvents));
 	}
+	/**
+	 * Recursive function. Each iteration draws an event and adds it to {@link #eventsContainer}.
+	 *
+	 * Terminology:
+	 * Slot = column which events are assigned. Starts from 0.
+	 *
+	 * Specifically:
+	 * 1. Finds the best slot to put this event in based on conflicts with other events. If all available
+	 *    slots are full, creates a new slot. The slots in which events are placed are passed to earlier
+	 *    events in case its margins are updated (the new event shrinks the previous event's width when
+	 *    a new slot is created).
+	 * 2. Creates the event cell ({@link View}).
+	 * 3. If there are more events, calculate their slots too. If the new event won't overlap with this
+	 *    one, it automatically is assigned the entire width (numSlots = 1).
+	 * 4. Sets event margins, text, listener. Stores in appropriate data structures.
+	 * 5. Returns numSlots and eventForSlot to the parent with relevant new positioning info.
+	 *
+	 * @param numSlots Number of slots currently available to events. Starts from 1.
+	 * @param eventForSlot A map of events occupying a given slot. Note: slots CAN be empty (return null).
+	 * @param events The remaining events to position on screen.
+	 * @return numSlots and eventForSlot to alert the previous event.
+	 */
 	private Pair<Integer, SparseArray<Event>> drawEvent(int numSlots, SparseArray<Event> eventForSlot, Queue<Event> events)
 	{
 		Event event = events.poll();
@@ -150,6 +210,14 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		return new Pair<>(newNumSlots, parentEventForSlot);
 	}
 
+	/**
+	 * Set the margins of a time line.
+	 * Top margin must be managed so that the time line is centered horizontally.
+	 *
+	 * @param timeLine View. Must be child of {@link RelativeLayout}
+	 * @param time The hour the time line represents.
+	 * @return Margins
+	 */
 	private RelativeLayout.LayoutParams timeLineMargins(View timeLine, LocalTime time)
 	{
 		RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) timeLine.getLayoutParams();
@@ -203,6 +271,17 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		return layoutParams;
 	}
 
+	/**
+	 * Returns the best slot for a given event based on the events that were already placed. The leftmost
+	 * unoccupied slot will be chosen, unless all slots are occupied, in which case the slot returned
+	 * will be out of range.
+	 *
+	 * @param event The event that we want to find a slot for.
+	 * @param numSlots The current # of slots assigned to events. The more slots, the skinnier the
+	 *                 events will appear. numSlot = 1 means each event takes up the entire width.
+	 * @param eventForSlot The events that are currently assigned to each slot.
+	 * @return The best slot to put this event in.
+	 */
 	private int slotForEvent(Event event, int numSlots, SparseArray<Event> eventForSlot)
 	{
 		for (int i = 0; i < numSlots; i++)
@@ -210,6 +289,15 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 				return i;
 		return numSlots;
 	}
+	/**
+	 * Returns false if the given event can fit into every available slot. That means the event should
+	 * be placed below, not next to, the current available events.
+	 *
+	 * @param event The event that we test every slot's event against.
+	 * @param numSlots The current # of slots assigned to events.
+	 * @param eventForSlot The events that are currently assigned to each slot.
+	 * @return True if there exists a slot that this event cannot use.
+	 */
 	private boolean areEventOverlaps(Event event, int numSlots, SparseArray<Event> eventForSlot)
 	{
 		for (int i = 0; i < numSlots; i++)
@@ -217,17 +305,44 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 				return true;
 		return false;
 	}
+	/**
+	 * Returns true if the given event can be fitted into this slot. There are 3 ways this can happen:
+	 * 1. The slot is empty.
+	 * 2. The event in the slot ends before this event starts.
+	 * 3. The event in the slot starts after this event ends.
+	 *
+	 * @param slot The slot we plan to put the event in.
+	 * @param event The event we want to put in the slot.
+	 * @param eventForSlot The events that are currently assigned to each slot.
+	 * @return True if the event can use the slot.
+	 */
 	private boolean canUseSlot(int slot, Event event, SparseArray<Event> eventForSlot)
 	{
 		return eventForSlot.get(slot) == null
 				|| minutesBetween(event.endTime, eventForSlot.get(slot).startTime) >= 0
 				|| minutesBetween(eventForSlot.get(slot).endTime, event.startTime) >= 0;
 	}
+	/**
+	 * Distance from the top for a given event based on its start time.
+	 * @param startTime {@link Event#startTime}
+	 * @return Distance from the top (in pixels)
+	 */
 	private float marginTopForStartTime(LocalTime startTime)
 	{
 		int minutesFrom7 = minutesBetween(HOURS.get(0), startTime);
 		return ((float) HOUR_HEIGHT) / 60.0f * ((float) minutesFrom7) + ((float) HOUR_HEIGHT) / 2;
 	}
+	/**
+	 * Returns how wide an event should be based on the number of slots and whether or not there are
+	 * events to the right of this one that this would conflict with. An event will attempt to occupy
+	 * all available space to its right.
+	 *
+	 * @param event The event to determine the widthPercent for.
+	 * @param slot The slot the event occupies.
+	 * @param numSlots The current # of slots assigned to events.
+	 * @param eventForSlot The events that are currently assigned to each slot.
+	 * @return The % of the width of the parent view that the event is allowed to take up.
+	 */
 	private float widthPercent(Event event, int slot, int numSlots, SparseArray<Event> eventForSlot)
 	{
 		float occupiedSlots = 1;
@@ -239,6 +354,11 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		}
 		return occupiedSlots / ((float) numSlots);
 	}
+	/**
+	 * Returns how tall an event should be based on its length.
+	 * @param event The event to determine the height for.
+	 * @return Height of the event in pixels.
+	 */
 	private int heightForEvent(Event event)
 	{
 		int minutes = minutesBetween(event.startTime, event.endTime);
@@ -246,23 +366,47 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		return (int) height;
 	}
 
-	//hour - view id conversion. Required since view ids must be positive (hour 0 should have id 1)
+	/**
+	 * Converts an hour (that a time line represents) into the time line's view ID. This is required
+	 * since view IDs must be positive (rule of Android), but we must accept hour 0.
+	 * @param hour The hour a time line represents.
+	 * @return The view ID of the time line.
+	 */
 	@IdRes
 	private int hourToId(int hour)
 	{
 		return hour + 1;
 	}
+	/**
+	 * Returns the view ID of an event, which is based on {@link Event#pk}, known to be unique. However,
+	 * since view IDs 0 to 24 (+1) may already be occupied by hours, we must add 31 so the view IDs
+	 * do not conflict.
+	 *
+	 * @param event Event that we want to know the view ID of.
+	 * @return The view ID of the event.
+	 */
 	@IdRes
 	private int eventToId(Event event)
 	{
-		return event.hashCode() + 31;
+		return event.pk + 31;
 	}
+	/**
+	 * Returns the event that is associated with the a view's ID.
+	 * @param id The view ID of the scheduleCell.
+	 * @return The event the cell represents.
+	 */
 	private Event idToEvent(int id)
 	{
 		int pk = id - 31;
 		return pkToEvent.get(pk);
 	}
-
+	/**
+	 * Returns the number of minutes between 2 given times. Note that this accounts for events that cross
+	 * over midnight. An event that begins at 11PM and ends at 2AM lasts 3 hours, not -21.
+	 * @param startTime Start
+	 * @param endTime End
+	 * @return Number of minutes in between.
+	 */
 	private int minutesBetween(LocalTime startTime, LocalTime endTime)
 	{
 		//check if we're crossing over the midnight mark. If we are, reverse the minutes
@@ -273,6 +417,10 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		else
 			return Minutes.minutesBetween(startTime, endTime).getMinutes();
 	}
+	/**
+	 * Opens {@link DetailsActivity} for an event if the event's corresponding scheduleCell was clicked.
+	 * @param v {@inheritDoc}
+	 */
 	@Override
 	public void onClick(View v)
 	{
@@ -287,22 +435,38 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		DetailsActivity.event = event;
 		startActivity(new Intent(getContext(), DetailsActivity.class));
 	}
-
+	/**
+	 * Listener for a change in user selected dates. If the dates change, we should display events for
+	 * the new date.
+	 * @param eventDateSelected Ignored
+	 */
 	@Subscribe
 	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
 	{
 		redrawEvents();
 	}
+	/**
+	 * Listener for the selection or deselection of an event. This means we might need to display more
+	 * or fewer events.
+	 * @param eventSelectionChanged Ignored.
+	 */
 	@Subscribe
 	public void onEventSelectionChanged(NotificationCenter.EventSelectionChanged eventSelectionChanged)
 	{
 		redrawEvents();
 	}
+	/**
+	 * Listener for an update from the database.
+	 * @param eventReload Ignored.
+	 */
 	@Subscribe
 	public void onEventReload(NotificationCenter.EventReload eventReload)
 	{
 		redrawEvents();
 	}
+	/**
+	 * Removes all scheduleCells and redraws them.
+	 */
 	private void redrawEvents()
 	{
 		eventsContainer.removeAllViews();

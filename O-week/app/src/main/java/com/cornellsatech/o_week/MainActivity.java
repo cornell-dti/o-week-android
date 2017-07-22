@@ -12,6 +12,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * The first {@link android.app.Activity} that will execute when the app launches.
+ *
+ * {@link #datePickerRecycler}: List of all dates for the orientation.
+ * {@link #filterMenu}: Button to filter events by category. Should only be visible when {@link FeedFragment}
+ *                      is showing.
+ * {@link #feedMenu}: Button to switch to {@link FeedFragment}. Should only be visible when {@link ScheduleFragment}
+ *                    is showing.
+ * {@link #scheduleMenu}: Button to switch to {@link ScheduleFragment}. Should only be visible when {@link FeedFragment}
+ *                        is showing.
+ */
 public class MainActivity extends AppCompatActivity
 {
 	private RecyclerView datePickerRecycler;
@@ -20,6 +31,10 @@ public class MainActivity extends AppCompatActivity
 	private MenuItem feedMenu;
 	private MenuItem scheduleMenu;
 
+	/**
+	 * Sets up toolbar, {@link #datePickerRecycler}, and starts {@link FeedFragment}
+	 * @param savedInstanceState Ignored.
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -32,6 +47,10 @@ public class MainActivity extends AppCompatActivity
 		startFeedFragment();
 	}
 
+	/**
+	 * Trigger {@link DatePickerAdapter#onDetachedFromRecyclerView(RecyclerView)} so it unregisters itself
+	 * as a listener.
+	 */
 	@Override
 	protected void onDestroy()
 	{
@@ -39,7 +58,10 @@ public class MainActivity extends AppCompatActivity
 		//detach the adapter so that its onDestroy methods trigger
 		datePickerRecycler.setAdapter(null);
 	}
-
+	/**
+	 * Connect {@link #datePickerRecycler} to {@link #datePickerAdapter}. Set up orientation for the
+	 * recycler, set margin between items.
+	 */
 	private void setUpRecycler()
 	{
 		datePickerRecycler = (RecyclerView) findViewById(R.id.datePicker);
@@ -51,6 +73,9 @@ public class MainActivity extends AppCompatActivity
 		datePickerAdapter = new DatePickerAdapter();
 		datePickerRecycler.setAdapter(datePickerAdapter);
 	}
+	/**
+	 * Switches out the fragment for {@link FeedFragment} and sets an appropriate title.
+	 */
 	private void startFeedFragment()
 	{
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -58,6 +83,9 @@ public class MainActivity extends AppCompatActivity
 		transaction.commit();
 		getSupportActionBar().setTitle(R.string.title_fragment_feed);
 	}
+	/**
+	 * Switches out the fragment for {@link ScheduleFragment} and sets an appropriate title.
+	 */
 	private void startScheduleFragment()
 	{
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -65,6 +93,10 @@ public class MainActivity extends AppCompatActivity
 		transaction.commit();
 		getSupportActionBar().setTitle(R.string.title_fragment_my_schedule);
 	}
+	/**
+	 * Shows the dialog that allows the user to choose what {@link Category} to filter events by.
+	 * If the user does select a NEW category to filter by, an event is sent out notifying listeners.
+	 */
 	private void showFilterDialog()
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -96,7 +128,11 @@ public class MainActivity extends AppCompatActivity
 		builder.show();
 	}
 
-	//region Menu methods
+	/**
+	 * Sets references to buttons in toolbar.
+	 * @param menu {@inheritDoc}
+	 * @return {@inheritDoc}
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -106,7 +142,15 @@ public class MainActivity extends AppCompatActivity
 		scheduleMenu = menu.findItem(R.id.myScheduleMenu);
 		return true;
 	}
-
+	/**
+	 * Listens for clicks and performs the following actions:
+	 * {@link #filterMenu}: Shows filter dialog.
+	 * {@link #scheduleMenu}, {@link #feedMenu}: Switches fragments, shows/hides buttons accordingly.
+	 * {@link R.id#settingsMenu}: Opens {@link SettingsActivity}
+	 *
+	 * @param item {@inheritDoc}
+	 * @return {@inheritDoc}
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{
@@ -134,8 +178,10 @@ public class MainActivity extends AppCompatActivity
 				return super.onOptionsItemSelected(item);
 		}
 	}
-	//endregion
-
+	/**
+	 * Save selected events when this app is about to enter the background, in case user selections changed.
+	 * This is not done continuously to save on processing power.
+	 */
 	@Override
 	protected void onStop()
 	{

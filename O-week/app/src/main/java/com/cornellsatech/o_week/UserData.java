@@ -14,6 +14,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Handles all data shared between classes. Many of these variables have associated {@link NotificationCenter}
+ * events that should be fired when they are changed, so do so when changing their values.
+ *
+ * {@link #allEvents}: All events on disk, sorted by date.
+ * {@link #selectedEvents}: All events selected by the user, sorted by date.
+ * {@link #categories}: All categories on disk.
+ * {@link #DATES}: Dates of the orientation. Determined from {@link #YEAR}, {@link #MONTH}, {@link #START_DAY},
+ *                 and {@link #END_DAY}.
+ * {@link #selectedDate}: The date to display events for.
+ * {@link #selectedFilterIndex}: A number that represents the current filter for events that should
+ *                               appear in the feed. See {@link FeedAdapter#applyFilters()} for its usage.
+ *                               0 = show all events.
+ *                               1 = show required events.
+ *                               2+ = show events of with {@link Event#category} where
+ *                               {@link Category#pk} - 2 = {@link #selectedFilterIndex}.
+ */
 public class UserData
 {
 	public static final Map<LocalDate, List<Event>> allEvents;
@@ -28,7 +45,9 @@ public class UserData
 	private static final int END_DAY = 24;      //Note: END_DAY must > START_DAY
 	private static final String TAG = UserData.class.getSimpleName();
 
-	//initialize DATES
+	/**
+	 * Initialize {@link #DATES} and lists for maps of events
+	 */
 	static
 	{
 		ImmutableList.Builder<LocalDate> tempDates = ImmutableList.builder();
@@ -54,17 +73,22 @@ public class UserData
 
 	//suppress instantiation
 	private UserData(){}
-	
-	public static boolean allEventsContains(Event event)
-	{
-		List<Event> eventsForDate = allEvents.get(event.date);
-		return eventsForDate != null && eventsForDate.contains(event);
-	}
+
+	/**
+	 * Returns true if the event is selected.
+	 * @param event The event that we want to check is selected.
+	 * @return See method description.
+	 */
 	public static boolean selectedEventsContains(Event event)
 	{
 		List<Event> eventsForDate = selectedEvents.get(event.date);
 		return eventsForDate != null && eventsForDate.contains(event);
 	}
+	/**
+	 * Adds event to {@link #allEvents} for the correct date according to {@link Event#date}.
+	 * The date should match a date in {@link #DATES}.
+	 * @param event Event to add.
+	 */
 	public static void appendToAllEvents(Event event)
 	{
 		List<Event> eventsForDate = allEvents.get(event.date);
@@ -76,6 +100,10 @@ public class UserData
 		if (!eventsForDate.contains(event))
 			eventsForDate.add(event);
 	}
+	/**
+	 * Removes event form {@link #allEvents}.
+	 * @param event Event to remove.
+	 */
 	public static void removeFromAllEvents(Event event)
 	{
 		List<Event> eventsForDate = allEvents.get(event.date);
@@ -84,6 +112,10 @@ public class UserData
 		else
 			eventsForDate.remove(event);
 	}
+	/**
+	 * Adds event to {@link #selectedEvents}. The date should match a date in {@link #DATES}.
+	 * @param event Event to add.
+	 */
 	public static void insertToSelectedEvents(Event event)
 	{
 		List<Event> eventsForDate = selectedEvents.get(event.date);
@@ -95,6 +127,10 @@ public class UserData
 		if (!eventsForDate.contains(event))
 			eventsForDate.add(event);
 	}
+	/**
+	 * Removes event from {@link #selectedEvents}.
+	 * @param event Event to remove.
+	 */
 	public static void removeFromSelectedEvents(Event event)
 	{
 		List<Event> eventsForDate = selectedEvents.get(event.date);
@@ -103,7 +139,16 @@ public class UserData
 		else
 			eventsForDate.remove(event);
 	}
-
+	/**
+	 * Loads {@link #allEvents}, {@link #selectedEvents}, {@link #categories}.
+	 * 1. Retrieves all events and categories from disk, adding them to {@link #allEvents}, {@link #categories}.
+	 * 2. Downloads updates from the database.
+	 * 3. Sorts all events and categories. Retrieves selected events. If anything WAS updated from the
+	 *    database, save the updates. Note that after events and categories are saved here, the lists
+	 *    they belong in should not be mutated any further.
+	 *
+	 * @param context
+	 */
 	public static void loadData(final Context context)
 	{
 		final Set<Event> events = Settings.getAllEvents(context);

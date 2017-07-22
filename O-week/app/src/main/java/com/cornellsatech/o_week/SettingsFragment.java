@@ -12,12 +12,19 @@ import android.util.Log;
 
 import java.util.List;
 
+/**
+ * Fragment to allow users to change their preferences.
+ */
 public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener
 {
 	Preference addRequiredEvents;
 	Preference removeAllEvents;
 	private static final String TAG = SettingsFragment.class.getSimpleName();
 
+	/**
+	 * Sets up preferences for the user with listeners.
+	 * @param savedInstanceState Ignored.
+	 */
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState)
 	{
@@ -71,6 +78,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 			Log.e(TAG, "onPreferenceClick: unrecognized preference");
 		return true;
 	}
+	/**
+	 * Shows a dialog asking the user if they'd like to select all required events, doing so should they
+	 * click OK.
+	 */
 	private void addRequiredEvents()
 	{
 		showDialog(R.string.dialog_title_add_required_events, R.string.dialog_message_add_required_events,
@@ -87,6 +98,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 					}
 				});
 	}
+	/**
+	 * Shows a dialog asking the user if they'd like to deselect all events, doing so should they
+	 * click OK.
+	 */
 	private void removeAllEvents()
 	{
 		showDialog(R.string.dialog_title_remove_events, R.string.dialog_message_remove_events,
