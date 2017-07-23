@@ -10,6 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.Log;
 
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.util.NotificationCenter;
+
 import java.util.List;
 
 /**

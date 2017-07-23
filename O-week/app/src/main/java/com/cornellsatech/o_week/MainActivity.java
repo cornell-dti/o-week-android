@@ -12,6 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.util.NotificationCenter;
+import com.cornellsatech.o_week.util.Settings;
+
 /**
  * The first {@link android.app.Activity} that will execute when the app launches.
  *

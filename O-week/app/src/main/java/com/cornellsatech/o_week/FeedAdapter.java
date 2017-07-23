@@ -4,6 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;

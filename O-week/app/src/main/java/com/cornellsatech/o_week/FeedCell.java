@@ -6,6 +6,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.util.NotificationCenter;
+
 /**
  * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
  * is in {@link R.layout#cell_feed}.

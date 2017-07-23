@@ -1,4 +1,4 @@
-package com.cornellsatech.o_week;
+package com.cornellsatech.o_week.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.cornellsatech.o_week.models.Event;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;

@@ -19,6 +19,11 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.util.Internet;
+import com.cornellsatech.o_week.util.NotificationCenter;
+import com.cornellsatech.o_week.util.Settings;
+
 /**
  * Displays a user-selected event in a separate page. An {@link android.app.Activity} is used instead
  * of a Fragment since this page should have a back button.

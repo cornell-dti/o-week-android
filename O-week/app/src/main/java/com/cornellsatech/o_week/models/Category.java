@@ -1,6 +1,8 @@
-package com.cornellsatech.o_week;
+package com.cornellsatech.o_week.models;
 
 import android.support.annotation.NonNull;
+
+import com.cornellsatech.o_week.util.Internet;
 
 import org.json.JSONObject;
 

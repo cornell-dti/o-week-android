@@ -3,6 +3,11 @@ package com.cornellsatech.o_week;
 import android.content.Context;
 import android.util.Log;
 
+import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.util.Internet;
+import com.cornellsatech.o_week.util.NotificationCenter;
+import com.cornellsatech.o_week.util.Settings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 

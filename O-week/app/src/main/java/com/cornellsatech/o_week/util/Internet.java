@@ -1,4 +1,4 @@
-package com.cornellsatech.o_week;
+package com.cornellsatech.o_week.util;
 
 
 import android.content.Context;
@@ -12,6 +12,10 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.R;
+import com.cornellsatech.o_week.UserData;
 import com.google.common.io.CharStreams;
 
 import org.joda.time.LocalDate;

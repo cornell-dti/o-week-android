@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
 

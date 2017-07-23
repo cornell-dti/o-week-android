@@ -1,7 +1,10 @@
-package com.cornellsatech.o_week;
+package com.cornellsatech.o_week.models;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.cornellsatech.o_week.ScheduleFragment;
+import com.cornellsatech.o_week.util.Internet;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;

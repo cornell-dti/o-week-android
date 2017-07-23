@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.eventbus.Subscribe;
 
 /**

@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cornellsatech.o_week.util.NotificationCenter;
+
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 

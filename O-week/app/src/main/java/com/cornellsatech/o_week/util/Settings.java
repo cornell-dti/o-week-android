@@ -1,8 +1,12 @@
-package com.cornellsatech.o_week;
+package com.cornellsatech.o_week.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.UserData;
 
 import java.util.HashSet;
 import java.util.List;
