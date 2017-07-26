@@ -3,18 +3,20 @@
 	<PreferenceCategory
 		android:title="@string/settings_category_notifications">
 		<ListPreference
-			android:key="@string/settings_receive_reminders"
+			android:key="@string/key_receive_reminders"
 			android:title="@string/settings_receive_reminders"
 			android:summary="%s"
 			android:entries="@array/settings_receive_reminders_titles"
 			android:entryValues="@array/settings_receive_reminders_titles"
+			android:defaultValue="@string/receive_reminders_all_events"
 			android:positiveButtonText="@null"/>
 		<ListPreference
-			android:key="@string/settings_notify_me"
+			android:key="@string/key_notify_me"
 			android:title="@string/settings_notify_me"
 			android:summary="%s"
 			android:entries="@array/settings_notify_me_titles"
 			android:entryValues="@array/settings_notify_me_titles"
+			android:defaultValue="@string/notify_me_2_hours"
 			android:positiveButtonText="@null"/>
 	</PreferenceCategory>
 	<PreferenceCategory

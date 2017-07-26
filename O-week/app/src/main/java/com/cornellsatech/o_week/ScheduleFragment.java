@@ -145,7 +145,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	 *
 	 * Specifically:
 	 * 1. Finds the best slot to put this event in based on conflicts with other events. If all available
-	 *    slots are full, creates a new slot. The slots in which events are placed are passed to earlier
+	 *    slots are full, creates a new slot. The slots in which events are placed are shouldActUpon to earlier
 	 *    events in case its margins are updated (the new event shrinks the previous event's width when
 	 *    a new slot is created).
 	 * 2. Creates the event cell ({@link View}).
@@ -434,8 +434,9 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		}
 
 		//start details
-		DetailsActivity.event = event;
-		startActivity(new Intent(getContext(), DetailsActivity.class));
+		Intent intent = new Intent(getContext(), DetailsActivity.class);
+		intent.putExtra(DetailsActivity.EVENT_KEY, event.toString());
+		startActivity(intent);
 	}
 	/**
 	 * Listener for a change in user selected dates. If the dates change, we should display events for

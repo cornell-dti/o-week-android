@@ -25,20 +25,19 @@ import com.google.common.eventbus.EventBus;
  *
  * See more documentation <a href="https://github.com/google/guava/wiki/EventBusExplained">here</a>.
  */
-public class NotificationCenter
+public final class NotificationCenter
 {
 	public static final EventBus DEFAULT = new EventBus();
 
 	/**
-	 * Indicates information about events have changed (updated from the database).
-	 * Note: {@link UserData#selectedEvents} will not be accurate at this time.
+	 * Indicates information about events have changed. Anything that displays a list of events should update.
 	 */
-	static class EventReload {}
+	public static class EventReload {}
 	/**
 	 * Indicates the user selected a new date. The new date can be accessed with {@link DateCell#getDate()}.
 	 * Note: {@link UserData#selectedDate} will not be accurate at this time.
 	 */
-	static class EventDateSelected
+	public static class EventDateSelected
 	{
 		public final DateCell selectedCell;
 		public EventDateSelected(DateCell selectedCell)
@@ -49,7 +48,7 @@ public class NotificationCenter
 	/**
 	 * Indicates the user clicked on an event in a list of events. The event clicked is {@link #event}.
 	 */
-	static class EventEventClicked
+	public static class EventEventClicked
 	{
 		public final Event event;
 		public EventEventClicked(Event event)
@@ -60,17 +59,19 @@ public class NotificationCenter
 	/**
 	 * Indicates the {@link #event} has been selected or unselected.
 	 */
-	static class EventSelectionChanged
+	public static class EventSelectionChanged
 	{
 		public final Event event;
-		public EventSelectionChanged(Event event)
+		public final boolean selected;
+		public EventSelectionChanged(Event event, boolean selected)
 		{
 			this.event = event;
+			this.selected = selected;
 		}
 	}
 
 	/**
 	 * Indicates a new {@link Category} has been selected as the filter for {@link FeedAdapter}.
 	 */
-	static class EventFilterChanged {}
+	public static class EventFilterChanged {}
 }

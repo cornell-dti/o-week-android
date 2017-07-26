@@ -3,10 +3,12 @@ package com.cornellsatech.o_week.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
+import com.cornellsatech.o_week.R;
+import com.cornellsatech.o_week.UserData;
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.Event;
-import com.cornellsatech.o_week.UserData;
 
 import java.util.HashSet;
 import java.util.List;
@@ -16,13 +18,15 @@ import java.util.Set;
  * Handles all operations involving saving and reading from disk. Every method requires {@link Context}
  * to create a {@link SharedPreferences}. Some of these methods are costly CPU-wise, so use sparingly.
  */
-public class Settings
+public final class Settings
 {
 	//Keys to saved data.
 	private static final String KEY_ALL_EVENTS = "allEvents";
 	private static final String KEY_SELECTED_EVENTS = "selectedEvents";
 	private static final String KEY_CATEGORIES = "categories";
 	private static final String KEY_VERSION = "version";
+
+	private static final String TAG = Settings.class.getSimpleName();
 
 	//suppress default constructor
 	private Settings(){}
@@ -148,5 +152,82 @@ public class Settings
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		return preferences.getInt(KEY_VERSION, 0);  //default version value = 0
+	}
+
+	/**
+	 * Returns the index of the current selection in {@link R.array#settings_receive_reminders_titles}.
+	 * Change default value of <code>receiveRemindersText</code> along with {@link R.xml#preferences}.
+	 *
+	 * @param context
+	 * @return See method description.
+	 */
+	public static int getReceiveReminders(Context context)
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		String receiveRemindersText = preferences.getString(context.getString(R.string.key_receive_reminders),
+				context.getString(R.string.receive_reminders_all_events));
+		String[] choices = context.getResources().getStringArray(R.array.settings_receive_reminders_titles);
+		return linearSearch(choices, receiveRemindersText);
+	}
+	/**
+	 * Returns the number of hours before an event starts to notify the user.
+	 * Change default value of <code>notifyMeText</code> along with {@link R.xml#preferences}.
+	 *
+	 * @param context
+	 * @return See method description.
+	 */
+	public static int getNotifyMe(Context context)
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		String notifyMeText = preferences.getString(context.getString(R.string.key_notify_me),
+				context.getString(R.string.notify_me_2_hours));
+		return getNotifyMe(notifyMeText, context);
+	}
+	/**
+	 * Returns the number of hours before an event starts to notify the user.
+	 * Use this method instead of {@link #getNotifyMe(Context)} if the new value might not have been
+	 * saved yet.
+	 *
+	 * This should change should {@link R.array#settings_notify_me_titles} change.
+	 *
+	 * @param notifyMeValue The current string value of {@link com.cornellsatech.o_week.SettingsFragment#notifyMe}
+	 * @param context
+	 * @return See method description.
+	 */
+	public static int getNotifyMe(String notifyMeValue, Context context)
+	{
+		String choices[] = context.getResources().getStringArray(R.array.settings_notify_me_titles);
+		int index = linearSearch(choices, notifyMeValue);
+		switch (index)
+		{
+			case 0: //notify at time of event
+				return 0;
+			case 1: //notify 1 hour before event
+				return 1;
+			case 2: //notify 2 hours before event
+				return 2;
+			case 3: //notify 5 hours before event
+				return 5;
+			case 4: //notify 1 day before event
+				return 24;
+			default:
+				Log.e(TAG, "getNotifyMe: Unexpected index selected in list");
+				return 0;
+		}
+	}
+
+	/**
+	 * Conducts a linear search for a generic object in a generic array.
+	 * @param array Array (does not have to be sorted)
+	 * @param object Object to find
+	 * @param <T> Generic type. Object of this type should extend {@link Object#equals(Object)}.
+	 * @return Index of object in array, or -1 if failed.
+	 */
+	private static <T> int linearSearch(T[] array, T object)
+	{
+		for (int i = 0; i < array.length; i++)
+			if (array[i].equals(object))
+				return i;
+		return -1;
 	}
 }

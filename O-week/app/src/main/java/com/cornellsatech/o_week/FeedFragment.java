@@ -66,8 +66,9 @@ public class FeedFragment extends Fragment
 	@Subscribe
 	public void onEventClicked(NotificationCenter.EventEventClicked eventEventClicked)
 	{
-		DetailsActivity.event = eventEventClicked.event;
-		startActivity(new Intent(getContext(), DetailsActivity.class));
+		Intent intent = new Intent(getContext(), DetailsActivity.class);
+		intent.putExtra(DetailsActivity.EVENT_KEY, eventEventClicked.event.toString());
+		startActivity(intent);
 	}
 	/**
 	 * Connects {@link #feedRecycler} to {@link #feedAdapter}.

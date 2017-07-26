@@ -1,6 +1,7 @@
 package com.cornellsatech.o_week;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.cornellsatech.o_week.models.Category;
@@ -10,6 +11,7 @@ import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Settings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 import org.joda.time.LocalDate;
 
@@ -36,7 +38,7 @@ import java.util.Set;
  *                               2+ = show events of with {@link Event#category} where
  *                               {@link Category#pk} - 2 = {@link #selectedFilterIndex}.
  */
-public class UserData
+public final class UserData
 {
 	public static final Map<LocalDate, List<Event>> allEvents;
 	public static final Map<LocalDate, List<Event>> selectedEvents;
@@ -120,17 +122,22 @@ public class UserData
 	/**
 	 * Adds event to {@link #selectedEvents}. The date should match a date in {@link #DATES}.
 	 * @param event Event to add.
+	 * @return True if the event was added
 	 */
-	public static void insertToSelectedEvents(Event event)
+	@CanIgnoreReturnValue
+	public static boolean insertToSelectedEvents(Event event)
 	{
 		List<Event> eventsForDate = selectedEvents.get(event.date);
 		if (eventsForDate == null)
 		{
 			Log.e(TAG, "insertToSelectedEvents: attempted to add event with date outside orientation");
-			return;
+			return false;
 		}
-		if (!eventsForDate.contains(event))
-			eventsForDate.add(event);
+		if (eventsForDate.contains(event))
+			return false;
+
+		eventsForDate.add(event);
+		return true;
 	}
 	/**
 	 * Removes event from {@link #selectedEvents}.
@@ -143,6 +150,21 @@ public class UserData
 			Log.e(TAG, "removeFromSelectedEvents: No selected events for date");
 		else
 			eventsForDate.remove(event);
+	}
+	/**
+	 * Linear search for an event given its pk value.
+	 * @param pk {@link Event#pk}
+	 * @return Event
+	 */
+	@Nullable
+	public static Event eventForPk(int pk)
+	{
+		for (List<Event> eventsOfDay : UserData.allEvents.values())
+			for (Event event : eventsOfDay)
+				if (event.pk == pk)
+					return event;
+		Log.e(TAG, "eventForPk: Event not found for given pk");
+		return null;
 	}
 	/**
 	 * Loads {@link #allEvents}, {@link #selectedEvents}, {@link #categories}.

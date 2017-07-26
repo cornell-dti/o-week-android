@@ -1,5 +1,6 @@
 package com.cornellsatech.o_week;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
@@ -8,12 +9,14 @@ import android.widget.TextView;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
+import com.cornellsatech.o_week.util.Notifications;
 
 /**
  * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
  * is in {@link R.layout#cell_feed}.
  *
  * {@link #event}: The event that this object currently represents.
+ * {@link #context}: To be used in {@link #onCheckedChanged(CompoundButton, boolean)}
  *
  * @see FeedAdapter
  */
@@ -24,6 +27,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 	private final TextView titleText;
 	private final TextView captionText;
 	private final CheckBox checkBox;
+	private final Context context;
 	private Event event;
 
 	/**
@@ -40,6 +44,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 		checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
 		checkBox.setOnCheckedChangeListener(this);
 		itemView.setOnClickListener(this);
+		context = itemView.getContext();
 	}
 	/**
 	 * Sets the current event to display. Time display formats are specified here: {@link Event#DISPLAY_TIME_FORMAT}.
@@ -65,9 +70,16 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 	{
 		if (isChecked)
+		{
 			UserData.insertToSelectedEvents(event);
+			if (Notifications.shouldScheduleForEvent(event, context))
+				Notifications.scheduleForEvent(event, context);
+		}
 		else
+		{
 			UserData.removeFromSelectedEvents(event);
+			Notifications.unscheduleForEvent(event, context);
+		}
 	}
 	/**
 	 * This object has been clicked. List listeners know.

@@ -7,6 +7,7 @@ import com.cornellsatech.o_week.ScheduleFragment;
 import com.cornellsatech.o_week.util.Internet;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -99,6 +100,20 @@ public class Event implements Comparable<Event>
 		date = LocalDate.parse(startDate, DATABASE_DATE_FORMATTER);
 		this.startTime = LocalTime.parse(startTime, DATABASE_TIME_FORMATTER);
 		this.endTime = LocalTime.parse(endTime, DATABASE_TIME_FORMATTER);
+	}
+	/**
+	 * Returns {@link #startTime} combined with {@link #date}. Adjusts the date to tomorrow if the event
+	 * does not ACTUALLY occur on the {@link #date}, but during midnight of the next day.
+	 *
+	 * @return DateTime for the start of the event
+	 */
+	public LocalDateTime startDateTime()
+	{
+		if (startTime.getHourOfDay() >= ScheduleFragment.START_HOUR)
+			return date.toLocalDateTime(startTime);
+
+		LocalDate nextDay = date.plusDays(1);
+		return nextDay.toLocalDateTime(startTime);
 	}
 	/**
 	 * Returns the {@link #pk}, which is unique to each {@link Event}.

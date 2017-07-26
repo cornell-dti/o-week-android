@@ -3,8 +3,9 @@
     package="com.cornellsatech.o_week" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <application
+	<application
         android:name=".MainApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -39,6 +40,14 @@
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity" >
         </activity>
-    </application>
 
+	    <receiver android:process=":remote" android:name=".util.AlarmReceiver"/>
+
+	    <!-- Reboot service for resetting alarms after they're erased on shutdown -->
+		<receiver android:name=".util.RebootReceiver" android:enabled="true">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+	</application>
 </manifest>

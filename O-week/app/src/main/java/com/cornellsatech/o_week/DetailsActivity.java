@@ -1,7 +1,6 @@
 package com.cornellsatech.o_week;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -22,24 +21,24 @@ import android.widget.TextView;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
+import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
 
 /**
  * Displays a user-selected event in a separate page. An {@link android.app.Activity} is used instead
  * of a Fragment since this page should have a back button.
  *
- * {@link #event}: The event displayed to the user. NOTE: This should already be set when the Activity
- *                 is opened, set by whomever called {@link #startActivity(Intent)}. The better option
- *                 would be to put {@link #event} in a {@link Bundle}, but then {@link Event} would
- *                 have to extend {@link android.os.Parcelable}.
- * {@link #coordinatorLayout}: Layout that will be passed to
+ * {@link #EVENT_KEY}: See {@link #onCreate(Bundle)}.
+ * {@link #event}: The event displayed to the user.
+ * {@link #coordinatorLayout}: Layout that will be shouldActUpon to
  *                             {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout, boolean)}.
  *                             A reference to the {@link CoordinatorLayout} is necessary to display
  *                             {@link android.support.design.widget.Snackbar}.
  */
 public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener
 {
-	public static Event event;
+	public static String EVENT_KEY = "event";
+	private Event event;
 	private CoordinatorLayout coordinatorLayout;
 	private ImageView eventImage;
 	private TextView titleText;
@@ -51,9 +50,10 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 
 	/**
-	 * Link to layout, add back button to toolbar, sets up views.
+	 * Link to layout, add back button to toolbar, sets up views. Retrieves {@link #event} from the
+	 * bundle shouldActUpon in the parameter, which contains a String that describes an Event.
 	 *
-	 * @param savedInstanceState Ignored.
+	 * @param savedInstanceState Contains a String that is the event to display.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -65,6 +65,9 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 
 		//set back button
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		//get the event
+		event = Event.fromString(getIntent().getExtras().getString(EVENT_KEY));
 
 		findViews();
 		setEventData();
@@ -141,10 +144,17 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
 	{
 		if (isChecked)
+		{
 			UserData.insertToSelectedEvents(event);
+			if (Notifications.shouldScheduleForEvent(event, this))
+				Notifications.scheduleForEvent(event, this);
+		}
 		else
+		{
 			UserData.removeFromSelectedEvents(event);
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event));
+			Notifications.unscheduleForEvent(event, this);
+		}
+		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, isChecked));
 	}
 
 	/**

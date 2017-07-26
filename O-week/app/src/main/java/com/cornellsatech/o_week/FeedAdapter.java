@@ -27,6 +27,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 {
 	private List<Event> events;
 	private List<Event> selectedEvents;
+	private static final String TAG = FeedAdapter.class.getSimpleName();
 
 	/**
 	 * Registers this object to listen in on notifications.
@@ -83,6 +84,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	{
 		Event event = eventSelectionChanged.event;
 		int index = events.indexOf(event);
+		if (eventSelectionChanged.selected)
+			selectedEvents.add(event);
+		else
+			selectedEvents.remove(event);
 		notifyItemChanged(index);
 	}
 	/**

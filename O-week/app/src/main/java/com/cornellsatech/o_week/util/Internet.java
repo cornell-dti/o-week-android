@@ -1,7 +1,6 @@
 package com.cornellsatech.o_week.util;
 
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -12,13 +11,12 @@ import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.cornellsatech.o_week.models.Category;
-import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.R;
 import com.cornellsatech.o_week.UserData;
+import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.models.Event;
 import com.google.common.io.CharStreams;
 
-import org.joda.time.LocalDate;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +37,7 @@ import java.util.Set;
  *
  * {@link #DATABASE}: Link to the database.
  */
-public class Internet
+public final class Internet
 {
 	public static final String DATABASE = "https://oweekapp.herokuapp.com/flow/";
 	private static final String TAG = Internet.class.getSimpleName();
@@ -148,32 +146,6 @@ public class Internet
 			}
 		});
 	}
-	public static void getEventsOnDate(final LocalDate date, final Context context)
-	{
-		get(DATABASE + "feed/" + date.getDayOfMonth(), new Callback()
-		{
-			@Override
-			public void execute(String msg)
-			{
-				if (msg.isEmpty())
-					return;
-
-				try
-				{
-					JSONArray jsonArray = new JSONArray(msg);
-					for (int i = 0; i < jsonArray.length(); i++)
-					{
-						JSONObject jsonObject = jsonArray.getJSONObject(i);
-						UserData.appendToAllEvents(new Event(jsonObject));
-					}
-
-					if (date.isEqual(UserData.selectedDate))
-						NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
-				}
-				catch (JSONException e) {e.printStackTrace();}
-			}
-		});
-	}
 	/**
 	 * Try to assign an image to the given {@link ImageView}.
 	 * Attempts the following, in order:
@@ -209,7 +181,7 @@ public class Internet
 			@Override
 			public void onError(ImageDownloader.ImageError error)
 			{
-				Log.e(TAG, "onError: " + error.getErrorCode());
+				Log.e(TAG, "image download error: " + error.getErrorCode());
 				Snackbar.make(layout, R.string.snackbar_image_error, Snackbar.LENGTH_SHORT).show();
 			}
 			@Override
@@ -263,7 +235,7 @@ public class Internet
 				catch (Exception e)
 				{
 					e.printStackTrace();
-					Log.wtf("Internet", "GET from database failed :(");
+					Log.e("Internet", "GET from database failed :(");
 				}
 				return "";
 			}
