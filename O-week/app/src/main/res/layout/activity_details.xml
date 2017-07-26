@@ -56,7 +56,9 @@
 					android:id="@+id/titleText"
 					android:textSize="@dimen/size_title_details"
 					android:textStyle="bold"
-					android:lines="1"
+					android:maxLines="1"
+					android:scrollHorizontally="true"
+					android:ellipsize="end"
 					tools:text="Title"/>
 				<TextView
 					android:layout_width="match_parent"
@@ -68,7 +70,9 @@
 					android:layout_marginBottom="@dimen/margin"
 					android:layout_marginRight="@dimen/margin"
 					android:textSize="@dimen/size_secondary_details"
-					android:lines="1"
+					android:maxLines="1"
+					android:scrollHorizontally="true"
+					android:ellipsize="end"
 					tools:text="Caption"/>
 				<TextView
 					android:layout_width="wrap_content"

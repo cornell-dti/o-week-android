@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
 	xmlns:tools="http://schemas.android.com/tools"
 	android:background="?attr/selectableItemBackground"
 	android:layout_width="match_parent"
 	android:layout_height="@dimen/height_feed_cell"
-	android:paddingLeft="@dimen/margin_feed_cell"
-	android:paddingRight="@dimen/margin_feed_cell"
 	android:orientation="horizontal">
 
 	<LinearLayout
 		android:id="@+id/timeLayouts"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentStart="true"
-		android:layout_centerVertical="true"
+		android:layout_marginRight="16dp"
 		android:gravity="right"
-		android:orientation="vertical">
+		android:orientation="vertical"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintRight_toLeftOf="@+id/eventTextLayouts"
+		app:layout_constraintTop_toTopOf="parent">
 
 		<TextView
 			android:id="@+id/startTimeText"
@@ -37,20 +38,26 @@
 
 	<LinearLayout
 		android:id="@+id/eventTextLayouts"
-		android:layout_width="match_parent"
+		android:layout_width="0dp"
 		android:layout_height="wrap_content"
-		android:layout_centerVertical="true"
-		android:layout_marginLeft="@dimen/margin_feed_cell_text"
-		android:layout_toLeftOf="@+id/checkbox"
-		android:layout_toRightOf="@+id/timeLayouts"
-		android:orientation="vertical">
+		android:orientation="vertical"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginLeft="80dp"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toLeftOf="@+id/checkbox"
+		android:layout_marginRight="16dp"
+		android:layout_marginStart="80dp"
+		android:layout_marginEnd="16dp">
 
 		<TextView
 			android:id="@+id/titleText"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@dimen/margin_bottom_feed_cell_title"
-			android:singleLine="true"
+			android:maxLines="1"
+			android:scrollHorizontally="true"
+			android:ellipsize="end"
 			android:textSize="@dimen/size_title"
 			android:textStyle="bold"
 			tools:text="Event title"/>
@@ -60,7 +67,9 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:alpha="@dimen/alpha_feed_secondary_text"
-			android:singleLine="true"
+			android:maxLines="1"
+			android:scrollHorizontally="true"
+			android:ellipsize="end"
 			android:textSize="@dimen/size_caption"
 			tools:text="Event caption"/>
 	</LinearLayout>
@@ -69,8 +78,10 @@
 		android:id="@+id/checkbox"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_alignParentRight="true"
-		android:layout_centerVertical="true"
-		android:layout_marginLeft="@dimen/margin_feed_cell_text"
-		tools:text=""/>
-</RelativeLayout>
+		tools:text=""
+		android:layout_marginRight="16dp"
+		app:layout_constraintRight_toRightOf="parent"
+		app:layout_constraintBottom_toBottomOf="parent"
+		android:layout_marginEnd="16dp"
+		app:layout_constraintTop_toTopOf="parent"/>
+</android.support.constraint.ConstraintLayout>
