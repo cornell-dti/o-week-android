@@ -6,23 +6,21 @@ An **Android** app for incoming freshmen to use during their first week as a Cor
 
 Getting Started
 ------
-You will need **Android Studio 2.3.3** to run the latest version of this app, which uses the following SDKs. Last Update **6/26/2017** (remember to check "Show Package Details" in the Android SDK dialog):
+You will need **Android Studio 2.3.3** to run the latest version of this app, which uses the following SDKs. Last Update **7/25/2017** (remember to check "Show Package Details" in the Android SDK dialog):
  * Android 8.0 (O)
    * Android SDK Platform 26
- * Android 7.1.1 (Nougat) API
-   * Android SDK Platform 25, rev 3
-   * Sources for Android 25
+ * Android SDK Build-Tools 26.0.1
  * Android SDK Platform-Tools 26.0.0
  * Android SDK Tools 26.0.2
  * Android Support Library 23.2.1 (Windows only)
  * Documentation for Android SDK
- * Google Play Services, rev 41
+ * Google Play Services, rev 42
  * Google USB Driver (Windows only, use newest ver)
  * Support Repository
    * ConstraintLayout for Android 1.0.2
    * Solver for ConstraintLayout 1.0.2
    * Android Support Repository, rev 47
-   * Google Repository 54
+   * Google Repository 56
    
 Activity Hierarchy Tree
 ------
