@@ -19,14 +19,12 @@ import java.util.List;
  *
  * {@link #events}: All events on the {@link UserData#selectedDate}. However, this list may be filtered
  *                  by category, so we must keep this list from mutating {@link UserData#allEvents}.
- * {@link #selectedEvents}: See {@link #events}.
  *
  * @see FeedCell
  */
 public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 {
 	private List<Event> events;
-	private List<Event> selectedEvents;
 	private static final String TAG = FeedAdapter.class.getSimpleName();
 
 	/**
@@ -62,7 +60,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	public void onBindViewHolder(FeedCell viewHolder, int position)
 	{
 		Event event = events.get(position);
-		viewHolder.configure(event, selectedEvents.contains(event));
+		viewHolder.configure(event, UserData.selectedEventsContains(event));
 	}
 	/**
 	 * Returns total number of events that will be shown in the {@link RecyclerView}.
@@ -84,10 +82,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	{
 		Event event = eventSelectionChanged.event;
 		int index = events.indexOf(event);
-		if (eventSelectionChanged.selected)
-			selectedEvents.add(event);
-		else
-			selectedEvents.remove(event);
 		notifyItemChanged(index);
 	}
 	/**
@@ -140,7 +134,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	private void loadData()
 	{
 		events = new ArrayList<>(UserData.allEvents.get(UserData.selectedDate));
-		selectedEvents = new ArrayList<>(UserData.selectedEvents.get(UserData.selectedDate));
 		applyFilters();
 	}
 	/**
@@ -156,12 +149,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 				break;
 			case 1: //show required events
 				filterRequired(events);
-				filterRequired(selectedEvents);
 				break;
 			default:
 				Category category = UserData.categories.get(UserData.selectedFilterIndex - 2);
 				filterForCategory(category.pk, events);
-				filterForCategory(category.pk, selectedEvents);
 				break;
 		}
 	}

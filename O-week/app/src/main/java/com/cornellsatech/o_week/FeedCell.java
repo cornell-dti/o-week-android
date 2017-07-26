@@ -2,6 +2,7 @@ package com.cornellsatech.o_week;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -20,7 +21,7 @@ import com.cornellsatech.o_week.util.Notifications;
  *
  * @see FeedAdapter
  */
-public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.OnCheckedChangeListener, View.OnClickListener
+public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickListener
 {
 	private final TextView startTimeText;
 	private final TextView endTimeText;
@@ -29,6 +30,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 	private final CheckBox checkBox;
 	private final Context context;
 	private Event event;
+	private static final String TAG = FeedCell.class.getSimpleName();
 
 	/**
 	 * Stores pointers to all the subviews and sets up listeners.
@@ -42,7 +44,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 		titleText = (TextView) itemView.findViewById(R.id.titleText);
 		captionText = (TextView) itemView.findViewById(R.id.captionText);
 		checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
-		checkBox.setOnCheckedChangeListener(this);
+		checkBox.setOnClickListener(this);
 		itemView.setOnClickListener(this);
 		context = itemView.getContext();
 	}
@@ -62,32 +64,28 @@ public class FeedCell extends RecyclerView.ViewHolder implements CompoundButton.
 		checkBox.setChecked(selected);
 	}
 	/**
-	 * Update {@link UserData#selectedEvents} based on the {@link #checkBox}.
-	 * @param buttonView Ignored.
-	 * @param isChecked {@inheritDoc}
-	 */
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-	{
-		if (isChecked)
-		{
-			UserData.insertToSelectedEvents(event);
-			if (Notifications.shouldScheduleForEvent(event, context))
-				Notifications.scheduleForEvent(event, context);
-		}
-		else
-		{
-			UserData.removeFromSelectedEvents(event);
-			Notifications.unscheduleForEvent(event, context);
-		}
-	}
-	/**
 	 * This object has been clicked. List listeners know.
-	 * @param v Ignored.
+	 * @param v Clicked view.
 	 */
 	@Override
 	public void onClick(View v)
 	{
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventEventClicked(event));
+		if (v.getId() == checkBox.getId())  //checkBox was clicked
+		{
+			if (checkBox.isChecked())
+			{
+				UserData.insertToSelectedEvents(event);
+				if (Notifications.shouldScheduleForEvent(event, context))
+					Notifications.scheduleForEvent(event, context);
+			}
+			else
+			{
+				UserData.removeFromSelectedEvents(event);
+				Notifications.unscheduleForEvent(event, context);
+			}
+
+		}
+		else    //entire view was clicked
+			NotificationCenter.DEFAULT.post(new NotificationCenter.EventEventClicked(event));
 	}
 }
