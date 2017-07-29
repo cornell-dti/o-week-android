@@ -8,7 +8,6 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 
 import com.cornellsatech.o_week.ScheduleFragment;
 import com.cornellsatech.o_week.util.Internet;
@@ -49,6 +48,8 @@ public class Event implements Comparable<Event>
 	public final boolean required;
 	public final boolean categoryRequired;
 	public final String additional;
+	public final double longitude;
+	public final double latitude;
 	public final int pk;
 	public static final String DISPLAY_TIME_FORMAT = "h:mm a";  //hour:minute AM/PM
 	private static final String DATABASE_TIME_FORMAT = "HH:mm:ss";
@@ -70,9 +71,11 @@ public class Event implements Comparable<Event>
 	 * @param required Whether this event is required for new students.
 	 * @param categoryRequired Whether this event is required for its category.
 	 * @param additional For example, ## All new students are required to attend this program at the following times: ## ____3:30pm # Residents of Balch, Jameson, Risley, Just About Music, Ecology House, and Latino Living Center; on-campus transfers in Call Alumni Auditorium ____5:30pm # Residents of Dickson, McLLU, Donlon, High Rise 5, and Ujamaa; off-campus transfers in Call Alumni Auditorium ____8:00pm # Residents of Townhouses, Low Rises, Court-Kay-Bauer, Mews, Holland International Living Center, and Akwe:kon
+	 * @param longitude For example, -76.4785000
+	 * @param latitude For example, 42.4439000
 	 * @param pk Unique positive ID given to each event starting from 1.
 	 */
-	public Event(String title, String caption, @Nullable String description, int category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, boolean categoryRequired, String additional, int pk)
+	public Event(String title, String caption, @Nullable String description, int category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, boolean categoryRequired, String additional, double longitude, double latitude, int pk)
 	{
 		this.title = title;
 		this.caption = caption;
@@ -84,8 +87,8 @@ public class Event implements Comparable<Event>
 		this.required = required;
 		this.categoryRequired = categoryRequired;
 		this.additional = additional;
-		if (!additional.isEmpty())
-			Log.i(TAG, "Event additional: " + additional);
+		this.longitude = longitude;
+		this.latitude = latitude;
 		this.pk = pk;
 	}
 
@@ -115,6 +118,8 @@ public class Event implements Comparable<Event>
 		required = json.optBoolean("required");
 		categoryRequired = json.optBoolean("categoryRequired");
 		additional = json.optString("additional");
+		longitude = json.optDouble("longitude");
+		latitude = json.optDouble("latitude");
 
 		date = LocalDate.parse(startDate, DATABASE_DATE_FORMATTER);
 		this.startTime = LocalTime.parse(startTime, DATABASE_TIME_FORMATTER);
@@ -236,7 +241,8 @@ public class Event implements Comparable<Event>
 	{
 		return title + "|" + caption + "|" + description + "|" + category + "|" + DATABASE_DATE_FORMATTER.print(date) +
 				"|" + DATABASE_TIME_FORMATTER.print(startTime) + "|" + DATABASE_TIME_FORMATTER.print(endTime) + "|" +
-				(required ? 1 : 0) + "|" + pk + "|" + (categoryRequired ? 1 : 0) + "|" + additional + "|";
+				(required ? 1 : 0) + "|" + pk + "|" + (categoryRequired ? 1 : 0) + "|" + additional + "|" +
+				longitude + "|" + latitude + "|";
 	}
 	/**
 	 * Returns a {@link Event} from its String representation produced by {@link #toString()}.
@@ -259,8 +265,11 @@ public class Event implements Comparable<Event>
 		String pk = parts[8];
 		String categoryRequired = parts[9];
 		String additional = parts[10];
+		String longitude = parts[11];
+		String latitude = parts[12];
 		return new Event(title, caption, description, Integer.valueOf(category), LocalDate.parse(date, DATABASE_DATE_FORMATTER),
 				LocalTime.parse(startTime, DATABASE_TIME_FORMATTER), LocalTime.parse(endTime, DATABASE_TIME_FORMATTER),
-				required.equals("1"), categoryRequired.equals("1"), additional, Integer.valueOf(pk));
+				required.equals("1"), categoryRequired.equals("1"), additional, Double.valueOf(longitude),
+				Double.valueOf(latitude), Integer.valueOf(pk));
 	}
 }

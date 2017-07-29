@@ -24,6 +24,12 @@ import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * Displays a user-selected event in a separate page. An {@link android.app.Activity} is used instead
@@ -36,7 +42,7 @@ import com.cornellsatech.o_week.util.Settings;
  *                             A reference to the {@link CoordinatorLayout} is necessary to display
  *                             {@link android.support.design.widget.Snackbar}.
  */
-public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener
+public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, OnMapReadyCallback
 {
 	public static String EVENT_KEY = "event";
 	private Event event;
@@ -50,6 +56,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	private TextView additionalText;
 	private CheckBox checkBox;
 	private static final String TAG = DetailsActivity.class.getSimpleName();
+	public static final int MAP_ZOOM = 16;
 
 	/**
 	 * Link to layout, add back button to toolbar, sets up views. Retrieves {@link #event} from the
@@ -87,6 +94,8 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		endTimeText = (TextView) findViewById(R.id.endTimeText);
 		descriptionText = (TextView) findViewById(R.id.descriptionText);
 		additionalText = (TextView) findViewById(R.id.additionalText);
+		MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+		mapFragment.getMapAsync(this);
 	}
 	/**
 	 * Shows the {@link #event}'s data on screen. Attempts to retrieve an image from the database or
@@ -195,5 +204,17 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	{
 		super.onStop();
 		Settings.setSelectedEvents(this);
+	}
+
+	/**
+	 * Loads {@link Event#latitude} and longitude onto the map, adds a marker.
+	 * @param map {@inheritDoc}
+	 */
+	@Override
+	public void onMapReady(GoogleMap map)
+	{
+		LatLng position = new LatLng(event.latitude, event.longitude);
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
+		map.addMarker(new MarkerOptions().position(position).title(event.caption));
 	}
 }
