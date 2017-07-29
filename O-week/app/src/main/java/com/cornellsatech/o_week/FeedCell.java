@@ -2,10 +2,8 @@ package com.cornellsatech.o_week;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.cornellsatech.o_week.models.Event;
@@ -17,7 +15,7 @@ import com.cornellsatech.o_week.util.Notifications;
  * is in {@link R.layout#cell_feed}.
  *
  * {@link #event}: The event that this object currently represents.
- * {@link #context}: To be used in {@link #onCheckedChanged(CompoundButton, boolean)}
+ * {@link #context}: To be used in {@link #onClick(View)}
  *
  * @see FeedAdapter
  */
@@ -28,6 +26,8 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	private final TextView titleText;
 	private final TextView captionText;
 	private final CheckBox checkBox;
+	private final TextView requiredLabel;
+	private final TextView categoryRequiredText;
 	private final Context context;
 	private Event event;
 	private static final String TAG = FeedCell.class.getSimpleName();
@@ -39,11 +39,13 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	public FeedCell(View itemView)
 	{
 		super(itemView);
-		startTimeText = (TextView) itemView.findViewById(R.id.startTimeText);
-		endTimeText = (TextView) itemView.findViewById(R.id.endTimeText);
-		titleText = (TextView) itemView.findViewById(R.id.titleText);
-		captionText = (TextView) itemView.findViewById(R.id.captionText);
-		checkBox = (CheckBox) itemView.findViewById(R.id.checkbox);
+		startTimeText = itemView.findViewById(R.id.startTimeText);
+		endTimeText = itemView.findViewById(R.id.endTimeText);
+		titleText = itemView.findViewById(R.id.titleText);
+		captionText = itemView.findViewById(R.id.captionText);
+		checkBox = itemView.findViewById(R.id.checkbox);
+		requiredLabel = itemView.findViewById(R.id.requiredLabel);
+		categoryRequiredText = itemView.findViewById(R.id.categoryRequiredText);
 		checkBox.setOnClickListener(this);
 		itemView.setOnClickListener(this);
 		context = itemView.getContext();
@@ -62,6 +64,10 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
 		checkBox.setChecked(selected);
+		setVisible(event.required || event.categoryRequired, requiredLabel);
+		setVisible(event.categoryRequired, categoryRequiredText);
+		if (event.categoryRequired)
+			categoryRequiredText.setText(UserData.categoryForPk(event.category).name);
 	}
 	/**
 	 * This object has been clicked. List listeners know.
@@ -87,5 +93,18 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		}
 		else    //entire view was clicked
 			NotificationCenter.DEFAULT.post(new NotificationCenter.EventEventClicked(event));
+	}
+
+	/**
+	 * Helper method to set the visibility of a view based on a boolean expression.
+	 * @param condition If true, the view is visible. If false, the view is gone.
+	 * @param view The view to set visibility of.
+	 */
+	private void setVisible(boolean condition, View view)
+	{
+		if (condition)
+			view.setVisibility(View.VISIBLE);
+		else
+			view.setVisibility(View.GONE);
 	}
 }

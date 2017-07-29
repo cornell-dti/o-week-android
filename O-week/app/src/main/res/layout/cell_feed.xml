@@ -17,7 +17,8 @@
 		android:orientation="vertical"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintRight_toLeftOf="@+id/eventTextLayouts"
-		app:layout_constraintTop_toTopOf="parent">
+		app:layout_constraintTop_toTopOf="parent"
+		android:layout_marginEnd="16dp">
 
 		<TextView
 			android:id="@+id/startTimeText"
@@ -50,17 +51,55 @@
 		android:layout_marginStart="80dp"
 		android:layout_marginEnd="16dp">
 
-		<TextView
-			android:id="@+id/titleText"
-			android:layout_width="wrap_content"
+		<LinearLayout
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginBottom="@dimen/margin_bottom_feed_cell_title"
-			android:maxLines="1"
-			android:scrollHorizontally="true"
-			android:ellipsize="end"
-			android:textSize="@dimen/size_title"
-			android:textStyle="bold"
-			tools:text="Event title"/>
+			android:orientation="horizontal"
+			android:gravity="center_vertical"
+			tools:layout_editor_absoluteX="8dp"
+			tools:layout_editor_absoluteY="8dp">
+
+			<TextView
+				android:id="@+id/titleText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="1"
+				android:ellipsize="end"
+				android:maxLines="1"
+				android:scrollHorizontally="true"
+				android:textSize="@dimen/size_title"
+				android:textStyle="bold"
+				tools:text="Event title that is really really long"/>
+
+			<TextView
+				android:id="@+id/requiredLabel"
+				android:layout_width="@dimen/size_required_label"
+				android:layout_height="@dimen/size_required_label"
+				android:layout_gravity="left"
+				android:background="@drawable/required_label"
+				android:gravity="center"
+				android:textColor="@android:color/white"
+				android:layout_marginLeft="@dimen/half_margin"
+				android:textSize="@dimen/size_required_label_text"
+				android:textStyle="bold"
+				android:visibility="gone"
+				android:text="@string/required_label"
+				tools:text="RQ"
+				tools:visibility="visible"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="@dimen/half_margin"
+				android:textColor="@color/colorPrimary"
+				android:id="@+id/categoryRequiredText"
+				android:textSize="@dimen/size_title"
+				android:textStyle="bold"
+				android:visibility="gone"
+				tools:text="CALS"
+				tools:visibility="visible"/>
+		</LinearLayout>
 
 		<TextView
 			android:id="@+id/captionText"
@@ -72,6 +111,7 @@
 			android:ellipsize="end"
 			android:textSize="@dimen/size_caption"
 			tools:text="Event caption"/>
+
 	</LinearLayout>
 
 	<CheckBox

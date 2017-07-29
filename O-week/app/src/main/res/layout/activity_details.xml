@@ -40,7 +40,8 @@
 					android:scaleType="centerCrop"
 					app:layout_aspectRatio="178%"
 					app:layout_widthPercent="100%"
-					tools:src="@mipmap/ic_launcher"/>
+					tools:src="@mipmap/ic_launcher"
+					tools:ignore="ContentDescription"/>
 			</android.support.percent.PercentRelativeLayout>
 
 			<RelativeLayout
@@ -107,6 +108,16 @@
 				android:layout_margin="@dimen/margin"
 				android:id="@+id/descriptionText"
 				tools:text="No description available at this time."/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textSize="@dimen/size_detail"
+				android:layout_marginBottom="@dimen/margin"
+				android:layout_marginRight="@dimen/margin"
+				android:layout_marginLeft="@dimen/margin"
+				android:id="@+id/additionalText"
+				android:visibility="gone"/>
 
 		</LinearLayout>
 

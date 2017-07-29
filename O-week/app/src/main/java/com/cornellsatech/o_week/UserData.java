@@ -48,8 +48,8 @@ public final class UserData
 	public static int selectedFilterIndex = 0;
 	private static final int YEAR = 2017;
 	private static final int MONTH = 8;
-	private static final int START_DAY = 19;    //Dates range: [START_DAY, END_DAY], inclusive
-	private static final int END_DAY = 24;      //Note: END_DAY must > START_DAY
+	private static final int START_DAY = 18;    //Dates range: [START_DAY, END_DAY], inclusive
+	private static final int END_DAY = 26;      //Note: END_DAY must > START_DAY
 	private static final String TAG = UserData.class.getSimpleName();
 
 	/**
@@ -114,10 +114,7 @@ public final class UserData
 	public static void removeFromAllEvents(Event event)
 	{
 		List<Event> eventsForDate = allEvents.get(event.date);
-		if (eventsForDate == null)
-			Log.e(TAG, "removeFromAllEvents: No selected events for date");
-		else
-			eventsForDate.remove(event);
+		eventsForDate.remove(event);
 	}
 	/**
 	 * Adds event to {@link #selectedEvents}. The date should match a date in {@link #DATES}.
@@ -154,16 +151,31 @@ public final class UserData
 	/**
 	 * Linear search for an event given its pk value.
 	 * @param pk {@link Event#pk}
-	 * @return Event
+	 * @return Event. May be null.
 	 */
 	@Nullable
 	public static Event eventForPk(int pk)
 	{
-		for (List<Event> eventsOfDay : UserData.allEvents.values())
+		for (List<Event> eventsOfDay : allEvents.values())
 			for (Event event : eventsOfDay)
 				if (event.pk == pk)
 					return event;
 		Log.e(TAG, "eventForPk: Event not found for given pk");
+		return null;
+	}
+	/**
+	 * Linear search for a category given its pk value.
+	 * @param pk {@link Category#pk}
+	 * @return Category. May be null.
+	 * @see #eventForPk(int)
+	 */
+	@Nullable
+	public static Category categoryForPk(int pk)
+	{
+		for (Category category : categories)
+			if (category.pk == pk)
+				return category;
+		Log.e(TAG, "categoryForPk: Category not found for given pk");
 		return null;
 	}
 	/**

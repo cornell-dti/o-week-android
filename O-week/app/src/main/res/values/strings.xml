@@ -14,6 +14,7 @@
 	<string name="dialog_negative_button">Cancel</string>
 	<string name="filter_show_all_events">Show All Events</string>
 	<string name="filter_show_required_events">Show Required Events</string>
+	<string name="required_label">RQ</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>

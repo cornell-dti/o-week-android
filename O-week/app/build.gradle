@@ -33,5 +33,5 @@ dependencies {
     compile 'com.google.guava:guava:22.0-android'
     //import Joda-Time (immutable time objects)
     compile 'net.danlew:android.joda:2.9.9'
-    compile 'com.google.android.gms:play-services-maps:11.0.2'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
 }

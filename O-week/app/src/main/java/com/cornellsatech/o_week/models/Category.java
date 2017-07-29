@@ -105,7 +105,7 @@ public class Category implements Comparable<Category>
 	 */
 	public static Category fromString(String string)
 	{
-		String[] parts = string.split("\\|");
+		String[] parts = string.split("\\|", -1);
 		String name = parts[0];
 		String description = parts[1];
 		int pk = Integer.valueOf(parts[2]);

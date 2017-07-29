@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -46,6 +47,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	private TextView startTimeText;
 	private TextView endTimeText;
 	private TextView descriptionText;
+	private TextView additionalText;
 	private CheckBox checkBox;
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 
@@ -84,6 +86,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		startTimeText = (TextView) findViewById(R.id.startTimeText);
 		endTimeText = (TextView) findViewById(R.id.endTimeText);
 		descriptionText = (TextView) findViewById(R.id.descriptionText);
+		additionalText = (TextView) findViewById(R.id.additionalText);
 	}
 	/**
 	 * Shows the {@link #event}'s data on screen. Attempts to retrieve an image from the database or
@@ -102,6 +105,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		descriptionText.setText(event.description);
 		startTimeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT));
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
+		setAdditionalText();
 
 		//we must know if we can write the image we downloaded to file
 		boolean canWriteToFile = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
@@ -109,6 +113,16 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 
 		Internet.getImageForEvent(event, eventImage, coordinatorLayout, canWriteToFile);
+	}
+	/**
+	 * Sets {@link #additionalText} if {@link Event#additional} is non-empty.
+	 */
+	private void setAdditionalText()
+	{
+		if (event.additional.isEmpty())
+			return;
+		additionalText.setVisibility(View.VISIBLE);
+		additionalText.setText(event.formattedAdditionalText());
 	}
 
 	/**

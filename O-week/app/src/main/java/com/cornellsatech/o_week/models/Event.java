@@ -1,7 +1,14 @@
 package com.cornellsatech.o_week.models;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.LeadingMarginSpan;
+import android.text.style.StyleSpan;
+import android.util.Log;
 
 import com.cornellsatech.o_week.ScheduleFragment;
 import com.cornellsatech.o_week.util.Internet;
@@ -21,6 +28,9 @@ import org.json.JSONObject;
  * {@link #category}: The {@link Category#pk} of the {@link Category} this object belongs to.
  * {@link #date}: The date in which this event BEGINS. If this event crosses over midnight, the date
  *                is that of the 1st day.
+ * {@link #categoryRequired}: True if this event is required by its category.
+ * {@link #additional}: Additional information to display in a special format. Formatted like so:
+ *                      ## HEADER ## ____BULLET # INFO ____BULLET # INFO
  *
  * NOTE: Since events can cross over midnight, the {@link #endTime} may not be "after" the {@link #startTime}.
  *       Calculations should take this into account.
@@ -37,6 +47,8 @@ public class Event implements Comparable<Event>
 	public final LocalTime startTime;
 	public final LocalTime endTime;
 	public final boolean required;
+	public final boolean categoryRequired;
+	public final String additional;
 	public final int pk;
 	public static final String DISPLAY_TIME_FORMAT = "h:mm a";  //hour:minute AM/PM
 	private static final String DATABASE_TIME_FORMAT = "HH:mm:ss";
@@ -48,7 +60,6 @@ public class Event implements Comparable<Event>
 	/**
 	 * Creates an event object in-app. This should never be done organically (without initial input
 	 * from the database in some form), or else we risk becoming out-of-sync with the database.
-	 *
 	 * @param title For example, "New Student Check-In"
 	 * @param caption For example, "Bartels Hall"
 	 * @param description For example, "You are required to attend New Student Check-In to pick up..."
@@ -57,9 +68,11 @@ public class Event implements Comparable<Event>
 	 * @param startTime For example, 8:00 AM
 	 * @param endTime For example, 4:00 PM
 	 * @param required Whether this event is required for new students.
+	 * @param categoryRequired Whether this event is required for its category.
+	 * @param additional For example, ## All new students are required to attend this program at the following times: ## ____3:30pm # Residents of Balch, Jameson, Risley, Just About Music, Ecology House, and Latino Living Center; on-campus transfers in Call Alumni Auditorium ____5:30pm # Residents of Dickson, McLLU, Donlon, High Rise 5, and Ujamaa; off-campus transfers in Call Alumni Auditorium ____8:00pm # Residents of Townhouses, Low Rises, Court-Kay-Bauer, Mews, Holland International Living Center, and Akwe:kon
 	 * @param pk Unique positive ID given to each event starting from 1.
 	 */
-	public Event(String title, String caption, @Nullable String description, int category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, int pk)
+	public Event(String title, String caption, @Nullable String description, int category, LocalDate date, LocalTime startTime, LocalTime endTime, boolean required, boolean categoryRequired, String additional, int pk)
 	{
 		this.title = title;
 		this.caption = caption;
@@ -69,6 +82,10 @@ public class Event implements Comparable<Event>
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.required = required;
+		this.categoryRequired = categoryRequired;
+		this.additional = additional;
+		if (!additional.isEmpty())
+			Log.i(TAG, "Event additional: " + additional);
 		this.pk = pk;
 	}
 
@@ -96,6 +113,8 @@ public class Event implements Comparable<Event>
 		String startTime = json.optString("start_time");
 		String endTime = json.optString("end_time");
 		required = json.optBoolean("required");
+		categoryRequired = json.optBoolean("categoryRequired");
+		additional = json.optString("additional");
 
 		date = LocalDate.parse(startDate, DATABASE_DATE_FORMATTER);
 		this.startTime = LocalTime.parse(startTime, DATABASE_TIME_FORMATTER);
@@ -114,6 +133,49 @@ public class Event implements Comparable<Event>
 
 		LocalDate nextDay = date.plusDays(1);
 		return nextDay.toLocalDateTime(startTime);
+	}
+	/**
+	 * Returns the formatted additional text, with headers and bullets.
+	 * String is like so: ## HEADER ## ____BULLET # INFO ____BULLET # INFO.
+	 * PLEASE check that {@link #additional} is not empty before calling this method.
+	 *
+	 * @return Formatted text to be set for a {@link android.widget.TextView}
+	 */
+	public SpannableStringBuilder formattedAdditionalText()
+	{
+		SpannableStringBuilder stringBuilder = new SpannableStringBuilder();
+		String[] headerAndRemaining = additional.split("##");
+		String header = headerAndRemaining[1].trim();
+		String remaining = headerAndRemaining[2].trim();
+
+		//set header
+		stringBuilder.append(header).append("\n\n");
+		stringBuilder.setSpan(new StyleSpan(Typeface.BOLD), 0, header.length(), 0);
+
+		String[] sections = remaining.split("____");
+		for (String section : sections)
+		{
+			if (section.isEmpty())
+				continue;
+			String[] bulletAndInfo = section.trim().split(" # ");
+			String bullet = bulletAndInfo[0];
+			String info = bulletAndInfo[1];
+
+			//set bullet
+			int bulletStart = stringBuilder.length();
+			int bulletEnd = bulletStart + bullet.length();
+			stringBuilder.append(bullet).append("\n");
+			stringBuilder.setSpan(new StyleSpan(Typeface.BOLD), bulletStart, bulletEnd, 0);
+			stringBuilder.setSpan(new ForegroundColorSpan(Color.RED), bulletStart, bulletEnd, 0);
+
+			//set info
+			int infoStart = stringBuilder.length();
+			int infoEnd = infoStart + info.length();
+			stringBuilder.append(info).append("\n");
+			stringBuilder.setSpan(new LeadingMarginSpan.Standard(100), infoStart, infoEnd, 0);
+		}
+
+		return stringBuilder;
 	}
 	/**
 	 * Returns the {@link #pk}, which is unique to each {@link Event}.
@@ -174,7 +236,7 @@ public class Event implements Comparable<Event>
 	{
 		return title + "|" + caption + "|" + description + "|" + category + "|" + DATABASE_DATE_FORMATTER.print(date) +
 				"|" + DATABASE_TIME_FORMATTER.print(startTime) + "|" + DATABASE_TIME_FORMATTER.print(endTime) + "|" +
-				(required ? 1 : 0) + "|" + pk;
+				(required ? 1 : 0) + "|" + pk + "|" + (categoryRequired ? 1 : 0) + "|" + additional + "|";
 	}
 	/**
 	 * Returns a {@link Event} from its String representation produced by {@link #toString()}.
@@ -185,7 +247,7 @@ public class Event implements Comparable<Event>
 	 */
 	public static Event fromString(String string)
 	{
-		String[] parts = string.split("\\|");
+		String[] parts = string.split("\\|", -1);
 		String title = parts[0];
 		String caption = parts[1];
 		String description = parts[2];
@@ -195,8 +257,10 @@ public class Event implements Comparable<Event>
 		String endTime = parts[6];
 		String required = parts[7];
 		String pk = parts[8];
+		String categoryRequired = parts[9];
+		String additional = parts[10];
 		return new Event(title, caption, description, Integer.valueOf(category), LocalDate.parse(date, DATABASE_DATE_FORMATTER),
 				LocalTime.parse(startTime, DATABASE_TIME_FORMATTER), LocalTime.parse(endTime, DATABASE_TIME_FORMATTER),
-				required.equals("1"), Integer.valueOf(pk));
+				required.equals("1"), categoryRequired.equals("1"), additional, Integer.valueOf(pk));
 	}
 }

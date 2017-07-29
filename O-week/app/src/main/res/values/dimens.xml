@@ -1,5 +1,6 @@
 <resources>
 	<dimen name="margin">16dp</dimen>
+	<dimen name="half_margin">8dp</dimen>
 	<dimen name="margin_date_cell_weekday_to_day_num">5dp</dimen>
 	<dimen name="margin_horiz_date_cell">24dp</dimen>
 	<dimen name="margin_feed_cell">20dp</dimen>
@@ -12,12 +13,14 @@
 	<dimen name="size_date_cell_day_num">17sp</dimen>
 	<dimen name="size_date_cell_weekday">10sp</dimen>
 	<dimen name="size_caption">10sp</dimen>
-	<dimen name="size_title">12sp</dimen>
+	<dimen name="size_title">14sp</dimen>
 	<dimen name="size_hour">12sp</dimen>
 	<dimen name="size_title_details">14sp</dimen>
 	<dimen name="size_secondary_details">12sp</dimen>
-	<dimen name="size_detail">10sp</dimen>
+	<dimen name="size_detail">12sp</dimen>
 	<dimen name="size_hour_textview">16sp</dimen>
+	<dimen name="size_required_label">24dp</dimen>
+	<dimen name="size_required_label_text">12sp</dimen>
 	<dimen name="height_date_picker">70dp</dimen>
 	<dimen name="height_feed_cell">116dp</dimen>
 	<dimen name="height_time_line">1dp</dimen>
