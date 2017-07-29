@@ -197,17 +197,14 @@ public final class UserData
 		Set<Category> categories = Settings.getCategories(context);
 		UserData.categories = new ArrayList<>(categories);
 
+		sortEventsAndCategories();
+
 		Internet.getUpdatesForVersion(Settings.getVersion(context), new Internet.Callback()
 		{
 			//msg is the versionNum as a String. null if failed
 			@Override
 			public void execute(String msg)
 			{
-				//sort everything
-				for (List<Event> events : allEvents.values())
-					Collections.sort(events);
-				Collections.sort(UserData.categories);
-
 				//all version updates have been processed. Now, load events that the user has selected into selectedEvents.
 				//this assumes selectedEvents is empty
 				Set<Event> selectedEvents = Settings.getSelectedEvents(context);
@@ -217,10 +214,21 @@ public final class UserData
 				//save all the new data if available
 				if (msg == null)
 					return;
+				//sort everything again, since things have been updated
+				sortEventsAndCategories();
 				Settings.setAllEvents(context);
 				Settings.setCategories(context);
 				Settings.setVersion(Integer.valueOf(msg), context);
 			}
 		});
+	}
+	/**
+	 * Sorts {@link #allEvents} and {@link #categories}.
+	 */
+	private static void sortEventsAndCategories()
+	{
+		for (List<Event> events : allEvents.values())
+			Collections.sort(events);
+		Collections.sort(UserData.categories);
 	}
 }
