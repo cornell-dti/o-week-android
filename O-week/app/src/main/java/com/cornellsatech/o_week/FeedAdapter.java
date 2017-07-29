@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 {
-	private List<Event> events;
+	public List<Event> events;
 	private static final String TAG = FeedAdapter.class.getSimpleName();
 
 	/**

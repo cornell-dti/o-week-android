@@ -14,6 +14,9 @@ import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.eventbus.Subscribe;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
+
 /**
  * Displays a list of events, ordered chronologically. This is a {@link Fragment} so that it can be
  * easily swapped out with {@link ScheduleFragment} while keeping the same date picker up top.
@@ -40,7 +43,7 @@ public class FeedFragment extends Fragment
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
 		NotificationCenter.DEFAULT.register(this);
 
-		feedRecycler = (RecyclerView) view.findViewById(R.id.feedRecycler);
+		feedRecycler = view.findViewById(R.id.feedRecycler);
 		setUpRecycler();
 		return view;
 	}
@@ -78,5 +81,26 @@ public class FeedFragment extends Fragment
 		feedAdapter = new FeedAdapter();
 		feedRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 		feedRecycler.setAdapter(feedAdapter);
+		scrollToNextEvent();
+	}
+	/**
+	 * Scrolls {@link #feedRecycler} to the next upcoming event based on the current time and date.
+	 */
+	private void scrollToNextEvent()
+	{
+		LocalDate date = LocalDate.now();
+		LocalTime now = LocalTime.now();
+
+		if (!date.isEqual(UserData.selectedDate))
+			return;
+		for (int i = 0; i < feedAdapter.events.size(); i++)
+		{
+			Event event = feedAdapter.events.get(i);
+			if (event.startTime.isBefore(now))
+				continue;
+
+			feedRecycler.scrollToPosition(i);
+			return;
+		}
 	}
 }
