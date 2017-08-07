@@ -199,7 +199,7 @@ public final class UserData
 
 		sortEventsAndCategories();
 
-		Internet.getUpdatesForVersion(Settings.getVersion(context), new Internet.Callback()
+		Internet.getUpdatesForVersion(Settings.getVersion(context), context, new Internet.Callback()
 		{
 			//msg is the versionNum as a String. null if failed
 			@Override

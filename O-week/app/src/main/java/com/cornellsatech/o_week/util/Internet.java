@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -56,6 +57,7 @@ public final class Internet
 	 * Downloads all events and categories to update the app to the database's newest version.
 	 * The {@link Callback} provided will be executed when the data has been processed. The String msg used
 	 * as the parameter for {@link Callback#execute(String)} will be the string for the new version (int).
+	 * A notification is sent out (with titles of changed events).
 	 *
 	 * Note: {@link UserData#selectedEvents} will not be updated by this method.
 	 *       {@link UserData#categories} and {@link UserData#allEvents} should already be filled with events
@@ -79,7 +81,7 @@ public final class Internet
 	 * @param version Current version of database on file. Should be 0 if never downloaded from database.
 	 * @param onCompletion Function to execute when data is processed. String in parameter is new version.
 	 */
-	public static void getUpdatesForVersion(int version, final Callback onCompletion)
+	public static void getUpdatesForVersion(int version, final Context context, final Callback onCompletion)
 	{
 		get(DATABASE + "version/" + version, new Callback()
 		{
@@ -123,11 +125,14 @@ public final class Internet
 							categoriesIterator.remove();
 					}
 
+					//keep track of all changed events to notify the user
+					List<String> changedEventsTitles = new ArrayList<>();
 					//update events
 					for (int i = 0; i < changedEvents.length(); i++)
 					{
 						JSONObject eventJSON = changedEvents.getJSONObject(i);
 						Event event = new Event(eventJSON);
+						changedEventsTitles.add(event.title);
 						UserData.removeFromAllEvents(event);
 						UserData.appendToAllEvents(event);
 					}
@@ -142,12 +147,16 @@ public final class Internet
 						{
 							Event event = eventsIterator.next();
 							if (deletedEventsPks.contains(event.pk))
+							{
+								changedEventsTitles.add(event.title);
 								eventsIterator.remove();
+							}
 						}
 					}
 
 					onCompletion.execute(String.valueOf(newestVersion));
 					NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
+					Notifications.createForChangedEvents(changedEventsTitles, context);
 				}
 				catch (JSONException e) {e.printStackTrace();}
 			}

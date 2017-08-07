@@ -15,6 +15,8 @@
 	<string name="filter_show_all_events">Show All Events</string>
 	<string name="filter_show_required_events">Show Required Events</string>
 	<string name="required_label">RQ</string>
+	<string name="notification_events_changed_title">Orientation events have been updated</string>
+	<string name="notification_events_changed_caption">The following events were changed: %1$s</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>
