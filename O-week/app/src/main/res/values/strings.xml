@@ -19,7 +19,12 @@
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>
 	<string name="settings_category_events">Events</string>
+	<string name="settings_category_resources">Resources</string>
 	<string name="settings_receive_reminders">Receive reminders for…</string>
+	<string name="settings_orientation_pamphlet">Orientation PDF</string>
+	<string name="settings_campus_map">Campus Map</string>
+	<string name="settings_new_students_webpage">New Students Orientation Website</string>
+	<string name="settings_cornell_rescuer">Cornell Rescuer App</string>
 	<string name="key_receive_reminders">receiveReminders</string>
 	<string name="settings_notify_me">Notify me…</string>
 	<string name="key_notify_me">notifyMe</string>

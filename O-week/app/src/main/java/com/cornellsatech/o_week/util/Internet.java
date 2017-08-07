@@ -1,8 +1,11 @@
 package com.cornellsatech.o_week.util;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.annotation.WorkerThread;
@@ -40,6 +43,10 @@ import java.util.Set;
 public final class Internet
 {
 	public static final String DATABASE = "https://oweekapp.herokuapp.com/flow/";
+	public static final String ORIENTATION_PAMPHLET = "http://ccengagement.cornell.edu/sites/ccengagement.cornell.edu/files/a3c/cornell_orientation_guide_08_2017.pdf";
+	public static final String CAMPUS_MAP = "https://www.cornell.edu/about/maps/cornell-campus-map-2015.pdf";
+	public static final String NEW_STUDENTS_WEBPAGE = "https://newstudents.cornell.edu/fall-2017/first-year/cornell-orientation-august-18-21-2017";
+	public static final String CORNELL_RESCUER = "market://details?id=cornell.sa.rescuer";
 	private static final String TAG = Internet.class.getSimpleName();
 
 	//suppress default constructor
@@ -205,6 +212,17 @@ public final class Internet
 				imageView.setImageBitmap(result);
 			}
 		}).download(DATABASE + "event/" + event.pk + "/image", false);
+	}
+	/**
+	 * Opens the user to the website given.
+	 * @param url Site address.
+	 * @param context
+	 */
+	public static void openToPage(String url, Context context)
+	{
+		Intent websiteIntent = new Intent(Intent.ACTION_VIEW);
+		websiteIntent.setData(Uri.parse(url));
+		context.startActivity(websiteIntent);
 	}
 	/**
 	 * Connects to the website given, then calls {@link Callback#execute(String)} with the output

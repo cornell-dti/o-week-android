@@ -11,6 +11,7 @@ import android.support.annotation.StringRes;
 import android.util.Log;
 
 import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
@@ -26,6 +27,10 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 	private ListPreference notifyMe;
 	private Preference addRequiredEvents;
 	private Preference removeAllEvents;
+	private Preference orientationPamphlet;
+	private Preference campusMap;
+	private Preference newStudentsWebpage;
+	private Preference cornellRescuer;
 	private static final String TAG = SettingsFragment.class.getSimpleName();
 
 	/**
@@ -44,8 +49,16 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 		notifyMe.setOnPreferenceChangeListener(this);
 		addRequiredEvents = findPreference(R.string.settings_add_required_events);
 		removeAllEvents = findPreference(R.string.settings_remove_events);
+		orientationPamphlet = findPreference(R.string.settings_orientation_pamphlet);
+		campusMap = findPreference(R.string.settings_campus_map);
+		newStudentsWebpage = findPreference(R.string.settings_new_students_webpage);
+		cornellRescuer = findPreference(R.string.settings_cornell_rescuer);
 		addRequiredEvents.setOnPreferenceClickListener(this);
 		removeAllEvents.setOnPreferenceClickListener(this);
+		orientationPamphlet.setOnPreferenceClickListener(this);
+		campusMap.setOnPreferenceClickListener(this);
+		newStudentsWebpage.setOnPreferenceClickListener(this);
+		cornellRescuer.setOnPreferenceClickListener(this);
 
 		//set notify me to disabled if necessary
 		toggleEnableNotifyMe(receiveReminders.getValue());
@@ -68,6 +81,14 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 			addRequiredEvents();
 		else if (preference.equals(removeAllEvents))
 			removeAllEvents();
+		else if (preference.equals(orientationPamphlet))
+			Internet.openToPage(Internet.ORIENTATION_PAMPHLET, getActivity());
+		else if (preference.equals(campusMap))
+			Internet.openToPage(Internet.CAMPUS_MAP, getActivity());
+		else if (preference.equals(newStudentsWebpage))
+			Internet.openToPage(Internet.NEW_STUDENTS_WEBPAGE, getActivity());
+		else if (preference.equals(cornellRescuer))
+			Internet.openToPage(Internet.CORNELL_RESCUER, getActivity());
 		else
 			Log.e(TAG, "onPreferenceClick: unrecognized preference");
 		return true;
