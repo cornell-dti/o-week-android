@@ -57,9 +57,12 @@
 					android:id="@+id/titleText"
 					android:textSize="@dimen/size_title_details"
 					android:textStyle="bold"
-					android:maxLines="1"
+					android:singleLine="true"
 					android:scrollHorizontally="true"
-					android:ellipsize="end"
+					android:ellipsize="marquee"
+					android:marqueeRepeatLimit="marquee_forever"
+					android:focusable="true"
+					android:focusableInTouchMode="true"
 					tools:text="Title"/>
 				<TextView
 					android:layout_width="match_parent"
