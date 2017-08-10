@@ -13,11 +13,13 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.cornellsatech.o_week.R;
 import com.cornellsatech.o_week.UserData;
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.Event;
+import com.google.common.base.Joiner;
 import com.google.common.io.CharStreams;
 
 import org.json.JSONArray;
@@ -31,9 +33,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -57,7 +61,7 @@ public final class Internet
 	 * Downloads all events and categories to update the app to the database's newest version.
 	 * The {@link Callback} provided will be executed when the data has been processed. The String msg used
 	 * as the parameter for {@link Callback#execute(String)} will be the string for the new version (int).
-	 * A notification is sent out (with titles of changed events).
+	 * A toast is sent out with titles of changed events that the user had selected.
 	 *
 	 * Note: {@link UserData#selectedEvents} will not be updated by this method.
 	 *       {@link UserData#categories} and {@link UserData#allEvents} should already be filled with events
@@ -126,13 +130,13 @@ public final class Internet
 					}
 
 					//keep track of all changed events to notify the user
-					List<String> changedEventsTitles = new ArrayList<>();
+					Map<Integer, String> changedEventsTitleAndPk = new HashMap<>();
 					//update events
 					for (int i = 0; i < changedEvents.length(); i++)
 					{
 						JSONObject eventJSON = changedEvents.getJSONObject(i);
 						Event event = new Event(eventJSON);
-						changedEventsTitles.add(event.title);
+						changedEventsTitleAndPk.put(event.pk, event.title);
 						UserData.removeFromAllEvents(event);
 						UserData.appendToAllEvents(event);
 					}
@@ -148,7 +152,7 @@ public final class Internet
 							Event event = eventsIterator.next();
 							if (deletedEventsPks.contains(event.pk))
 							{
-								changedEventsTitles.add(event.title);
+								changedEventsTitleAndPk.put(event.pk, event.title);
 								eventsIterator.remove();
 							}
 						}
@@ -156,7 +160,24 @@ public final class Internet
 
 					onCompletion.execute(String.valueOf(newestVersion));
 					NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
-					Notifications.createForChangedEvents(changedEventsTitles, context);
+
+					//send a toast to alert the user that their events were updated
+					if (!changedEventsTitleAndPk.isEmpty())
+					{
+						Set<String> pkStrings = Settings.getSelectedEventsPks(context);
+
+						//show toast only for changed events that you HAD selected
+						List<String> selectedChangedEventsTitles = new ArrayList<>();
+						for (String pkString : pkStrings)
+						{
+							int pk = Integer.parseInt(pkString);
+							String selectedChangedEventTitle = changedEventsTitleAndPk.get(pk);
+							if (selectedChangedEventTitle != null)
+								selectedChangedEventsTitles.add(selectedChangedEventTitle);
+						}
+						String toastText = context.getString(R.string.toast_events_changed, Joiner.on(", ").join(selectedChangedEventsTitles));
+						Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
+					}
 				}
 				catch (JSONException e) {e.printStackTrace();}
 			}

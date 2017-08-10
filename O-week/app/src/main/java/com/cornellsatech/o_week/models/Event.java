@@ -104,6 +104,7 @@ public class Event implements Comparable<Event>
 	 *             start_time => time formatted according to {@link #DATABASE_TIME_FORMAT}
 	 *             end_time => see start_time
 	 *             required => boolean
+	 *             category_required => boolean
 	 */
 	public Event(JSONObject json)
 	{
@@ -116,7 +117,7 @@ public class Event implements Comparable<Event>
 		String startTime = json.optString("start_time");
 		String endTime = json.optString("end_time");
 		required = json.optBoolean("required");
-		categoryRequired = json.optBoolean("categoryRequired");
+		categoryRequired = json.optBoolean("category_required");
 		additional = json.optString("additional");
 		longitude = json.optDouble("longitude");
 		latitude = json.optDouble("latitude");

@@ -89,14 +89,24 @@ public final class Settings
 	 */
 	public static Set<Event> getSelectedEvents(Context context)
 	{
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		Set<String> selectedEventPks = preferences.getStringSet(KEY_SELECTED_EVENTS, new HashSet<String>());
+		Set<String> selectedEventPks = getSelectedEventsPks(context);
 		Set<Event> allEvents = getAllEvents(context);
 		Set<Event> selectedEvents = new HashSet<>(selectedEventPks.size());
 		for (Event event : allEvents)
 			if (selectedEventPks.contains(String.valueOf(event.pk)))
 				selectedEvents.add(event);
 		return selectedEvents;
+	}
+	/**
+	 * Returns all selected events' pks (as strings, since the only data structure we can store are sets of strings).
+	 *
+	 * @param context
+	 * @return Set of pks of all selected events.
+	 */
+	public static Set<String> getSelectedEventsPks(Context context)
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		return preferences.getStringSet(KEY_SELECTED_EVENTS, new HashSet<String>());
 	}
 	/**
 	 * Saves {@link UserData#categories} to disk.

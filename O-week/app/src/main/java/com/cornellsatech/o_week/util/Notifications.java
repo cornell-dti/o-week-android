@@ -13,7 +13,6 @@ import com.cornellsatech.o_week.DetailsActivity;
 import com.cornellsatech.o_week.R;
 import com.cornellsatech.o_week.UserData;
 import com.cornellsatech.o_week.models.Event;
-import com.google.common.base.Joiner;
 
 import org.joda.time.LocalDateTime;
 
@@ -29,32 +28,6 @@ public final class Notifications
 	//suppress constructor
 	private Notifications(){}
 
-	/**
-	 * Creates a notification to tell the user that the app's events have been updated. Does nothing if
-	 * the given list of changed events is empty.
-	 *
-	 * @param changedEventsTitles Titles of changed events.
-	 * @param context
-	 */
-	public static void createForChangedEvents(List<String> changedEventsTitles, Context context)
-	{
-		if (changedEventsTitles.isEmpty())
-			return;
-
-		String notificationCaption = context.getString(R.string.notification_events_changed_caption,
-					Joiner.on(", ").join(changedEventsTitles));
-
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-		builder.setVisibility(Notification.VISIBILITY_PUBLIC)
-				.setSmallIcon(R.drawable.ic_notification)
-				.setContentTitle(context.getString(R.string.notification_events_changed_title))
-				.setContentText(notificationCaption)
-				.setAutoCancel(true);        //notification will disappear on click
-		builder.setDefaults(Notification.DEFAULT_ALL);  //default sound, light, vibration
-
-		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		manager.notify(0, builder.build());
-	}
 	/**
 	 * {@link #scheduleForEvent(Event, int, Context)} if you're certain hoursBefore is saved and the extra
 	 * processing power spent retrieving it is necessary. For example, if you're calling this in a loop,
