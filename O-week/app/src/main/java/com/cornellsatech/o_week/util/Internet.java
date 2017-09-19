@@ -131,6 +131,8 @@ public final class Internet
 
 					//keep track of all changed events to notify the user
 					Map<Integer, String> changedEventsTitleAndPk = new HashMap<>();
+					//update/remove notifications
+					boolean remindersOn = Settings.getReceiveReminders(context);
 					//update events
 					for (int i = 0; i < changedEvents.length(); i++)
 					{
@@ -141,7 +143,8 @@ public final class Internet
 						UserData.appendToAllEvents(event);
 
 						//reschedule the event
-						Notifications.scheduleForEvent(event, context);
+						if (remindersOn)
+							Notifications.scheduleForEvent(event, context);
 					}
 					//delete events
 					Set<Integer> deletedEventsPks = new HashSet<>(deletedEvents.length());
@@ -159,7 +162,8 @@ public final class Internet
 								eventsIterator.remove();
 
 								//remove the event from notification
-								Notifications.unscheduleForEvent(event, context);
+								if (remindersOn)
+									Notifications.unscheduleForEvent(event, context);
 							}
 						}
 					}
