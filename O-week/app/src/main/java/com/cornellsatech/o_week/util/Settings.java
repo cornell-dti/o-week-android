@@ -165,19 +165,16 @@ public final class Settings
 	}
 
 	/**
-	 * Returns the index of the current selection in {@link R.array#settings_receive_reminders_titles}.
-	 * Change default value of <code>receiveRemindersText</code> along with {@link R.xml#preferences}.
+	 * Returns whether or not the user wants to receive reminders.
+	 * Change default value of along with {@link R.xml#preferences}.
 	 *
 	 * @param context
 	 * @return See method description.
 	 */
-	public static int getReceiveReminders(Context context)
+	public static boolean getReceiveReminders(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		String receiveRemindersText = preferences.getString(context.getString(R.string.key_receive_reminders),
-				context.getString(R.string.receive_reminders_all_events));
-		String[] choices = context.getResources().getStringArray(R.array.settings_receive_reminders_titles);
-		return linearSearch(choices, receiveRemindersText);
+		return preferences.getBoolean(context.getString(R.string.key_receive_reminders), true);
 	}
 	/**
 	 * Returns the number of hours before an event starts to notify the user.

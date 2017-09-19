@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Notifications;
+import com.cornellsatech.o_week.util.Settings;
 
 /**
  * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
@@ -81,7 +82,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 			if (checkBox.isChecked())
 			{
 				UserData.insertToSelectedEvents(event);
-				if (Notifications.shouldScheduleForEvent(event, context))
+				if (Settings.getReceiveReminders(context))
 					Notifications.scheduleForEvent(event, context);
 			}
 			else

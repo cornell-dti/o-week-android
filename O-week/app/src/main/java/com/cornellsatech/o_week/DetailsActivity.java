@@ -169,7 +169,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		if (isChecked)
 		{
 			UserData.insertToSelectedEvents(event);
-			if (Notifications.shouldScheduleForEvent(event, this))
+			if (Settings.getReceiveReminders(this))
 				Notifications.scheduleForEvent(event, this);
 		}
 		else
