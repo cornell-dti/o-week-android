@@ -139,6 +139,9 @@ public final class Internet
 						changedEventsTitleAndPk.put(event.pk, event.title);
 						UserData.removeFromAllEvents(event);
 						UserData.appendToAllEvents(event);
+
+						//reschedule the event
+						Notifications.scheduleForEvent(event, context);
 					}
 					//delete events
 					Set<Integer> deletedEventsPks = new HashSet<>(deletedEvents.length());
@@ -154,6 +157,9 @@ public final class Internet
 							{
 								changedEventsTitleAndPk.put(event.pk, event.title);
 								eventsIterator.remove();
+
+								//remove the event from notification
+								Notifications.unscheduleForEvent(event, context);
 							}
 						}
 					}
@@ -175,8 +181,11 @@ public final class Internet
 							if (selectedChangedEventTitle != null)
 								selectedChangedEventsTitles.add(selectedChangedEventTitle);
 						}
-						String toastText = context.getString(R.string.toast_events_changed, Joiner.on(", ").join(selectedChangedEventsTitles));
-						Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
+						if (!selectedChangedEventsTitles.isEmpty())
+						{
+							String toastText = context.getString(R.string.toast_events_changed, Joiner.on(", ").join(selectedChangedEventsTitles));
+							Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
+						}
 					}
 				}
 				catch (JSONException e) {e.printStackTrace();}
