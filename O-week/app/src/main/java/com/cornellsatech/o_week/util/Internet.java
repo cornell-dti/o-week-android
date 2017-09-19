@@ -52,6 +52,7 @@ public final class Internet
 	public static final String CAMPUS_MAP = "https://www.cornell.edu/about/maps/cornell-campus-map-2015.pdf";
 	public static final String NEW_STUDENTS_WEBPAGE = "https://newstudents.cornell.edu/fall-2017/first-year/cornell-orientation-august-18-21-2017";
 	public static final String CORNELL_RESCUER = "market://details?id=cornell.sa.rescuer";
+	public static final String IMAGE_DIRECTORY = "OweekImages";
 	private static final String TAG = Internet.class.getSimpleName();
 
 	//suppress default constructor
@@ -213,7 +214,7 @@ public final class Internet
 	public static void getImageForEvent(final Event event, final ImageView imageView, final CoordinatorLayout layout, final boolean saveImage)
 	{
 		final File imageFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-				+ File.separator + event.pk + Bitmap.CompressFormat.JPEG.name().toLowerCase());
+				+ File.separator + IMAGE_DIRECTORY + File.separator + event.pk + ".jpg");
 		if (imageFile.exists())
 		{
 			try
