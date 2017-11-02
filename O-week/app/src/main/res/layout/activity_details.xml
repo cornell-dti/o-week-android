@@ -31,96 +31,175 @@
 			android:layout_height="wrap_content"
 			android:orientation="vertical">
 
-			<android.support.percent.PercentRelativeLayout
+			<android.support.constraint.ConstraintLayout
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
+				android:layout_height="match_parent">
 
-				<ImageView
-					android:id="@+id/eventImage"
-					android:scaleType="centerCrop"
-					app:layout_aspectRatio="178%"
-					app:layout_widthPercent="100%"
-					tools:src="@mipmap/ic_launcher"
-					tools:ignore="ContentDescription"/>
-			</android.support.percent.PercentRelativeLayout>
+				<android.support.percent.PercentRelativeLayout
+					android:id="@+id/percentRelativeLayout2"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content">
+
+					<ImageView
+						android:id="@+id/eventImage"
+						android:scaleType="centerCrop"
+						app:layout_aspectRatio="178%"
+						app:layout_widthPercent="100%"
+						tools:ignore="ContentDescription"
+						tools:src="@mipmap/ic_launcher" />
+
+					<View
+						android:layout_width="match_parent"
+						android:layout_height="160dp"
+						android:layout_alignParentBottom="true"
+						android:background="@drawable/gradient" />
+
+				</android.support.percent.PercentRelativeLayout>
+
+				<TextView
+					android:id="@+id/titleText"
+					android:layout_width="291dp"
+					android:layout_height="0dp"
+					android:layout_marginBottom="4dp"
+					android:layout_marginStart="16dp"
+					android:ellipsize="marquee"
+					android:focusable="true"
+					android:focusableInTouchMode="true"
+					android:marqueeRepeatLimit="marquee_forever"
+					android:scrollHorizontally="true"
+					android:singleLine="true"
+					android:textColor="@color/common_google_signin_btn_text_dark_default"
+					android:textSize="24sp"
+					android:textStyle="bold"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					tools:text="Title" />
+
+			</android.support.constraint.ConstraintLayout>
 
 			<RelativeLayout
 				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-				<TextView
+				android:layout_height="77dp">
+
+				<android.support.constraint.ConstraintLayout
 					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginTop="@dimen/margin"
-					android:layout_marginLeft="@dimen/margin"
-					android:layout_marginRight="@dimen/margin"
-					android:layout_toLeftOf="@+id/startTimeText"
-					android:id="@+id/titleText"
-					android:textSize="@dimen/size_title_details"
-					android:textStyle="bold"
-					android:singleLine="true"
-					android:scrollHorizontally="true"
-					android:ellipsize="marquee"
-					android:marqueeRepeatLimit="marquee_forever"
-					android:focusable="true"
-					android:focusableInTouchMode="true"
-					tools:text="Title"/>
-				<TextView
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:id="@+id/captionText"
-					android:layout_below="@+id/titleText"
-					android:layout_toLeftOf="@+id/endTimeText"
-					android:layout_marginLeft="@dimen/margin"
-					android:layout_marginBottom="@dimen/margin"
-					android:layout_marginRight="@dimen/margin"
-					android:textSize="@dimen/size_secondary_details"
-					android:maxLines="1"
-					android:scrollHorizontally="true"
-					android:ellipsize="end"
-					tools:text="Caption"/>
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_alignParentRight="true"
-					android:layout_alignBottom="@+id/titleText"
-					android:layout_marginRight="@dimen/margin"
-					android:id="@+id/startTimeText"
-					android:textSize="@dimen/size_secondary_details"
-					tools:text="10:00 AM"/>
-				<TextView
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_alignParentRight="true"
-					android:layout_alignBottom="@+id/captionText"
-					android:layout_marginRight="@dimen/margin"
-					android:id="@+id/endTimeText"
-					android:textSize="@dimen/size_secondary_details"
-					tools:text="11:30 AM"/>
+					android:layout_height="match_parent">
+
+					<Button
+						android:id="@+id/button2"
+						android:layout_width="100dp"
+						android:layout_height="39dp"
+						android:layout_alignParentEnd="true"
+						android:layout_centerVertical="true"
+						android:layout_marginEnd="20dp"
+						android:background="@drawable/bg_schedule_cell_ripple"
+						android:text="Add"
+						android:textAppearance="@style/TextAppearance.AppCompat"
+						android:textColor="@color/common_google_signin_btn_text_dark_default"
+						android:textSize="16sp"
+						app:layout_constraintBottom_toBottomOf="parent"
+						app:layout_constraintEnd_toEndOf="parent"
+						app:layout_constraintTop_toTopOf="parent" />
+
+					<android.support.constraint.ConstraintLayout
+						android:id="@+id/constraintLayout"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginBottom="8dp"
+						android:layout_marginEnd="8dp"
+						android:layout_marginStart="20dp"
+						android:layout_marginTop="8dp"
+						app:layout_constraintBottom_toBottomOf="parent"
+						app:layout_constraintEnd_toStartOf="@+id/button2"
+						app:layout_constraintStart_toStartOf="parent"
+						app:layout_constraintTop_toTopOf="parent">
+
+						<TextView
+							android:id="@+id/startTimeText"
+							android:layout_width="0dp"
+							android:layout_height="wrap_content"
+							android:layout_alignParentStart="true"
+							android:layout_alignParentTop="true"
+							android:textColor="@color/common_google_signin_btn_text_dark_focused"
+							android:textSize="16sp"
+							app:layout_constraintBottom_toBottomOf="parent"
+							app:layout_constraintTop_toTopOf="parent"
+							tools:layout_editor_absoluteX="3dp"
+							tools:text="10:00 AM" />
+
+						<TextView
+							android:id="@+id/timeDash"
+							android:layout_width="0dp"
+							android:layout_height="wrap_content"
+							android:layout_marginStart="4dp"
+							android:text="-"
+							android:textAlignment="center"
+							android:textColor="@color/common_google_signin_btn_text_dark_focused"
+							android:textSize="16sp"
+							app:layout_constraintBottom_toBottomOf="parent"
+							app:layout_constraintStart_toEndOf="@+id/startTimeText"
+							app:layout_constraintTop_toTopOf="parent" />
+
+						<TextView
+							android:id="@+id/endTimeText"
+							android:layout_width="116dp"
+							android:layout_height="23dp"
+							android:layout_alignBaseline="@+id/startTimeText"
+							android:layout_alignBottom="@+id/startTimeText"
+							android:layout_marginBottom="8dp"
+							android:layout_marginStart="4dp"
+							android:layout_marginTop="8dp"
+							android:layout_toEndOf="@+id/startTimeText"
+							android:textColor="@color/common_google_signin_btn_text_dark_focused"
+							android:textSize="16sp"
+							app:layout_constraintBottom_toBottomOf="parent"
+							app:layout_constraintStart_toEndOf="@+id/timeDash"
+							app:layout_constraintTop_toTopOf="parent"
+							tools:text="11:30 AM" />
+
+						<TextView
+							android:id="@+id/captionText"
+							android:layout_width="256dp"
+							android:layout_height="20dp"
+							android:layout_alignParentBottom="true"
+							android:layout_alignParentStart="true"
+							android:ellipsize="end"
+							android:maxLines="1"
+							android:scrollHorizontally="true"
+							android:textSize="@dimen/size_secondary_details"
+							app:layout_constraintStart_toStartOf="parent"
+							app:layout_constraintTop_toBottomOf="@+id/timeDash"
+							tools:text="Caption" />
+					</android.support.constraint.ConstraintLayout>
+
+				</android.support.constraint.ConstraintLayout>
+
 			</RelativeLayout>
+
+			<TextView
+				android:id="@+id/descriptionText"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="@dimen/margin"
+				android:textSize="@dimen/size_detail"
+				tools:text="No description available at this time." />
 
 			<fragment
 				android:id="@+id/map"
 				android:name="com.google.android.gms.maps.MapFragment"
 				android:layout_width="match_parent"
-				android:layout_height="@dimen/height_map"/>
+				android:layout_height="@dimen/height_map"
+				app:layout_constraintTop_toBottomOf="parent" />
 
 			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textSize="@dimen/size_detail"
-				android:layout_margin="@dimen/margin"
-				android:id="@+id/descriptionText"
-				tools:text="No description available at this time."/>
-
-			<TextView
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:textSize="@dimen/size_detail"
-				android:layout_marginBottom="@dimen/margin"
-				android:layout_marginRight="@dimen/margin"
-				android:layout_marginLeft="@dimen/margin"
 				android:id="@+id/additionalText"
-				android:visibility="gone"/>
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="@dimen/margin"
+				android:layout_marginLeft="@dimen/margin"
+				android:layout_marginRight="@dimen/margin"
+				android:textSize="@dimen/size_detail"
+				android:visibility="gone" />
 
 		</LinearLayout>
 
