@@ -26,9 +26,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	private final TextView endTimeText;
 	private final TextView titleText;
 	private final TextView captionText;
-	private final CheckBox checkBox;
 	private final TextView requiredLabel;
-	private final TextView categoryRequiredText;
 	private final Context context;
 	private Event event;
 	private static final String TAG = FeedCell.class.getSimpleName();
@@ -44,10 +42,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		endTimeText = itemView.findViewById(R.id.endTimeText);
 		titleText = itemView.findViewById(R.id.titleText);
 		captionText = itemView.findViewById(R.id.captionText);
-		checkBox = itemView.findViewById(R.id.checkbox);
 		requiredLabel = itemView.findViewById(R.id.requiredLabel);
-		categoryRequiredText = itemView.findViewById(R.id.categoryRequiredText);
-		checkBox.setOnClickListener(this);
 		itemView.setOnClickListener(this);
 		context = itemView.getContext();
 	}
@@ -64,11 +59,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
-		checkBox.setChecked(selected);
 		setVisible(event.required || event.categoryRequired, requiredLabel);
-		setVisible(event.categoryRequired, categoryRequiredText);
-		if (event.categoryRequired)
-			categoryRequiredText.setText(UserData.categoryForPk(event.category).name);
 	}
 	/**
 	 * This object has been clicked. List listeners know.
@@ -77,22 +68,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	@Override
 	public void onClick(View v)
 	{
-		if (v.getId() == checkBox.getId())  //checkBox was clicked
-		{
-			if (checkBox.isChecked())
-			{
-				UserData.insertToSelectedEvents(event);
-				if (Settings.getReceiveReminders(context))
-					Notifications.scheduleForEvent(event, context);
-			}
-			else
-			{
-				UserData.removeFromSelectedEvents(event);
-				Notifications.unscheduleForEvent(event, context);
-			}
-
-		}
-		else    //entire view was clicked
+		   //entire view was clicked
 			NotificationCenter.DEFAULT.post(new NotificationCenter.EventEventClicked(event));
 	}
 
