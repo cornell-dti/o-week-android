@@ -6,15 +6,15 @@ An **Android** app for incoming freshmen to use during their first week as a Cor
 
 Getting Started
 ------
-You will need **Android Studio 2.3.3** to run the latest version of this app, which uses the following SDKs. Last Update **9/18/2017** (remember to check "Show Package Details" in the Android SDK dialog):
- * Android 8.0 (O)
-   * Android SDK Platform 26
- * Android SDK Build-Tools 26.0.1
- * Android SDK Platform-Tools 26.0.0
- * Android SDK Tools 26.0.2
+You will need **Android Studio 3.0** to run the latest version of this app, which uses the following SDKs. Last Update **11/2/2017** (remember to check "Show Package Details" in the Android SDK dialog):
+ * Android API 27
+   * Android SDK Platform 27
+ * Android SDK Build-Tools 27.0.0
+ * Android SDK Platform-Tools 26.0.2
+ * Android SDK Tools 26.1.1
  * Android Support Library 23.2.1 (Windows only)
  * Documentation for Android SDK
- * Google Play Services, rev 44
+ * Google Play Services, rev 46
  * Google USB Driver (Windows only, use newest ver)
  * Support Repository
    * ConstraintLayout for Android 1.0.2
@@ -75,10 +75,15 @@ Used Libraries
 Contributors
 ------
  * **Julia Kruk** - Project Manager
- * **Juhwan Park** - Project Manager
- * **David Chu** - Front-End Developer
- * **Vicente Caycedo** - Front-End Developer
+ * **David Chu** - Project Manager
+ * **Amanda Ong** - Front-End Developer
+ * **Jagger Brulato** - Front-End Developer
+ * **Qichen (Ethan) Hu** - Front-End Developer
  * **Arnav Ghosh** - Back-End Developer
+ * **Adit Gupta** - Back-End Developer
+ * **Cedric Castillo** - Designer
+ * **Lisa LaBarbera** - Designer
+ * **Justin Park** - Designer
 
-We are a team within **Cornell Design & Tech Initiative**, a project team affiliated with Cornell Undergraduate Student Assembly led by Alice Pham. For more information, see its website [here](http://cornelldti.org/).
+We are a team within **Cornell Design & Tech Initiative**. For more information, see its website [here](http://cornelldti.org/).
 <img src="http://cornelldti.org/img/logos/cornelldti-dark.png">
