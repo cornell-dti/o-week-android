@@ -1,127 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:app="http://schemas.android.com/apk/res-auto"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:background="?attr/selectableItemBackground"
-	android:layout_width="match_parent"
-	android:layout_height="@dimen/height_feed_cell"
-	android:orientation="horizontal">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/height_feed_cell"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="horizontal"
+    tools:layout_editor_absoluteY="81dp">
 
-	<LinearLayout
-		android:id="@+id/timeLayouts"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginRight="16dp"
-		android:gravity="right"
-		android:orientation="vertical"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintRight_toLeftOf="@+id/eventTextLayouts"
-		app:layout_constraintTop_toTopOf="parent"
-		android:layout_marginEnd="16dp">
+    <TextView
+        android:id="@+id/endTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:alpha="@dimen/alpha_feed_secondary_text"
+        android:textSize="@dimen/size_caption"
+        app:layout_constraintStart_toStartOf="@+id/startTimeText"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        tools:text="10:00 AM" />
 
-		<TextView
-			android:id="@+id/startTimeText"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:alpha="@dimen/alpha_feed_secondary_text"
-			android:textSize="@dimen/size_caption"
-			tools:text="8:00 AM"/>
+    <TextView
+        android:id="@+id/captionText"
+        android:layout_width="0dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="2dp"
+        android:layout_weight="1"
+        android:alpha="@dimen/alpha_feed_secondary_text"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
+        android:textSize="@dimen/size_caption"
+        app:layout_constraintEnd_toStartOf="@+id/requiredLabel"
+        app:layout_constraintStart_toStartOf="@+id/titleText"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        tools:text="Event caption" />
 
-		<TextView
-			android:id="@+id/endTimeText"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:alpha="@dimen/alpha_feed_secondary_text"
-			android:textSize="@dimen/size_caption"
-			tools:text="10:00 AM"/>
-	</LinearLayout>
+    <TextView
+        android:id="@+id/startTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginStart="20dp"
+        android:alpha="1"
+        android:textSize="@dimen/size_caption"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="08:00 AM" />
 
-	<LinearLayout
-		android:id="@+id/eventTextLayouts"
-		android:layout_width="0dp"
-		android:layout_height="wrap_content"
-		android:orientation="vertical"
-		app:layout_constraintBottom_toBottomOf="parent"
-		app:layout_constraintTop_toTopOf="parent"
-		android:layout_marginLeft="80dp"
-		app:layout_constraintLeft_toLeftOf="parent"
-		app:layout_constraintRight_toLeftOf="@+id/checkbox"
-		android:layout_marginRight="16dp"
-		android:layout_marginStart="80dp"
-		android:layout_marginEnd="16dp">
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_weight="0"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
+        android:textAlignment="viewStart"
+        android:textSize="@dimen/size_title"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toStartOf="@+id/requiredLabel"
+        app:layout_constraintStart_toEndOf="@+id/startTimeText"
+        tools:text="Event title that is really really long" />
 
-		<LinearLayout
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_marginBottom="@dimen/margin_bottom_feed_cell_title"
-			android:orientation="horizontal"
-			android:gravity="center_vertical"
-			tools:layout_editor_absoluteX="8dp"
-			tools:layout_editor_absoluteY="8dp">
+    <TextView
+        android:id="@+id/requiredLabel"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="right"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/required_label"
+        android:gravity="center"
+        android:text="@string/required_label"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/size_required_label_text"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="RQ"
+        tools:visibility="visible" />
 
-			<TextView
-				android:id="@+id/titleText"
-				android:layout_width="0dp"
-				android:layout_height="wrap_content"
-				android:layout_weight="1"
-				android:ellipsize="end"
-				android:maxLines="1"
-				android:scrollHorizontally="true"
-				android:textSize="@dimen/size_title"
-				android:textStyle="bold"
-				tools:text="Event title that is really really long"/>
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 
-			<TextView
-				android:id="@+id/requiredLabel"
-				android:layout_width="@dimen/size_required_label"
-				android:layout_height="@dimen/size_required_label"
-				android:layout_gravity="left"
-				android:background="@drawable/required_label"
-				android:gravity="center"
-				android:textColor="@android:color/white"
-				android:layout_marginLeft="@dimen/half_margin"
-				android:textSize="@dimen/size_required_label_text"
-				android:textStyle="bold"
-				android:visibility="gone"
-				android:text="@string/required_label"
-				tools:text="RQ"
-				tools:visibility="visible"/>
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="@dimen/half_margin"
-				android:textColor="@color/colorPrimary"
-				android:id="@+id/categoryRequiredText"
-				android:textSize="@dimen/size_title"
-				android:textStyle="bold"
-				android:visibility="gone"
-				tools:text="CALS"
-				tools:visibility="visible"/>
-		</LinearLayout>
-
-		<TextView
-			android:id="@+id/captionText"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:alpha="@dimen/alpha_feed_secondary_text"
-			android:maxLines="1"
-			android:scrollHorizontally="true"
-			android:ellipsize="end"
-			android:textSize="@dimen/size_caption"
-			tools:text="Event caption"/>
-
-	</LinearLayout>
-
-	<CheckBox
-		android:id="@+id/checkbox"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		tools:text=""
-		android:layout_marginRight="16dp"
-		app:layout_constraintRight_toRightOf="parent"
-		app:layout_constraintBottom_toBottomOf="parent"
-		android:layout_marginEnd="16dp"
-		app:layout_constraintTop_toTopOf="parent"/>
 </android.support.constraint.ConstraintLayout>
