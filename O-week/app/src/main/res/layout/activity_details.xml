@@ -99,105 +99,112 @@
 
 			</android.support.constraint.ConstraintLayout>
 
-			<RelativeLayout
+			<android.support.constraint.ConstraintLayout
 				android:layout_width="match_parent"
-				android:layout_height="77dp">
+				android:layout_height="wrap_content">
 
-				<android.support.constraint.ConstraintLayout
-					android:layout_width="match_parent"
-					android:layout_height="match_parent">
+				<Button
+					android:id="@+id/addButton"
+					android:layout_width="100dp"
+					android:layout_height="39dp"
+					android:layout_alignParentEnd="true"
+					android:layout_centerVertical="true"
+					android:layout_marginEnd="20dp"
+					android:layout_marginTop="8dp"
+					android:background="@drawable/bg_button_ripple"
+					android:text="@string/button_text_event_not_added"
+					android:textAppearance="@style/TextAppearance.AppCompat"
+					android:textColor="@color/colorPrimary"
+					android:textSize="16sp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintEnd_toEndOf="parent"
+					app:layout_constraintTop_toTopOf="parent" />
 
-					<Button
-						android:id="@+id/addButton"
-						android:layout_width="100dp"
-						android:layout_height="39dp"
-						android:layout_alignParentEnd="true"
-						android:layout_centerVertical="true"
-						android:layout_marginEnd="20dp"
-						android:background="@drawable/bg_button_ripple"
-						android:text="Add"
-						android:textAppearance="@style/TextAppearance.AppCompat"
-						android:textColor="@color/colorPrimary"
-						android:textSize="16sp"
-						app:layout_constraintBottom_toBottomOf="parent"
-						app:layout_constraintEnd_toEndOf="parent"
-						app:layout_constraintTop_toTopOf="parent" />
+				<TextView
+					android:id="@+id/startTimeText"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_alignParentStart="true"
+					android:layout_alignParentTop="true"
+					android:layout_marginStart="20dp"
+					android:textColor="@color/common_google_signin_btn_text_dark_focused"
+					android:textSize="16sp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toTopOf="parent"
+					tools:text="10:00 AM" />
 
-					<android.support.constraint.ConstraintLayout
-						android:id="@+id/constraintLayout"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:layout_marginBottom="8dp"
-						android:layout_marginEnd="8dp"
-						android:layout_marginStart="20dp"
-						android:layout_marginTop="8dp"
-						app:layout_constraintBottom_toBottomOf="parent"
-						app:layout_constraintEnd_toStartOf="@+id/addButton"
-						app:layout_constraintStart_toStartOf="parent"
-						app:layout_constraintTop_toTopOf="parent">
+				<TextView
+					android:id="@+id/timeDash"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_marginStart="4dp"
+					android:text="-"
+					android:textAlignment="center"
+					android:textColor="@color/common_google_signin_btn_text_dark_focused"
+					android:textSize="16sp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintStart_toEndOf="@+id/startTimeText"
+					app:layout_constraintTop_toTopOf="parent" />
 
-						<TextView
-							android:id="@+id/startTimeText"
-							android:layout_width="0dp"
-							android:layout_height="wrap_content"
-							android:layout_alignParentStart="true"
-							android:layout_alignParentTop="true"
-							android:textColor="@color/common_google_signin_btn_text_dark_focused"
-							android:textSize="16sp"
-							app:layout_constraintBottom_toBottomOf="parent"
-							app:layout_constraintTop_toTopOf="parent"
-							tools:layout_editor_absoluteX="3dp"
-							tools:text="10:00 AM" />
+				<TextView
+					android:id="@+id/endTimeText"
+					android:layout_width="116dp"
+					android:layout_height="23dp"
+					android:layout_alignBaseline="@+id/startTimeText"
+					android:layout_alignBottom="@+id/startTimeText"
+					android:layout_marginBottom="8dp"
+					android:layout_marginStart="4dp"
+					android:layout_marginTop="8dp"
+					android:layout_toEndOf="@+id/startTimeText"
+					android:textColor="@color/common_google_signin_btn_text_dark_focused"
+					android:textSize="16sp"
+					app:layout_constraintBottom_toBottomOf="parent"
+					app:layout_constraintStart_toEndOf="@+id/timeDash"
+					app:layout_constraintTop_toTopOf="parent"
+					tools:text="11:30 AM" />
 
-						<TextView
-							android:id="@+id/timeDash"
-							android:layout_width="0dp"
-							android:layout_height="wrap_content"
-							android:layout_marginStart="4dp"
-							android:text="-"
-							android:textAlignment="center"
-							android:textColor="@color/common_google_signin_btn_text_dark_focused"
-							android:textSize="16sp"
-							app:layout_constraintBottom_toBottomOf="parent"
-							app:layout_constraintStart_toEndOf="@+id/startTimeText"
-							app:layout_constraintTop_toTopOf="parent" />
+				<TextView
+					android:id="@+id/captionText"
+					android:layout_width="0dp"
+					android:layout_height="wrap_content"
+					android:layout_alignParentBottom="true"
+					android:layout_alignParentStart="true"
+					android:layout_marginEnd="5dp"
+					android:layout_marginStart="20dp"
+					android:ellipsize="end"
+					android:scrollHorizontally="true"
+					android:textSize="@dimen/size_secondary_details"
+					app:layout_constraintEnd_toStartOf="@+id/addButton"
+					app:layout_constraintStart_toStartOf="parent"
+					app:layout_constraintTop_toBottomOf="@+id/startTimeText"
+					tools:text="This is a really long caption which is being used to test the caption box's ability to accommodate long strings." />
 
-						<TextView
-							android:id="@+id/endTimeText"
-							android:layout_width="116dp"
-							android:layout_height="23dp"
-							android:layout_alignBaseline="@+id/startTimeText"
-							android:layout_alignBottom="@+id/startTimeText"
-							android:layout_marginBottom="8dp"
-							android:layout_marginStart="4dp"
-							android:layout_marginTop="8dp"
-							android:layout_toEndOf="@+id/startTimeText"
-							android:textColor="@color/common_google_signin_btn_text_dark_focused"
-							android:textSize="16sp"
-							app:layout_constraintBottom_toBottomOf="parent"
-							app:layout_constraintStart_toEndOf="@+id/timeDash"
-							app:layout_constraintTop_toTopOf="parent"
-							tools:text="11:30 AM" />
+				<!--<android.support.constraint.ConstraintLayout-->
+				<!--android:id="@+id/constraintLayout"-->
+				<!--android:layout_width="0dp"-->
+				<!--android:layout_height="0dp"-->
+				<!--android:layout_marginBottom="8dp"-->
+				<!--android:layout_marginEnd="8dp"-->
+				<!--android:layout_marginStart="20dp"-->
+				<!--android:layout_marginTop="8dp"-->
+				<!--app:layout_constraintBottom_toBottomOf="parent"-->
+				<!--app:layout_constraintEnd_toStartOf="@+id/addButton"-->
+				<!--app:layout_constraintStart_toStartOf="parent"-->
+				<!--app:layout_constraintTop_toTopOf="parent">-->
 
-						<TextView
-							android:id="@+id/captionText"
-							android:layout_width="256dp"
-							android:layout_height="20dp"
-							android:layout_alignParentBottom="true"
-							android:layout_alignParentStart="true"
-							android:ellipsize="end"
-							android:maxLines="1"
-							android:scrollHorizontally="true"
-							android:textSize="@dimen/size_secondary_details"
-							app:layout_constraintStart_toStartOf="parent"
-							app:layout_constraintTop_toBottomOf="@+id/timeDash"
-							tools:text="Caption" />
+				<!---->
 
-					</android.support.constraint.ConstraintLayout>
+				<!--</android.support.constraint.ConstraintLayout>-->
 
-				</android.support.constraint.ConstraintLayout>
+			</android.support.constraint.ConstraintLayout>
 
-			</RelativeLayout>
+			<!--<RelativeLayout-->
+				<!--android:layout_width="match_parent"-->
+				<!--android:layout_height="77dp">-->
+				<!---->
+
+			<!--</RelativeLayout>-->
 
 			<ImageView
 				android:id="@+id/horizontalBreakBar"
