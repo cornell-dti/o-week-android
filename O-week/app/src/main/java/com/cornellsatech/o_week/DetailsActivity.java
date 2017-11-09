@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -42,7 +43,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  *                             A reference to the {@link CoordinatorLayout} is necessary to display
  *                             {@link android.support.design.widget.Snackbar}.
  */
-public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, OnMapReadyCallback
+public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, OnMapReadyCallback, Button.OnClickListener
 {
 	public static String EVENT_KEY = "event";
 	private Event event;
@@ -55,6 +56,8 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	private TextView descriptionText;
 	private TextView additionalText;
 	private CheckBox checkBox;
+	private TextView requiredButton;
+	private Button addButton;
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	public static final int MAP_ZOOM = 16;
 
@@ -94,6 +97,9 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		endTimeText = (TextView) findViewById(R.id.endTimeText);
 		descriptionText = (TextView) findViewById(R.id.descriptionText);
 		additionalText = (TextView) findViewById(R.id.additionalText);
+		requiredButton = (TextView) findViewById(R.id.requiredLabel);
+		addButton = (Button) findViewById(R.id.addButton);
+
 		MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
 	}
@@ -114,6 +120,13 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		descriptionText.setText(event.description);
 		startTimeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT));
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
+		if(!event.required){
+			requiredButton.setVisibility(View.GONE);
+		}
+		if(UserData.selectedEventsContains(event)){
+			addButton.setText(R.string.button_text_event_added);
+		}
+		addButton.setOnClickListener(this);
 		setAdditionalText();
 
 		//we must know if we can write the image we downloaded to file
@@ -153,9 +166,26 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		checkBox.setButtonTintList(new ColorStateList(states, colors));
 		//set checkbox checked based on whether event is selected
 		checkBox.setChecked(UserData.selectedEventsContains(event));
+		checkBox.setVisibility(View.GONE);
 		checkBox.setOnCheckedChangeListener(this);
 
 		return true;
+	}
+
+	@Override
+	public void onClick(View addButton){
+		Button button = (Button) addButton;
+		if(UserData.selectedEventsContains(event)){
+			UserData.removeFromSelectedEvents(event);
+			Notifications.unscheduleForEvent(event, this);
+			button.setText(R.string.button_text_event_not_added);
+		}else{
+			UserData.insertToSelectedEvents(event);
+			if (Settings.getReceiveReminders(this))
+				Notifications.scheduleForEvent(event, this);
+			button.setText(R.string.button_text_event_added);
+		}
+		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, button.getText()==getString(R.string.button_text_event_added)));
 	}
 
 	/**

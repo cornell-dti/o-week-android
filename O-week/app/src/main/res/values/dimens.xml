@@ -26,7 +26,9 @@
 	<dimen name="height_time_line">1dp</dimen>
 	<dimen name="height_map">150dp</dimen>
 	<dimen name="width_schedule_cell_border">1dp</dimen>
+	<dimen name="width_button_border">2dp</dimen>
 	<dimen name="corner_radius_schedule_cell">3dp</dimen>
+	<dimen name="corner_radius_button">10dp</dimen>
 	<dimen name="distance_between_time_lines">75dp</dimen>
 	<item name="alpha_feed_secondary_text" format="float" type="dimen">0.5</item>
 	<item name="alpha_time_line" format="float" type="dimen">0.2</item>

@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cornellsatech.o_week.R;
+
+
 /**
  * Created by Ethan on 10/29/17.
  */
