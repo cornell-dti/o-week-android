@@ -18,19 +18,41 @@
             android:layout_height="?attr/actionBarSize"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-	    <android.support.v7.widget.RecyclerView
-		    android:id="@+id/datePicker"
-		    android:layout_width="match_parent"
-		    android:layout_height="@dimen/height_date_picker"
-		    android:orientation="horizontal"
-		    tools:listitem="@layout/cell_date_picker"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/datePicker"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_date_picker"
+            android:orientation="horizontal"
+            tools:listitem="@layout/cell_date_picker" />
 
     </android.support.design.widget.AppBarLayout>
 
-	<FrameLayout
-		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-	    android:id="@+id/fragmentContainer"
-		app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/navigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemBackground="@android:color/white"
+            app:itemIconTint="@color/colorPrimaryDark"
+            app:itemTextColor="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/bottom_nav"
+            android:elevation="8dp"/>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.design.widget.CoordinatorLayout>
