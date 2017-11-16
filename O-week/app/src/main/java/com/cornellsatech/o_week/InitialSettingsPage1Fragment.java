@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,7 @@ import com.cornellsatech.o_week.models.StudentType;
  * The pager fragment for the student type initial settings.
  */
 
-public class InitialSettingsPage1Fragment extends Fragment{
+public class InitialSettingsPage1Fragment extends Fragment implements View.OnClickListener{
 
     private Button freshman;
     private Button transfer;
@@ -62,41 +63,10 @@ public class InitialSettingsPage1Fragment extends Fragment{
         }
         //Sometimes view is reloaded after scrolling back from the third page. This ensures that the options the user had chosen remains visible.
 
-        freshman.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setSelected(freshman);
-                disableSelected(transfer);
-                studentType = StudentType.FRESHMAN;
-                jumpToNextFragment();
-            }
-        });
-
-        transfer.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setSelected(transfer);
-                disableSelected(freshman);
-                studentType = StudentType.TRANSFER;
-                jumpToNextFragment();
-            }
-        });
-
-        yes.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setSelected(yes);
-                disableSelected(no);
-                internationalStudentStatus = InternationalStudentStatus.YES;
-                jumpToNextFragment();
-            }
-        });
-
-        no.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setSelected(no);
-                disableSelected(yes);
-                internationalStudentStatus = InternationalStudentStatus.NO;
-                jumpToNextFragment();
-            }
-        });
+        freshman.setOnClickListener(this);
+        transfer.setOnClickListener(this);
+        yes.setOnClickListener(this);
+        no.setOnClickListener(this);
 
         return rootView;
     }
@@ -116,7 +86,7 @@ public class InitialSettingsPage1Fragment extends Fragment{
      */
     private void disableSelected(Button button){
         button.setBackgroundResource(R.drawable.bg_button_ripple);
-        button.setTextColor(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
+        button.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
     }
 
     /**
@@ -132,5 +102,43 @@ public class InitialSettingsPage1Fragment extends Fragment{
         }
     }
 
+    /**
+     * Handles button clicks.
+     * @param view {@link freshman}, {@link transfer}, {@link yes}, {@link no}
+     */
+    @Override
+    public void onClick(View view) {
+        Button buttonToSelect;
+        Button buttonToDeselect;
 
+        switch (view.getId()) {
+            case R.id.freshman:
+                buttonToSelect = freshman;
+                buttonToDeselect = transfer;
+                studentType = StudentType.FRESHMAN;
+                break;
+            case R.id.transfer:
+                buttonToSelect = transfer;
+                buttonToDeselect = freshman;
+                studentType = StudentType.TRANSFER;
+                break;
+            case R.id.isInternationalStudent:
+                buttonToSelect = yes;
+                buttonToDeselect = no;
+                internationalStudentStatus = InternationalStudentStatus.YES;
+                break;
+            case R.id.notInternationalStudent:
+                buttonToSelect = no;
+                buttonToDeselect = yes;
+                internationalStudentStatus = InternationalStudentStatus.NO;
+                break;
+            default:
+                Log.e("InitialPage1Fragment", "onClick unexpected id: " + view);
+                return;
+        }
+
+        setSelected(buttonToSelect);
+        disableSelected(buttonToDeselect);
+        jumpToNextFragment();
+    }
 }

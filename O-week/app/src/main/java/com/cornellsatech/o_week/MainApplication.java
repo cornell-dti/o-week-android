@@ -3,6 +3,7 @@ package com.cornellsatech.o_week;
 
 import android.app.Application;
 import android.content.Intent;
+import android.util.Log;
 
 import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.InternationalStudentStatus;

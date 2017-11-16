@@ -41,7 +41,10 @@
             android:parentActivityName=".MainActivity" >
         </activity>
 
-        <activity android:name=".InitialSettingsActivity"></activity>
+        <activity
+            android:name=".InitialSettingsActivity"
+            android:launchMode="singleTop">
+        </activity>
 
 	    <receiver android:process=":remote" android:name=".util.AlarmReceiver"/>
 

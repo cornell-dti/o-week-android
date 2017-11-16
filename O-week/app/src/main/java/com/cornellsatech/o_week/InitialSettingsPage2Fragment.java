@@ -98,7 +98,6 @@ public class InitialSettingsPage2Fragment extends Fragment {
                 jumpToNextFragment();
             }
         });
-
         ILR.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setActiveButton(ILR);
