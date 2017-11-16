@@ -41,6 +41,8 @@
             android:parentActivityName=".MainActivity" >
         </activity>
 
+        <activity android:name=".InitialSettingsActivity"></activity>
+
 	    <receiver android:process=":remote" android:name=".util.AlarmReceiver"/>
 
 	    <!-- Reboot service for resetting alarms after they're erased on shutdown -->
