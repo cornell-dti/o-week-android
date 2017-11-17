@@ -1,10 +1,10 @@
 package com.cornellsatech.o_week;
 
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.util.Log;
@@ -16,9 +16,10 @@ import com.cornellsatech.o_week.util.Settings;
 /**
  * Fragment to allow users to change their preferences.
  */
-public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener
+
+public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener
 {
-	private SwitchPreference receiveReminders;
+	private SwitchPreferenceCompat receiveReminders;
 	private ListPreference notifyMe;
 	private Preference orientationPamphlet;
 	private Preference campusMap;
@@ -26,30 +27,30 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 	private Preference cornellRescuer;
 	private static final String TAG = SettingsFragment.class.getSimpleName();
 
-	/**
-	 * Sets up preferences for the user with listeners.
-	 * @param savedInstanceState Ignored.
-	 */
-	@Override
-	public void onCreate(@Nullable Bundle savedInstanceState)
-	{
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences);
+    /**
+     * Sets up preferences for the user with listeners.
+     * @param savedInstanceState Ignored.
+     */
+    @Override
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey)
+    {
+        addPreferencesFromResource(R.xml.preferences);
 
-		receiveReminders = (SwitchPreference) findPreference(R.string.key_receive_reminders);
-		notifyMe = (ListPreference) findPreference(R.string.key_notify_me);
-		receiveReminders.setOnPreferenceChangeListener(this);
-		notifyMe.setOnPreferenceChangeListener(this);
-		orientationPamphlet = findPreference(R.string.settings_orientation_pamphlet);
-		campusMap = findPreference(R.string.settings_campus_map);
-		newStudentsWebpage = findPreference(R.string.settings_new_students_webpage);
-		cornellRescuer = findPreference(R.string.settings_cornell_rescuer);
-		orientationPamphlet.setOnPreferenceClickListener(this);
-		campusMap.setOnPreferenceClickListener(this);
-		newStudentsWebpage.setOnPreferenceClickListener(this);
-		cornellRescuer.setOnPreferenceClickListener(this);
-	}
-	/**
+        receiveReminders = (SwitchPreferenceCompat) findPreference(R.string.key_receive_reminders);
+        notifyMe = (ListPreference) findPreference(R.string.key_notify_me);
+        receiveReminders.setOnPreferenceChangeListener(this);
+        notifyMe.setOnPreferenceChangeListener(this);
+        orientationPamphlet = findPreference(R.string.settings_orientation_pamphlet);
+        campusMap = findPreference(R.string.settings_campus_map);
+        newStudentsWebpage = findPreference(R.string.settings_new_students_webpage);
+        cornellRescuer = findPreference(R.string.settings_cornell_rescuer);
+        orientationPamphlet.setOnPreferenceClickListener(this);
+        campusMap.setOnPreferenceClickListener(this);
+        newStudentsWebpage.setOnPreferenceClickListener(this);
+        cornellRescuer.setOnPreferenceClickListener(this);
+    }
+
+    /**
 	 * Helper method for finding the Preference for the given key using the key's resId as opposed
 	 * to the key String itself.
 	 *

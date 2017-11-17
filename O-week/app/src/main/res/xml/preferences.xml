@@ -1,8 +1,8 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
 	<PreferenceCategory
 		android:title="@string/settings_category_notifications">
-		<SwitchPreference
+		<SwitchPreferenceCompat
 			android:key="@string/key_receive_reminders"
 			android:title="@string/settings_receive_reminders"
 		    android:defaultValue="true"/>
@@ -16,6 +16,7 @@
 			android:positiveButtonText="@null"
 			android:dependency="@string/key_receive_reminders"/>
 	</PreferenceCategory>
+
 	<PreferenceCategory
 		android:title="@string/settings_category_resources">
 		<Preference
@@ -31,4 +32,4 @@
 			android:key="@string/settings_cornell_rescuer"
 		    android:title="@string/settings_cornell_rescuer"/>
 	</PreferenceCategory>
-</PreferenceScreen>
+</android.support.v7.preference.PreferenceScreen>

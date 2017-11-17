@@ -7,20 +7,4 @@
 		android:icon="@drawable/ic_tune_white_24dp"
 		android:title="@string/menu_filter"
 		app:showAsAction="always"/>
-	<item
-		android:id="@+id/feedMenu"
-		android:icon="@drawable/ic_view_list_white_24dp"
-		android:title="@string/menu_feed"
-		android:visible="false"
-		app:showAsAction="always"/>
-	<item
-		android:id="@+id/myScheduleMenu"
-		android:icon="@drawable/ic_event_available_white_24dp"
-		android:title="@string/menu_my_schedule"
-		app:showAsAction="always"/>
-	<item
-		android:id="@+id/settingsMenu"
-		android:icon="@drawable/ic_settings_white_24dp"
-		android:title="@string/menu_settings"
-		app:showAsAction="ifRoom"/>
 </menu>
