@@ -121,40 +121,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
-	private void startFeedFragment()
-	{
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		transaction.replace(R.id.fragmentContainer, new FeedFragment());
-		transaction.commit();
-		getSupportActionBar().setTitle(R.string.title_fragment_feed);
-		datePickerRecycler.setVisibility(View.VISIBLE);
-	}
-
-	/**
-	 * Switches out the fragment for {@link ScheduleFragment} and sets an appropriate title.
-	 */
-	private void startScheduleFragment()
-	{
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		transaction.replace(R.id.fragmentContainer, new ScheduleFragment());
-		transaction.commit();
-		getSupportActionBar().setTitle(R.string.title_fragment_my_schedule);
-        datePickerRecycler.setVisibility(View.VISIBLE);
-	}
-
-    /**
-     * Switches out the fragment for {@link SettingsFragment} and sets an appropriate title.
-     */
-    private void startSettingsFragment()
-    {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainer, new SettingsFragment());
-        transaction.commit();
-		getSupportActionBar().setTitle(R.string.title_activity_settings);
-        datePickerRecycler.setVisibility(View.GONE);
-    }
-
-
 	/**
 	 * Shows the dialog that allows the user to choose what {@link Category} to filter events by.
 	 * If the user does select a NEW category to filter by, an event is sent out notifying listeners.
