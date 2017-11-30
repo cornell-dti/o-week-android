@@ -3,13 +3,10 @@ package com.cornellsatech.o_week;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
-import com.cornellsatech.o_week.util.Notifications;
-import com.cornellsatech.o_week.util.Settings;
 
 /**
  * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
@@ -59,7 +56,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
-		setVisible(event.required || event.categoryRequired, requiredLabel);
+		setVisible(UserData.requiredForUser(event, context), requiredLabel);
 	}
 	/**
 	 * This object has been clicked. List listeners know.

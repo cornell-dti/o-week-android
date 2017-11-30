@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
@@ -230,5 +231,16 @@ public final class UserData
 		for (List<Event> events : allEvents.values())
 			Collections.sort(events);
 		Collections.sort(UserData.categories);
+	}
+
+	/**
+	 * Checks whether the given event is required for the current user
+	 * @param event
+	 * @param context the context of the app
+	 * @return true if this event is required for the current user, false otherwise.
+	 */
+	public static boolean requiredForUser(Event event, Context context) {
+		boolean requiredForStudentsCategory = CollegeType.toCollegeType(event.category) == Settings.getStudentSavedCollegeType(context);
+		return event.required || (event.categoryRequired && requiredForStudentsCategory);
 	}
 }

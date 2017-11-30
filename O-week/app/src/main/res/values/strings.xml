@@ -30,6 +30,14 @@
 	<string name="key_receive_reminders">receiveReminders</string>
 	<string name="settings_notify_me">Notify me…</string>
 	<string name="key_notify_me">notifyMe</string>
+	<string name="college_ALS">Agriculture and Life Sciences</string>
+	<string name="college_AAP">Architecture, Art, and Planning</string>
+	<string name="college_AS">Arts and Sciences</string>
+	<string name="college_ENG">Engineering</string>
+	<string name="college_HE">Human Ecology</string>
+	<string name="college_ILR">Industrial Labor Relations</string>
+	<string name="college_JOHNSON">Johnson School of Business</string>
+
 
 	<string name="notify_me_time_of">At time of event</string>
 	<string name="notify_me_1_hour">1 hour before</string>

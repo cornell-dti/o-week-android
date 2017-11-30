@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.InternationalStudentStatus;
 import com.cornellsatech.o_week.models.StudentType;
+import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Settings;
 
 /**
@@ -54,6 +55,7 @@ public class InitialSettingsActivity extends AppCompatActivity {
         else {
             if(studentType != StudentType.NOTSET && internationalStudentStatus != InternationalStudentStatus.NOTSET && collegeType != CollegeType.NOTSET) {
                 Settings.setStudentInfo(this, studentType, internationalStudentStatus, collegeType);
+                NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
                 finish();
             }
         }

@@ -21,13 +21,12 @@ import java.util.ArrayList;
 public class InitialSettingsPage2Fragment extends Fragment {
 
     private Button ALS;
-    private Button AEM;
     private Button AAP;
     private Button AS;
     private Button ENG;
-    private Button HA;
     private Button ILR;
     private Button HE;
+    private Button JOHNSON;
     private CollegeType collegeType = CollegeType.NOTSET;
 
     /**
@@ -43,26 +42,17 @@ public class InitialSettingsPage2Fragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.initial_settings_college, container,false);
 
         ALS = rootView.findViewById(R.id.ALS);
-        AEM = rootView.findViewById(R.id.AEM);
         AAP = rootView.findViewById(R.id.AAP);
         AS = rootView.findViewById(R.id.AS);
         ENG = rootView.findViewById(R.id.ENG);
-        HA = rootView.findViewById(R.id.HA);
         ILR = rootView.findViewById(R.id.ILR);
         HE = rootView.findViewById(R.id.HE);
+        JOHNSON = rootView.findViewById(R.id.Johnson);
 
         ALS.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setActiveButton(ALS);
                 collegeType = CollegeType.ALS;
-                jumpToNextFragment();
-            }
-        });
-
-        AEM.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(AEM);
-                collegeType = CollegeType.AEM;
                 jumpToNextFragment();
             }
         });
@@ -91,13 +81,6 @@ public class InitialSettingsPage2Fragment extends Fragment {
             }
         });
 
-        HA.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(HA);
-                collegeType = CollegeType.HA;
-                jumpToNextFragment();
-            }
-        });
         ILR.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setActiveButton(ILR);
@@ -114,6 +97,14 @@ public class InitialSettingsPage2Fragment extends Fragment {
             }
         });
 
+        JOHNSON.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setActiveButton(JOHNSON);
+                collegeType = CollegeType.JOHNSON;
+                jumpToNextFragment();
+            }
+        });
+
 
         return rootView;
     }
@@ -125,13 +116,12 @@ public class InitialSettingsPage2Fragment extends Fragment {
     private void setActiveButton(Button button) {
         ArrayList<Button> buttonGroup = new ArrayList<Button>();
         buttonGroup.add(ALS);
-        buttonGroup.add(AEM);
         buttonGroup.add(AAP);
         buttonGroup.add(AS);
         buttonGroup.add(ENG);
-        buttonGroup.add(HA);
         buttonGroup.add(ILR);
         buttonGroup.add(HE);
+        buttonGroup.add(JOHNSON);
         setSelected(button);
         for(Button b : buttonGroup) {
             if(b != button) {
