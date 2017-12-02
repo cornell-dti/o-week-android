@@ -36,13 +36,6 @@
             android:value="AIzaSyAfj99YO2rt_bnRE3XBXiL8_0yAaewM_eY" />
 
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-
-        <activity
             android:name=".InitialSettingsActivity"
             android:launchMode="singleTop">
         </activity>

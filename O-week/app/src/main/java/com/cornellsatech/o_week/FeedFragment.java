@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.google.common.eventbus.Subscribe;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
+import java.util.Date;
+
 /**
  * Displays a list of events, ordered chronologically. This is a {@link Fragment} so that it can be
  * easily swapped out with {@link ScheduleFragment} while keeping the same date picker up top.
@@ -24,12 +27,36 @@ import org.joda.time.LocalTime;
  */
 public class FeedFragment extends Fragment
 {
+	private static final String TAG = FeedFragment.class.getSimpleName();
+	private static final String DATE_BUNDLE_KEY = "date";
+	private LocalDate date;
 	private RecyclerView feedRecycler;
 	private FeedAdapter feedAdapter;
 
 	/**
+	 * Create an instance of {@link FeedFragment} with the given date.
+	 * This should be the only way you create instances of {@link FeedFragment}.
+	 *
+	 * It passes the given date as a Bundle to {@link FeedFragment}.
+	 *
+	 * @param date The date the feed will display.
+	 * @return Instance of the feed.
+	 */
+	public static FeedFragment newInstance(LocalDate date)
+	{
+		FeedFragment feedFragment = new FeedFragment();
+
+		Bundle args = new Bundle();
+		args.putSerializable(DATE_BUNDLE_KEY, date);
+		feedFragment.setArguments(args);
+
+		return feedFragment;
+	}
+	/**
 	 * Connects views, sets up recycler, registers as listener. Unregisters in {@link #onDestroyView()}.
 	 * Listens for event clicks and opens {@link DetailsActivity} upon a click.
+	 *
+	 * Retrieves {@link #date} from the bundle.
 	 *
 	 * @param inflater {@inheritDoc}
 	 * @param container {@inheritDoc}
@@ -42,6 +69,12 @@ public class FeedFragment extends Fragment
 	{
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
 		NotificationCenter.DEFAULT.register(this);
+
+		//retrieve date from bundle
+		if (getArguments() != null)
+			date = (LocalDate) getArguments().getSerializable(DATE_BUNDLE_KEY);
+		else
+			Log.e(TAG, "onCreateView: date not found");
 
 		feedRecycler = view.findViewById(R.id.feedRecycler);
 		setUpRecycler();
@@ -78,7 +111,7 @@ public class FeedFragment extends Fragment
 	 */
 	private void setUpRecycler()
 	{
-		feedAdapter = new FeedAdapter();
+		feedAdapter = new FeedAdapter(date);
 		feedRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 		feedRecycler.setAdapter(feedAdapter);
 		scrollToNextEvent();

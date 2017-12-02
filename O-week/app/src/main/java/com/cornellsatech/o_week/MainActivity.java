@@ -1,9 +1,9 @@
 package com.cornellsatech.o_week;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -16,23 +16,25 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Settings;
+import com.google.common.eventbus.Subscribe;
 
 /**
  * The first {@link android.app.Activity} that will execute when the app launches.
  *
  * {@link #datePickerRecycler}: List of all dates for the orientation.
- * {@link #filterMenu}: Button to filter events by category. Should only be visible when {@link FeedFragment}
- *                      is showing.
+ * {@link #filterMenu}: Button to filter events by category. Should only be visible when {@link FeedFragment} is showing.
  */
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener
+{
 	private RecyclerView datePickerRecycler;
 	private DatePickerAdapter datePickerAdapter;
 	private MenuItem filterMenu;
+
+	private static final String TAG = MainActivity.class.getSimpleName();
 
 	/**
 	 * Sets up toolbar, {@link #datePickerRecycler}, and starts {@link FeedFragment}
@@ -43,36 +45,43 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setUpRecycler();
 
-        String feedTitle = getResources().getString(R.string.title_fragment_feed);
-        startFragment(new FeedFragment(), feedTitle);
+	    NotificationCenter.DEFAULT.register(this);
 
-        BottomNavigationView bottomNavBar = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView bottomNavBar = findViewById(R.id.navigation);
         bottomNavBar.setOnNavigationItemSelectedListener(this);
-        //Highlights feed tab bar button
-        bottomNavBar.getMenu().getItem(0).setChecked(false);
-        bottomNavBar.getMenu().getItem(1	).setChecked(true);
-
+	    //Highlights feed tab bar button
+	    bottomNavBar.setSelectedItemId(R.id.bottom_nav_my_schedule);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-	    switch (item.getItemId()) {
+	/**
+	 * Called when an item on the bottom navigation bar is selected.
+	 * @param item The item that was selected.
+	 * @return True if the event was handled, false otherwise.
+	 */
+	@Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
+    {
+	    switch (item.getItemId())
+	    {
             case R.id.bottom_nav_feed:
-                String feedTitle = getResources().getString(R.string.title_fragment_feed);
-                startFragment(new FeedFragment(), feedTitle);
-                break;
+                String feedTitle = getString(R.string.title_fragment_feed);
+	            startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Feed), feedTitle);
+	            setFilterVisible(true);
+	            break;
             case R.id.bottom_nav_my_schedule:
-                String scheduleTitle = getResources().getString(R.string.title_fragment_my_schedule);
-                startFragment(new ScheduleFragment(), scheduleTitle);
-                break;
+                String scheduleTitle = getString(R.string.title_fragment_my_schedule);
+                startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Schedule), scheduleTitle);
+	            setFilterVisible(false);
+	            break;
             case R.id.bottom_nav_settings:
-                String settingsTitle = getResources().getString(R.string.title_activity_settings);
+                String settingsTitle = getString(R.string.title_activity_settings);
                 startFragment(new SettingsFragment(), settingsTitle);
-                break;
+	            setFilterVisible(false);
+	            break;
             default:
                 return false;
         }
@@ -81,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	/**
 	 * Trigger {@link DatePickerAdapter#onDetachedFromRecyclerView(RecyclerView)} so it unregisters itself
 	 * as a listener.
+	 * Also unregister ourselves as a listener.
 	 */
 	@Override
 	protected void onDestroy()
@@ -88,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		super.onDestroy();
 		//detach the adapter so that its onDestroy methods trigger
 		datePickerRecycler.setAdapter(null);
+		NotificationCenter.DEFAULT.unregister(this);
 	}
 	/**
 	 * Connect {@link #datePickerRecycler} to {@link #datePickerAdapter}. Set up orientation for the
@@ -95,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	 */
 	private void setUpRecycler()
 	{
-		datePickerRecycler = (RecyclerView) findViewById(R.id.datePicker);
+		datePickerRecycler = findViewById(R.id.datePicker);
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 		layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 		datePickerRecycler.setLayoutManager(layoutManager);
@@ -114,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.commit();
         getSupportActionBar().setTitle(title);
-        if(fragment instanceof SettingsFragment) {
+        if (fragment instanceof SettingsFragment) {
             datePickerRecycler.setVisibility(View.GONE);
         } else {
             datePickerRecycler.setVisibility(View.VISIBLE);
@@ -170,6 +181,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	}
 
 	/**
+	 * Sets the visibility of the {@link #filterMenu} with a null check.
+	 * @param visible Whether the filter should be visible
+	 */
+	private void setFilterVisible(boolean visible)
+	{
+		if (filterMenu != null)
+			filterMenu.setVisible(visible);
+	}
+
+	/**
 	 * Listens for clicks and performs the following actions:
 	 * {@link #filterMenu}: Shows filter dialog.
 	 *
@@ -200,4 +221,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		Settings.setSelectedEvents(this);
 	}
 
+	/**
+	 * Listens for date changes, then notifies {@link #datePickerAdapter} to re-bind the
+	 * {@link DateCell}s.
+	 *
+	 * @param event Ignored.
+	 */
+	@Subscribe
+	public void onDateChanged(NotificationCenter.EventDateChanged event)
+	{
+		datePickerAdapter.notifyDataSetChanged();
+	}
 }
