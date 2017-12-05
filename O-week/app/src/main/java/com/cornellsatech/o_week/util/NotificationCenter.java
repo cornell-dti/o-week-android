@@ -47,18 +47,6 @@ public final class NotificationCenter
 	{
 		public EventDateChanged() {}
 	}
-
-	/**
-	 * Indicates the user clicked on an event in a list of events. The event clicked is {@link #event}.
-	 */
-	public static class EventEventClicked
-	{
-		public final Event event;
-		public EventEventClicked(Event event)
-		{
-			this.event = event;
-		}
-	}
 	/**
 	 * Indicates the {@link #event} has been selected or unselected.
 	 */

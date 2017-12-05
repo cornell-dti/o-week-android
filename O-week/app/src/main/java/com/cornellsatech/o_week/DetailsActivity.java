@@ -19,7 +19,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
@@ -43,7 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  *                             A reference to the {@link CoordinatorLayout} is necessary to display
  *                             {@link android.support.design.widget.Snackbar}.
  */
-public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, OnMapReadyCallback, Button.OnClickListener
+public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback, Button.OnClickListener
 {
 	public static String EVENT_KEY = "event";
 	private Event event;
@@ -55,9 +57,12 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	private TextView endTimeText;
 	private TextView descriptionText;
 	private TextView additionalText;
-	private CheckBox checkBox;
 	private TextView requiredButton;
+	private TextView requiredButton2;
+	private TextView requirementDetails;
+	private ImageView horizontalBreakBar2;
 	private Button addButton;
+	private Button readMoreButton;
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	public static final int MAP_ZOOM = 16;
 
@@ -84,6 +89,8 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		findViews();
 		setEventData();
 	}
+
+
 	/**
 	 * Links {@link android.view.View}s with their pointers.
 	 */
@@ -98,7 +105,11 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		descriptionText = (TextView) findViewById(R.id.descriptionText);
 		additionalText = (TextView) findViewById(R.id.additionalText);
 		requiredButton = (TextView) findViewById(R.id.requiredLabel);
+		requiredButton2 = (TextView) findViewById(R.id.requiredLabel2);
 		addButton = (Button) findViewById(R.id.addButton);
+		readMoreButton = (Button) findViewById(R.id.readMoreButton);
+		requirementDetails = (TextView) findViewById(R.id.requirementDetails);
+		horizontalBreakBar2 = (ImageView) findViewById(R.id.horizontalBreakBar2);
 
 		MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
@@ -129,6 +140,22 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		addButton.setOnClickListener(this);
 		setAdditionalText();
 
+		//Set the description text cap at 3 for the time being.
+		descriptionText.setMaxLines(3);
+		readMoreButton.setOnClickListener(this);
+
+		if(event.categoryRequired){
+			Category category = UserData.categoryForPk(event.category);
+			if(category != null){
+				requirementDetails.setVisibility(View.VISIBLE);
+				requirementDetails.setText("Required for " + category.name);
+				horizontalBreakBar2.setVisibility(View.VISIBLE);
+				requiredButton.setVisibility(View.VISIBLE);
+				requiredButton2.setVisibility(View.VISIBLE);
+			}
+		}
+
+
 		//we must know if we can write the image we downloaded to file
 		boolean canWriteToFile = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 		if (!canWriteToFile)
@@ -148,66 +175,40 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	}
 
 	/**
-	 * Put the {@link #checkBox} to the top right.
-	 * @param menu {@inheritDoc}
-	 * @return {@inheritDoc}
+	 * This runs when a button is clicked on the activity_details.xml view. All buttons
+	 * share the same onClick handler (this), and therefore should be distinguished from one
+	 * another programmatically instead of creating new listeners for each button. Do this by checking Resource ID.
+	 *
+	 * @param pressedButton {@inheritDoc}
 	 */
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		getMenuInflater().inflate(R.menu.menu_details, menu);
-
-		checkBox = (CheckBox) menu.findItem(R.id.checkbox).getActionView();
-		//hacky way to set right margin of check box
-		checkBox.setText("   ");
-		//set checkbox to white
-		int[][] states = {{android.R.attr.state_checked}, {}};
-		int[] colors = {Color.WHITE, Color.WHITE};
-		checkBox.setButtonTintList(new ColorStateList(states, colors));
-		//set checkbox checked based on whether event is selected
-		checkBox.setChecked(UserData.selectedEventsContains(event));
-		checkBox.setVisibility(View.GONE);
-		checkBox.setOnCheckedChangeListener(this);
-
-		return true;
-	}
-
-	@Override
-	public void onClick(View addButton){
-		Button button = (Button) addButton;
-		if(UserData.selectedEventsContains(event)){
-			UserData.removeFromSelectedEvents(event);
-			Notifications.unscheduleForEvent(event, this);
-			button.setText(R.string.button_text_event_not_added);
-		}else{
-			UserData.insertToSelectedEvents(event);
-			if (Settings.getReceiveReminders(this))
-				Notifications.scheduleForEvent(event, this);
-			button.setText(R.string.button_text_event_added);
+	public void onClick(View pressedButton){
+		Button button = (Button) pressedButton;
+		if(button.getId() == R.id.addButton){
+			if(UserData.selectedEventsContains(event)){
+				UserData.removeFromSelectedEvents(event);
+				Notifications.unscheduleForEvent(event, this);
+				button.setText(R.string.button_text_event_not_added);
+				Toast.makeText(this, R.string.toast_text_event_removed, Toast.LENGTH_SHORT).show();
+			}else{
+				UserData.insertToSelectedEvents(event);
+				if (Settings.getReceiveReminders(this))
+					Notifications.scheduleForEvent(event, this);
+				button.setText(R.string.button_text_event_added);
+				Toast.makeText(this, R.string.toast_text_event_added, Toast.LENGTH_SHORT).show();
+			}
+			NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, button.getText()==getString(R.string.button_text_event_added)));
 		}
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, button.getText()==getString(R.string.button_text_event_added)));
-	}
-
-	/**
-	 * Handle user selection of event.
-	 * @param buttonView Ignored.
-	 * @param isChecked Whether the {@link #checkBox} is checked.
-	 */
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-	{
-		if (isChecked)
-		{
-			UserData.insertToSelectedEvents(event);
-			if (Settings.getReceiveReminders(this))
-				Notifications.scheduleForEvent(event, this);
+		if(button.getId() == R.id.readMoreButton){
+			if(readMoreButton.getText().toString().equalsIgnoreCase(getString(R.string.read_more_button_unopened))){
+				descriptionText.setMaxLines(100000000);
+				readMoreButton.setText(getString(R.string.read_more_button_opened));
+			}
+			else if(readMoreButton.getText().equals(getString(R.string.read_more_button_opened))){
+				descriptionText.setMaxLines(3);
+				readMoreButton.setText(getString(R.string.read_more_button_unopened));
+			}
 		}
-		else
-		{
-			UserData.removeFromSelectedEvents(event);
-			Notifications.unscheduleForEvent(event, this);
-		}
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, isChecked));
 	}
 
 	/**
@@ -227,7 +228,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	}
 
 	/**
-	 * Save the selected events to file in case the user checked/unchecked the {@link #checkBox}.
+	 * Save the selected events to file in case the user checked/unchecked the {@link #addButton}.
 	 */
 	@Override
 	protected void onStop()

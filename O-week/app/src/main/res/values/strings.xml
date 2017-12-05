@@ -19,6 +19,10 @@
 	<string name="button_text_event_added">Remove</string>
 	<string name="button_text_event_not_added">Add</string>
 	<string name="no_data_available">No Events Available</string>
+	<string name="toast_text_event_added">Added event to schedule.</string>
+	<string name="toast_text_event_removed">Removed event from schedule.</string>
+	<string name="read_more_button_unopened">read more...</string>
+	<string name="read_more_button_opened">read less...</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>
