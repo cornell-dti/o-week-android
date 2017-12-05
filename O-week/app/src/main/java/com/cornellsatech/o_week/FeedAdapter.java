@@ -79,18 +79,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	}
 
 	/**
-	 * Listens for event selections or de-selections. Updates only the event that has been changed.
-	 *
-	 * @param eventSelectionChanged Event object containing the selected {@link Event}
-	 */
-	@Subscribe
-	public void onSelectionChanged(NotificationCenter.EventSelectionChanged eventSelectionChanged)
-	{
-		Event event = eventSelectionChanged.event;
-		int index = events.indexOf(event);
-		notifyItemChanged(index);
-	}
-	/**
 	 * Listens for updates to the list from the database. We don't know which events were updated, so
 	 * the entire list is swapped out.
 	 *

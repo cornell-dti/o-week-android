@@ -68,7 +68,6 @@ public class FeedFragment extends Fragment
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
-		NotificationCenter.DEFAULT.register(this);
 
 		//retrieve date from bundle
 		if (getArguments() != null)
@@ -92,19 +91,6 @@ public class FeedFragment extends Fragment
 		NotificationCenter.DEFAULT.unregister(this);
 		//detach the adapter so that its onDestroy methods trigger
 		feedRecycler.setAdapter(null);
-	}
-	/**
-	 * Listens for {@link FeedCell#onClick(View)}. Starts {@link DetailsActivity} featuring the {@link Event}
-	 * that was clicked upon the click.
-	 *
-	 * @param eventEventClicked Event that holds the {@link Event} clicked
-	 */
-	@Subscribe
-	public void onEventClicked(NotificationCenter.EventEventClicked eventEventClicked)
-	{
-		Intent intent = new Intent(getContext(), DetailsActivity.class);
-		intent.putExtra(DetailsActivity.EVENT_KEY, eventEventClicked.event.toString());
-		startActivity(intent);
 	}
 	/**
 	 * Connects {@link #feedRecycler} to {@link #feedAdapter}.
