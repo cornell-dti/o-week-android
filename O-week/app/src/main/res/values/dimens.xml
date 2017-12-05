@@ -17,9 +17,9 @@
 	<dimen name="size_hour">12sp</dimen>
 	<dimen name="size_title_details">14sp</dimen>
 	<dimen name="size_secondary_details">12sp</dimen>
-	<dimen name="size_detail">12sp</dimen>
+	<dimen name="size_detail">14sp</dimen>
 	<dimen name="size_hour_textview">16sp</dimen>
-	<dimen name="size_required_label">24dp</dimen>
+	<dimen name="size_required_label">32dp</dimen>
 	<dimen name="size_required_label_text">14sp</dimen>
 	<dimen name="size_small_required_label">24dp</dimen>
 	<dimen name="size_small_required_label_text">10sp</dimen>
