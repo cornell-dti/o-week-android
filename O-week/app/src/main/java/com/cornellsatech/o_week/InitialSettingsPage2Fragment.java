@@ -4,12 +4,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.cornellsatech.o_week.models.CollegeType;
+import com.cornellsatech.o_week.models.InternationalStudentStatus;
+import com.cornellsatech.o_week.models.StudentType;
 
 import java.util.ArrayList;
 
@@ -18,7 +21,7 @@ import java.util.ArrayList;
  * The pager fragment for the college settings page.
  */
 
-public class InitialSettingsPage2Fragment extends Fragment {
+public class InitialSettingsPage2Fragment extends Fragment implements View.OnClickListener{
 
     private Button ALS;
     private Button AAP;
@@ -27,11 +30,11 @@ public class InitialSettingsPage2Fragment extends Fragment {
     private Button ILR;
     private Button HE;
     private Button JOHNSON;
+    private ArrayList<Button> buttonGroup;
     private CollegeType collegeType = CollegeType.NOTSET;
 
     /**
      * Sets up the views
-     * Add action listener to each button.
      * @param inflater
      * @param container
      * @param savedInstanceState
@@ -49,62 +52,17 @@ public class InitialSettingsPage2Fragment extends Fragment {
         HE = rootView.findViewById(R.id.HE);
         JOHNSON = rootView.findViewById(R.id.Johnson);
 
-        ALS.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(ALS);
-                collegeType = CollegeType.ALS;
-                jumpToNextFragment();
-            }
-        });
-
-        AAP.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(AAP);
-                collegeType = CollegeType.AAP;
-                jumpToNextFragment();
-            }
-        });
-
-        AS.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(AS);
-                collegeType = CollegeType.AS;
-                jumpToNextFragment();
-            }
-        });
-
-        ENG.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(ENG);
-                collegeType = CollegeType.ENG;
-                jumpToNextFragment();
-            }
-        });
-
-        ILR.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(ILR);
-                collegeType = CollegeType.ILR;
-                jumpToNextFragment();
-            }
-        });
-
-        HE.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(HE);
-                collegeType = CollegeType.HE;
-                jumpToNextFragment();
-            }
-        });
-
-        JOHNSON.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setActiveButton(JOHNSON);
-                collegeType = CollegeType.JOHNSON;
-                jumpToNextFragment();
-            }
-        });
-
+        buttonGroup = new ArrayList<Button>();
+        buttonGroup.add(ALS);
+        buttonGroup.add(AAP);
+        buttonGroup.add(AS);
+        buttonGroup.add(ENG);
+        buttonGroup.add(ILR);
+        buttonGroup.add(HE);
+        buttonGroup.add(JOHNSON);
+        for(Button button : buttonGroup) {
+            button.setOnClickListener(this);
+        }
 
         return rootView;
     }
@@ -114,14 +72,6 @@ public class InitialSettingsPage2Fragment extends Fragment {
      * @param button
      */
     private void setActiveButton(Button button) {
-        ArrayList<Button> buttonGroup = new ArrayList<Button>();
-        buttonGroup.add(ALS);
-        buttonGroup.add(AAP);
-        buttonGroup.add(AS);
-        buttonGroup.add(ENG);
-        buttonGroup.add(ILR);
-        buttonGroup.add(HE);
-        buttonGroup.add(JOHNSON);
         setSelected(button);
         for(Button b : buttonGroup) {
             if(b != button) {
@@ -157,6 +107,54 @@ public class InitialSettingsPage2Fragment extends Fragment {
             InitialSettingsActivity parentActivity = (InitialSettingsActivity)getActivity();
             parentActivity.setCollegeType(collegeType);
             parentActivity.switchToNextPage();
+        }
+    }
+
+    /**
+     * Handles button clicks.
+     * @param view {@link ALS}, {@link AAP, {@link AS}, {@link ENG}, {@link ILR}, {@link HE}, {@link JOHNSON}
+     */
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.ALS:
+                setActiveButton(ALS);
+                collegeType = CollegeType.ALS;
+                jumpToNextFragment();
+                break;
+            case R.id.AAP:
+                setActiveButton(AAP);
+                collegeType = CollegeType.AAP;
+                jumpToNextFragment();
+                break;
+            case R.id.AS:
+                setActiveButton(AS);
+                collegeType = CollegeType.AS;
+                jumpToNextFragment();
+                break;
+            case R.id.ENG:
+                setActiveButton(ENG);
+                collegeType = CollegeType.ENG;
+                jumpToNextFragment();
+                break;
+            case R.id.ILR:
+                setActiveButton(ILR);
+                collegeType = CollegeType.ILR;
+                jumpToNextFragment();
+                break;
+            case R.id.HE:
+                setActiveButton(HE);
+                collegeType = CollegeType.HE;
+                jumpToNextFragment();
+                break;
+            case R.id.Johnson:
+                setActiveButton(JOHNSON);
+                collegeType = CollegeType.JOHNSON;
+                jumpToNextFragment();
+                break;
+            default:
+                Log.e("InitialPage2Fragment", "onClick unexpected id: " + view);
+                return;
         }
     }
 }

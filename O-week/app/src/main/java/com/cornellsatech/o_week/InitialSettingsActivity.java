@@ -69,6 +69,9 @@ public class InitialSettingsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Add all required events for the user to schedule. (Selected events)
+     */
     private void addRequiredEvents(){
         Set<Event> allEvents = Settings.getAllEvents(this);
         Set<Event> requiredEvents = new HashSet<Event>();

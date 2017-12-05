@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.util.SparseArray;
@@ -21,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 
@@ -225,8 +227,15 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 
 		scheduleCell.setLayoutParams(scheduleCellMargins(scheduleCell, event, slot, newNumSlots, eventForSlot, newEventForSlot));
 		scheduleCell.setOnClickListener(this);
+		if (eventOngoing(event))
+			scheduleCell.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_schedule_cell_ripple));
+		TextView required = scheduleCell.findViewById(R.id.requiredLabel);
+		TextView time = scheduleCell.findViewById(R.id.timeText);
 		TextView title = scheduleCell.findViewById(R.id.titleText);
 		TextView caption = scheduleCell.findViewById(R.id.captionText);
+		if (UserData.requiredForUser(event, getContext()))
+			required.setVisibility(View.VISIBLE);
+		time.setText(event.startTime.toString("h:mm") + " - " + event.endTime.toString("h:mm a"));
 		title.setText(event.title);
 		caption.setText(event.caption);
 		eventsContainer.addView(scheduleCell);
@@ -433,6 +442,17 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	{
 		int pk = id - 31;
 		return pkToEvent.get(pk);
+	}
+	private boolean eventOngoing(Event event)
+	{
+		LocalDateTime today = LocalDateTime.now();
+		if (!date.isEqual(today.toLocalDate()))
+			return false;
+
+		LocalTime now = today.toLocalTime();
+		boolean eventIsOngoing = minutesBetween(event.startTime, now) >= 0 &&
+				minutesBetween(now, event.endTime) >= 0;
+		return eventIsOngoing;
 	}
 	/**
 	 * Returns the number of minutes between 2 given times. Note that this accounts for events that cross

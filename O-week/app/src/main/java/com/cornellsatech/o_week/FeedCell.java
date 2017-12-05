@@ -1,7 +1,9 @@
 package com.cornellsatech.o_week;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -59,14 +61,16 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		setVisible(UserData.requiredForUser(event, context), requiredLabel);
 	}
 	/**
-	 * This object has been clicked. List listeners know.
+	 * This object has been clicked. Open the details page.
 	 * @param v Clicked view.
 	 */
 	@Override
 	public void onClick(View v)
 	{
-		   //entire view was clicked
-			NotificationCenter.DEFAULT.post(new NotificationCenter.EventEventClicked(event));
+		//entire view was clicked
+		Intent intent = new Intent(context, DetailsActivity.class);
+		intent.putExtra(DetailsActivity.EVENT_KEY, event.toString());
+		context.startActivity(intent);
 	}
 
 	/**
