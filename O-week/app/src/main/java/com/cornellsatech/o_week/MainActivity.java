@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 				}
 			}
 		});
-		builder.setNegativeButton(R.string.dialog_negative_button, null);
+		builder.setNegativeButton(R.string.dialog_positive_button, null);
 		builder.show();
 	}
 
