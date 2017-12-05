@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-	<solid android:color="@color/colorPrimary"/>
+	<solid android:color="@color/colorPrimaryFaded"/>
 	<stroke android:width="@dimen/width_schedule_cell_border" android:color="@color/colorPrimaryFaded" />
 	<corners android:radius="@dimen/corner_radius_schedule_cell"/>
 </shape>
