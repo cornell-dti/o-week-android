@@ -37,6 +37,7 @@
 	<string name="college_HE">Human Ecology</string>
 	<string name="college_ILR">Industrial Labor Relations</string>
 	<string name="college_JOHNSON">Johnson School of Business</string>
+	<string name="schedule_auto_add_notice">All required events have been added to your schedule ; )</string>
 
 
 	<string name="notify_me_time_of">At time of event</string>

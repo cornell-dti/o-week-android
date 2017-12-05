@@ -4,12 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.cornellsatech.o_week.models.CollegeType;
+import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.models.InternationalStudentStatus;
 import com.cornellsatech.o_week.models.StudentType;
 import com.cornellsatech.o_week.util.NotificationCenter;
+import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Controls interactions of the user initial settings. (student type, whether is international, which college)
@@ -56,10 +62,29 @@ public class InitialSettingsActivity extends AppCompatActivity {
             if(studentType != StudentType.NOTSET && internationalStudentStatus != InternationalStudentStatus.NOTSET && collegeType != CollegeType.NOTSET) {
                 Settings.setStudentInfo(this, studentType, internationalStudentStatus, collegeType);
                 NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
+                this.addRequiredEvents();
+                Toast.makeText(this, R.string.schedule_auto_add_notice, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
     }
+
+    private void addRequiredEvents(){
+        Set<Event> allEvents = Settings.getAllEvents(this);
+        Set<Event> requiredEvents = new HashSet<Event>();
+        for(Event e : allEvents) {
+            if(UserData.requiredForUser(e, this)) {
+                requiredEvents.add(e);
+            }
+        }
+        for(Event e : requiredEvents) {
+            UserData.insertToSelectedEvents(e);
+            if (Settings.getReceiveReminders(this))
+                Notifications.scheduleForEvent(e, this);
+            NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(e, true));
+        }
+    }
+
 
     /**
      * Make sure when back is pressed, the app goes home instead of the main activity so that user cannot bypass the selection.
