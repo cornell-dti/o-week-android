@@ -29,27 +29,14 @@
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="10dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Agriculture and life sciences"
+        android:background="@drawable/bg_button_ripple"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/college_ALS"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/AEM"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="applied economics and Management"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ALS" />
 
     <Button
         android:id="@+id/AAP"
@@ -58,13 +45,14 @@
         android:layout_height="45dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Architecture, Art, and Planning"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_ripple"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/college_AAP"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/AEM" />
+        app:layout_constraintTop_toBottomOf="@+id/ALS" />
 
     <Button
         android:id="@+id/AS"
@@ -73,9 +61,10 @@
         android:layout_height="45dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Arts and sciences"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_ripple"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/college_AS"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,28 +77,15 @@
         android:layout_height="45dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Engineering"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_ripple"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/college_ENG"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AS" />
 
-    <Button
-        android:id="@+id/HA"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="45dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Hotel Administration"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ENG" />
 
     <Button
         android:id="@+id/ILR"
@@ -118,13 +94,14 @@
         android:layout_height="45dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Industrial Labor Relations"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_ripple"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/college_ILR"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/HA" />
+        app:layout_constraintTop_toBottomOf="@+id/ENG" />
 
     <Button
         android:id="@+id/HE"
@@ -133,12 +110,30 @@
         android:layout_height="45dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:text="Human Ecology"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_ripple"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/college_HE"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ILR" />
+
+
+    <Button
+        android:id="@+id/Johnson"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="0dp"
+        android:layout_height="45dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_button_ripple"
+        android:textColor="@color/colorPrimary"
+        android:text="@string/college_JOHNSON"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HE" />
 
 </android.support.constraint.ConstraintLayout>

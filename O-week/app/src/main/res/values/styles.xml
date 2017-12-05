@@ -8,7 +8,8 @@
 		<item name="colorAccent">@color/colorAccent</item>
 		<item name="android:textColorPrimary">@color/primary_text_material_light</item>
 		<item name="android:textColorSecondary">@color/secondary_text_material_light</item>
-	</style>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
+    </style>
 
 	<style name="AppTheme.NoActionBar">
 		<item name="windowActionBar">false</item>

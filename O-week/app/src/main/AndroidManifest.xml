@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cornellsatech.o_week" >
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
 	<application
@@ -36,9 +36,8 @@
             android:value="AIzaSyAfj99YO2rt_bnRE3XBXiL8_0yAaewM_eY" />
 
         <activity
-            android:name=".SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity" >
+            android:name=".InitialSettingsActivity"
+            android:launchMode="singleTop">
         </activity>
 
 	    <receiver android:process=":remote" android:name=".util.AlarmReceiver"/>

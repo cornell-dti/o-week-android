@@ -6,10 +6,10 @@ An **Android** app for incoming freshmen to use during their first week as a Cor
 
 Getting Started
 ------
-You will need **Android Studio 3.0** to run the latest version of this app, which uses the following SDKs. Last Update **11/2/2017** (remember to check "Show Package Details" in the Android SDK dialog):
+You will need **Android Studio 3.0.1** to run the latest version of this app, which uses the following SDKs. Last Update **12/2/2017** (remember to check "Show Package Details" in the Android SDK dialog):
  * Android API 27
    * Android SDK Platform 27
- * Android SDK Build-Tools 27.0.0
+ * Android SDK Build-Tools 27.0.1
  * Android SDK Platform-Tools 26.0.2
  * Android SDK Tools 26.1.1
  * Android Support Library 23.2.1 (Windows only)

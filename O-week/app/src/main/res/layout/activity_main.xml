@@ -16,7 +16,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+        </android.support.v7.widget.Toolbar>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/datePicker"
@@ -46,8 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:itemBackground="@android:color/white"
-            app:itemIconTint="@color/colorPrimaryDark"
-            app:itemTextColor="@color/colorPrimaryDark"
+            app:itemIconTint="@animator/selector"
+            app:itemTextColor="@animator/selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
