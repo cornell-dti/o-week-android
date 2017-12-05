@@ -21,6 +21,7 @@
 	<string name="toast_events_changed">Your selected events were updated: %1$s</string>
 	<string name="button_text_event_added">Remove</string>
 	<string name="button_text_event_not_added">Add</string>
+	<string name="no_data_available">No Events Available</string>
 	<string name="toast_text_event_added">Added event to schedule.</string>
 	<string name="toast_text_event_removed">Removed event from schedule.</string>
 	<string name="more_button">more</string>

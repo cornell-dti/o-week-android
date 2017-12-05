@@ -1,6 +1,5 @@
 package com.cornellsatech.o_week;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,12 +12,9 @@ import android.view.ViewGroup;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
-import com.google.common.eventbus.Subscribe;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-
-import java.util.Date;
 
 /**
  * Displays a list of events, ordered chronologically. This is a {@link Fragment} so that it can be
@@ -76,7 +72,7 @@ public class FeedFragment extends Fragment
 			Log.e(TAG, "onCreateView: date not found");
 
 		feedRecycler = view.findViewById(R.id.feedRecycler);
-		setUpRecycler();
+		setUpRecycler(view.findViewById(R.id.empty_feed_view), view.findViewById(R.id.feedRecycler));
 		return view;
 	}
 
@@ -94,10 +90,12 @@ public class FeedFragment extends Fragment
 	}
 	/**
 	 * Connects {@link #feedRecycler} to {@link #feedAdapter}.
+	 * @param emptyView the empty view the recycler should use when there are no elements
+	 * @param recyclerView the default recycler view
 	 */
-	private void setUpRecycler()
+	private void setUpRecycler(View emptyView, View recyclerView)
 	{
-		feedAdapter = new FeedAdapter(date);
+		feedAdapter = new FeedAdapter(date, recyclerView, emptyView);
 		feedRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 		feedRecycler.setAdapter(feedAdapter);
 		scrollToNextEvent();
