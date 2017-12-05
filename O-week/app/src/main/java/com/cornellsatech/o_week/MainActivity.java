@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -142,25 +143,34 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		builder.setTitle(R.string.menu_filter);
 
 		//get an array of categories
-		String[] categories = new String[UserData.categories.size() + 2];
-		//2 default filters
-		categories[0] = getString(R.string.filter_show_all_events);
-		categories[1] = getString(R.string.filter_show_required_events);
-		for (int i = 2; i < categories.length; i++)
-			categories[i] = UserData.categories.get(i - 2).name;
+		String[] categories = new String[UserData.categories.size() + 1];
+		//1 default filter
+		categories[0] = getString(R.string.filter_show_required_events);
+		for (int i = 1; i < categories.length; i++) {
+			categories[i] = UserData.categories.get(i - 1).name;
+		}
 
-		builder.setSingleChoiceItems(categories, UserData.selectedFilterIndex, new DialogInterface.OnClickListener()
-		{
+		builder.setMultiChoiceItems(categories, UserData.getBooleanArrayForCheckedFilters(UserData.selectedFilters), new DialogInterface.OnMultiChoiceClickListener() {
 			@Override
-			public void onClick(DialogInterface dialog, int which)
-			{
-				//notify listeners that the filter has changed
-				if (UserData.selectedFilterIndex != which)
-				{
-					UserData.selectedFilterIndex = which;
+			public void onClick(DialogInterface dialogInterface, int i, boolean b) {
+				if(i!=0){
+					int categorypk = UserData.categories.get(i - 1).pk;
+					if(UserData.selectedFilters.contains(categorypk)){
+						UserData.selectedFilters.remove(categorypk);
+						NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+					}
+					else if(!UserData.selectedFilters.contains(categorypk)){
+						UserData.selectedFilters.add(categorypk);
+						NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+					}
+				}else{
+					if(UserData.filterRequired){
+						UserData.filterRequired = false;
+					}else if(!UserData.filterRequired){
+						UserData.filterRequired = true;
+					}
 					NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
 				}
-				dialog.dismiss();
 			}
 		});
 		builder.setNegativeButton(R.string.dialog_negative_button, null);
