@@ -18,6 +18,7 @@
 	<string name="toast_events_changed">Your selected events were updated: %1$s</string>
 	<string name="button_text_event_added">Remove</string>
 	<string name="button_text_event_not_added">Add</string>
+	<string name="no_data_available">No Events Available</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>

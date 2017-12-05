@@ -18,8 +18,6 @@ import com.google.common.eventbus.Subscribe;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
-import java.util.Date;
-
 /**
  * Displays a list of events, ordered chronologically. This is a {@link Fragment} so that it can be
  * easily swapped out with {@link ScheduleFragment} while keeping the same date picker up top.
@@ -77,7 +75,7 @@ public class FeedFragment extends Fragment
 			Log.e(TAG, "onCreateView: date not found");
 
 		feedRecycler = view.findViewById(R.id.feedRecycler);
-		setUpRecycler();
+		setUpRecycler(view.findViewById(R.id.empty_feed_view), view.findViewById(R.id.feedRecycler));
 		return view;
 	}
 
@@ -108,10 +106,12 @@ public class FeedFragment extends Fragment
 	}
 	/**
 	 * Connects {@link #feedRecycler} to {@link #feedAdapter}.
+	 * @param emptyView the empty view the recycler should use when there are no elements
+	 * @param recyclerView the default recycler view
 	 */
-	private void setUpRecycler()
+	private void setUpRecycler(View emptyView, View recyclerView)
 	{
-		feedAdapter = new FeedAdapter(date);
+		feedAdapter = new FeedAdapter(date, recyclerView, emptyView);
 		feedRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 		feedRecycler.setAdapter(feedAdapter);
 		scrollToNextEvent();

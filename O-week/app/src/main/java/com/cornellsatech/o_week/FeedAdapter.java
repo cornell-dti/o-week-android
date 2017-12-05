@@ -1,8 +1,8 @@
 package com.cornellsatech.o_week;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.cornellsatech.o_week.models.Category;
@@ -14,7 +14,6 @@ import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,14 +30,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	private final LocalDate date;
 	public List<Event> events;
 	private static final String TAG = FeedAdapter.class.getSimpleName();
+	private View recyclerView;
+	private View emptyView;
 
 	/**
 	 * Registers this object to listen in on notifications.
 	 * Unregisters itself in {@link #onDetachedFromRecyclerView(RecyclerView)} to avoid memory leaks.
 	 */
-	public FeedAdapter(LocalDate date)
+	public FeedAdapter(LocalDate date, View recyclerView, View emptyView)
 	{
 		NotificationCenter.DEFAULT.register(this);
+		this.recyclerView = recyclerView;
+		this.emptyView = emptyView;
 		this.date = date;
 		loadData();
 	}
@@ -132,7 +135,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 			return;
 		events = new ArrayList<>(UserData.allEvents.get(date));
 		applyFilters();
+		if(events.size() == 0) {
+			recyclerView.setVisibility(View.GONE);
+			emptyView.setVisibility(View.VISIBLE);
+		}
+		else {
+			recyclerView.setVisibility(View.VISIBLE);
+			emptyView.setVisibility(View.GONE);
+		}
 	}
+
+
+
 	/**
 	 * Depending on the filter the user applied, filter the events shown.
 	 *
