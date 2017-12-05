@@ -153,7 +153,7 @@ public class InitialSettingsPage2Fragment extends Fragment implements View.OnCli
                 jumpToNextFragment();
                 break;
             default:
-                Log.e("InitialPage1Fragment", "onClick unexpected id: " + view);
+                Log.e("InitialPage2Fragment", "onClick unexpected id: " + view);
                 return;
         }
     }
