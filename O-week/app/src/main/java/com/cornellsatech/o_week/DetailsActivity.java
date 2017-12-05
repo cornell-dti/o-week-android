@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -146,7 +147,23 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	private void configureDescription()
 	{
 		descriptionText.setMaxLines(NUM_LINES_IN_CONDENSED_DESCRIPTION);
-		//TODO find out how many lines the description text will be
+		//find out how many lines the description text will be
+		descriptionText.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+		{
+			@Override
+			public boolean onPreDraw()
+			{
+				if (moreButton.getVisibility() != View.VISIBLE)
+					return true;
+
+				int lineCount = descriptionText.getLayout().getLineCount();
+				if (lineCount > NUM_LINES_IN_CONDENSED_DESCRIPTION)
+					moreButton.setVisibility(View.VISIBLE);
+				else
+					moreButton.setVisibility(View.GONE);
+				return true;
+			}
+		});
 
 		if (!event.additional.isEmpty())
 		{
