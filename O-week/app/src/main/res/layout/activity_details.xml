@@ -42,10 +42,10 @@
 				tools:src="@mipmap/ic_launcher" />
 
 			<View
-				android:id="@+id/gradient"
+				android:id="@+id/imageGradient"
 				android:layout_width="0dp"
 				android:layout_height="0dp"
-				android:background="@drawable/gradient"
+				android:background="@drawable/gradient_image"
 				app:layout_constraintBottom_toBottomOf="@+id/eventImage"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -180,6 +180,24 @@
 				app:layout_constraintTop_toBottomOf="@+id/horizontalBreakBar2"
 				tools:text="Some additional info" />
 
+			<View
+				android:id="@+id/moreButtonGradient"
+				android:layout_width="35dp"
+				android:layout_height="0dp"
+				app:layout_constraintBottom_toBottomOf="@+id/moreButton"
+				app:layout_constraintRight_toLeftOf="@+id/moreButton"
+				app:layout_constraintTop_toTopOf="@+id/moreButton" />
+
+			<TextView
+				android:id="@+id/moreButton"
+				android:layout_width="wrap_content"
+				android:layout_height="0dp"
+				android:text="@string/more_button"
+				android:textColor="@color/colorPrimary"
+				android:textSize="@dimen/size_detail"
+				app:layout_constraintBottom_toBottomOf="@+id/descriptionText"
+				app:layout_constraintEnd_toEndOf="@+id/descriptionText" />
+
 			<TextView
 				android:id="@+id/descriptionText"
 				android:layout_width="0dp"
@@ -187,22 +205,12 @@
 				android:layout_marginEnd="20dp"
 				android:layout_marginStart="20dp"
 				android:layout_marginTop="20dp"
+				android:maxLines="3"
 				android:textSize="@dimen/size_detail"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/additionalText"
-				tools:text="This will be your official welcome from university administrators, as well as from your student body president and other key student leaders with" />
-
-			<TextView
-				android:id="@+id/moreButton"
-				android:layout_width="wrap_content"
-				android:layout_height="0dp"
-				android:paddingLeft="8dp"
-				android:text="@string/more_button"
-				android:textColor="@color/colorPrimary"
-				android:textSize="@dimen/size_detail"
-				app:layout_constraintBottom_toBottomOf="@+id/descriptionText"
-				app:layout_constraintEnd_toEndOf="@+id/descriptionText" />
+				tools:text="This will be your official welcome from university administrators, as well as from your student body president and other key student leaders with blah blah blah more blah blah blah" />
 
 
 			<Button

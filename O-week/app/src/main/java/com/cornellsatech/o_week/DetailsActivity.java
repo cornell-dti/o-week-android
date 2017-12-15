@@ -56,10 +56,11 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	private TextView requiredLabel;
 	private TextView requirementDetails;
 	private View horizontalBreakBar;
-
 	private Button addButton;
 	private TextView moreButton;
+	private View moreButtonGradient;
 	private Button directionsButton;
+
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	public static final int MAP_ZOOM = 16;
 	private static final int NUM_LINES_IN_CONDENSED_DESCRIPTION = 3;
@@ -105,6 +106,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		descriptionText = findViewById(R.id.descriptionText);
 		addButton = findViewById(R.id.addButton);
 		moreButton = findViewById(R.id.moreButton);
+		moreButtonGradient = findViewById(R.id.moreButtonGradient);
 		directionsButton = findViewById(R.id.directionsButton);
 
 		MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -158,9 +160,15 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
 				int lineCount = descriptionText.getLayout().getLineCount();
 				if (lineCount > NUM_LINES_IN_CONDENSED_DESCRIPTION)
+				{
 					moreButton.setVisibility(View.VISIBLE);
+					moreButtonGradient.setVisibility(View.VISIBLE);
+				}
 				else
+				{
 					moreButton.setVisibility(View.GONE);
+					moreButtonGradient.setVisibility(View.GONE);
+				}
 				return true;
 			}
 		});
