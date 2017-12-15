@@ -1,15 +1,14 @@
 package com.cornellsatech.o_week;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
-import com.cornellsatech.o_week.util.Notifications;
-import com.cornellsatech.o_week.util.Settings;
 
 /**
  * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
@@ -59,17 +58,19 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
-		setVisible(event.required || event.categoryRequired, requiredLabel);
+		setVisible(UserData.requiredForUser(event, context), requiredLabel);
 	}
 	/**
-	 * This object has been clicked. List listeners know.
+	 * This object has been clicked. Open the details page.
 	 * @param v Clicked view.
 	 */
 	@Override
 	public void onClick(View v)
 	{
-		   //entire view was clicked
-			NotificationCenter.DEFAULT.post(new NotificationCenter.EventEventClicked(event));
+		//entire view was clicked
+		Intent intent = new Intent(context, DetailsActivity.class);
+		intent.putExtra(DetailsActivity.EVENT_KEY, event.toString());
+		context.startActivity(intent);
 	}
 
 	/**

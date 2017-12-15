@@ -18,9 +18,16 @@
 	<string name="filter_show_all_events">Show All Events</string>
 	<string name="filter_show_required_events">Show Required Events</string>
 	<string name="required_label">RQ</string>
+	<string name="required_for_all">Required for All Students</string>
+	<string name="required_for_category">Required for %1$s Students</string>
+	<string name="directions_button">Directions</string>
 	<string name="toast_events_changed">Your selected events were updated: %1$s</string>
 	<string name="button_text_event_added">Remove</string>
 	<string name="button_text_event_not_added">Add</string>
+	<string name="no_data_available">No Events Available</string>
+	<string name="toast_text_event_added">Added event to schedule.</string>
+	<string name="toast_text_event_removed">Removed event from schedule.</string>
+	<string name="more_button">more</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>
@@ -33,6 +40,15 @@
 	<string name="key_receive_reminders">receiveReminders</string>
 	<string name="settings_notify_me">Notify me…</string>
 	<string name="key_notify_me">notifyMe</string>
+	<string name="college_ALS">Agriculture and Life Sciences</string>
+	<string name="college_AAP">Architecture, Art, and Planning</string>
+	<string name="college_AS">Arts and Sciences</string>
+	<string name="college_ENG">Engineering</string>
+	<string name="college_HE">Human Ecology</string>
+	<string name="college_ILR">Industrial Labor Relations</string>
+	<string name="college_JOHNSON">Johnson School of Business</string>
+	<string name="schedule_auto_add_notice">All required events have been added to your schedule ; )</string>
+
 
 	<string name="notify_me_time_of">At time of event</string>
 	<string name="notify_me_1_hour">1 hour before</string>

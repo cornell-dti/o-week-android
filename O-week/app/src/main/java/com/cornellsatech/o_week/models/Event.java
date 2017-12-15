@@ -140,6 +140,10 @@ public class Event implements Comparable<Event>
 		LocalDate nextDay = date.plusDays(1);
 		return nextDay.toLocalDateTime(startTime);
 	}
+	public String readableDate()
+	{
+		return date.toString("EEEE, MMM d");
+	}
 	/**
 	 * Returns the formatted additional text, with headers and bullets.
 	 * String is like so: ## HEADER ## ____BULLET # INFO ____BULLET # INFO.

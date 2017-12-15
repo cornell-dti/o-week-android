@@ -25,225 +25,207 @@
 		android:layout_height="match_parent"
 		app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-		<LinearLayout
+		<android.support.constraint.ConstraintLayout
 			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:orientation="vertical">
+			android:layout_height="wrap_content">
 
-			<android.support.constraint.ConstraintLayout
-				android:layout_width="match_parent"
-				android:layout_height="match_parent">
+			<ImageView
+				android:id="@+id/eventImage"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				android:scaleType="centerCrop"
+				app:layout_constraintDimensionRatio="16:9"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="parent"
+				tools:ignore="ContentDescription"
+				tools:src="@mipmap/ic_launcher" />
 
-				<android.support.percent.PercentRelativeLayout
-					android:id="@+id/percentRelativeLayout2"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content">
+			<View
+				android:id="@+id/gradient"
+				android:layout_width="0dp"
+				android:layout_height="0dp"
+				android:background="@drawable/gradient"
+				app:layout_constraintBottom_toBottomOf="@+id/eventImage"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/eventImage"
+				app:layout_constraintTop_toTopOf="parent" />
 
-					<ImageView
-						android:id="@+id/eventImage"
-						android:scaleType="centerCrop"
-						app:layout_aspectRatio="178%"
-						app:layout_widthPercent="100%"
-						tools:ignore="ContentDescription"
-						tools:src="@mipmap/ic_launcher" />
+			<TextView
+				android:id="@+id/titleText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="20dp"
+				android:layout_marginEnd="20dp"
+				android:layout_marginStart="20dp"
+				android:focusable="true"
+				android:focusableInTouchMode="true"
+				android:scrollHorizontally="false"
+				android:singleLine="false"
+				android:textColor="@color/common_google_signin_btn_text_dark_default"
+				android:textSize="24sp"
+				android:textStyle="bold"
+				app:layout_constraintBottom_toBottomOf="@+id/eventImage"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				tools:text="VERY VERY VERY VERY VERY VERY VERY LONG TITLE" />
 
-					<View
-						android:id="@+id/view"
-						android:layout_width="match_parent"
-						android:layout_height="160dp"
-						android:layout_alignParentBottom="true"
-						android:background="@drawable/gradient" />
+			<TextView
+				android:id="@+id/timeText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginStart="20dp"
+				android:layout_marginTop="20dp"
+				android:textColor="@color/common_google_signin_btn_text_dark_focused"
+				android:textSize="16sp"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/eventImage"
+				tools:text="10:00 AM - 12:00 PM" />
 
-				</android.support.percent.PercentRelativeLayout>
+			<TextView
+				android:id="@+id/captionText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="5dp"
+				android:layout_marginStart="20dp"
+				android:layout_marginTop="2dp"
+				android:ellipsize="end"
+				android:scrollHorizontally="true"
+				android:textSize="@dimen/size_secondary_details"
+				app:layout_constraintEnd_toStartOf="@+id/addButton"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/timeText"
+				tools:text="This is a really long caption which is being used to test the caption box's ability to accommodate long strings." />
 
-				<TextView
-					android:id="@+id/titleText"
-					android:layout_width="291dp"
-					android:layout_height="0dp"
-					android:layout_marginBottom="20dp"
-					android:layout_marginStart="16dp"
-					android:ellipsize="marquee"
-					android:focusable="true"
-					android:focusableInTouchMode="true"
-					android:marqueeRepeatLimit="marquee_forever"
-					android:scrollHorizontally="true"
-					android:singleLine="true"
-					android:textColor="@color/common_google_signin_btn_text_dark_default"
-					android:textSize="24sp"
-					android:textStyle="bold"
-					app:layout_constraintBottom_toBottomOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					tools:text="Title" />
-
-				<TextView
-					android:id="@+id/requiredLabel"
-					android:layout_width="32dp"
-					android:layout_height="32dp"
-					android:layout_gravity="right"
-					android:layout_marginEnd="25dp"
-					android:layout_marginStart="25dp"
-					android:layout_marginTop="8dp"
-					android:background="@drawable/required_label"
-					android:gravity="center"
-					android:text="@string/required_label"
-					android:textColor="@android:color/white"
-					android:textSize="@dimen/size_required_label_text"
-					android:textStyle="bold"
-					android:visibility="visible"
-					app:layout_constraintBottom_toBottomOf="@+id/titleText"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintStart_toEndOf="@+id/titleText"
-					app:layout_constraintTop_toTopOf="@+id/titleText"
-					tools:text="RQ"
-					tools:visibility="visible" />
-
-			</android.support.constraint.ConstraintLayout>
-
-			<android.support.constraint.ConstraintLayout
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content">
-
-				<Button
-					android:id="@+id/addButton"
-					android:layout_width="100dp"
-					android:layout_height="39dp"
-					android:layout_alignParentEnd="true"
-					android:layout_centerVertical="true"
-					android:layout_marginEnd="20dp"
-					android:layout_marginTop="8dp"
-					android:background="@drawable/bg_button_ripple"
-					android:text="@string/button_text_event_not_added"
-					android:textAppearance="@style/TextAppearance.AppCompat"
-					android:textColor="@color/colorPrimary"
-					android:textSize="16sp"
-					app:layout_constraintBottom_toBottomOf="parent"
-					app:layout_constraintEnd_toEndOf="parent"
-					app:layout_constraintTop_toTopOf="parent" />
-
-				<TextView
-					android:id="@+id/startTimeText"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_alignParentStart="true"
-					android:layout_alignParentTop="true"
-					android:layout_marginStart="20dp"
-					android:textColor="@color/common_google_signin_btn_text_dark_focused"
-					android:textSize="16sp"
-					app:layout_constraintBottom_toBottomOf="parent"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toTopOf="parent"
-					tools:text="10:00 AM" />
-
-				<TextView
-					android:id="@+id/timeDash"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_marginStart="4dp"
-					android:text="-"
-					android:textAlignment="center"
-					android:textColor="@color/common_google_signin_btn_text_dark_focused"
-					android:textSize="16sp"
-					app:layout_constraintBottom_toBottomOf="parent"
-					app:layout_constraintStart_toEndOf="@+id/startTimeText"
-					app:layout_constraintTop_toTopOf="parent" />
-
-				<TextView
-					android:id="@+id/endTimeText"
-					android:layout_width="116dp"
-					android:layout_height="23dp"
-					android:layout_alignBaseline="@+id/startTimeText"
-					android:layout_alignBottom="@+id/startTimeText"
-					android:layout_marginBottom="8dp"
-					android:layout_marginStart="4dp"
-					android:layout_marginTop="8dp"
-					android:layout_toEndOf="@+id/startTimeText"
-					android:textColor="@color/common_google_signin_btn_text_dark_focused"
-					android:textSize="16sp"
-					app:layout_constraintBottom_toBottomOf="parent"
-					app:layout_constraintStart_toEndOf="@+id/timeDash"
-					app:layout_constraintTop_toTopOf="parent"
-					tools:text="11:30 AM" />
-
-				<TextView
-					android:id="@+id/captionText"
-					android:layout_width="0dp"
-					android:layout_height="wrap_content"
-					android:layout_alignParentBottom="true"
-					android:layout_alignParentStart="true"
-					android:layout_marginEnd="5dp"
-					android:layout_marginStart="20dp"
-					android:ellipsize="end"
-					android:scrollHorizontally="true"
-					android:textSize="@dimen/size_secondary_details"
-					app:layout_constraintEnd_toStartOf="@+id/addButton"
-					app:layout_constraintStart_toStartOf="parent"
-					app:layout_constraintTop_toBottomOf="@+id/startTimeText"
-					tools:text="This is a really long caption which is being used to test the caption box's ability to accommodate long strings." />
-
-				<!--<android.support.constraint.ConstraintLayout-->
-				<!--android:id="@+id/constraintLayout"-->
-				<!--android:layout_width="0dp"-->
-				<!--android:layout_height="0dp"-->
-				<!--android:layout_marginBottom="8dp"-->
-				<!--android:layout_marginEnd="8dp"-->
-				<!--android:layout_marginStart="20dp"-->
-				<!--android:layout_marginTop="8dp"-->
-				<!--app:layout_constraintBottom_toBottomOf="parent"-->
-				<!--app:layout_constraintEnd_toStartOf="@+id/addButton"-->
-				<!--app:layout_constraintStart_toStartOf="parent"-->
-				<!--app:layout_constraintTop_toTopOf="parent">-->
-
-				<!---->
-
-				<!--</android.support.constraint.ConstraintLayout>-->
-
-			</android.support.constraint.ConstraintLayout>
-
-			<!--<RelativeLayout-->
-				<!--android:layout_width="match_parent"-->
-				<!--android:layout_height="77dp">-->
-				<!---->
-
-			<!--</RelativeLayout>-->
+			<Button
+				android:id="@+id/addButton"
+				android:layout_width="100dp"
+				android:layout_height="40dp"
+				android:layout_centerVertical="true"
+				android:layout_marginEnd="20dp"
+				android:background="@drawable/bg_button_ripple"
+				android:text="@string/button_text_event_not_added"
+				android:textAppearance="@style/TextAppearance.AppCompat"
+				android:textColor="@color/colorPrimary"
+				android:textSize="16sp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintTop_toTopOf="@+id/timeText" />
 
 			<ImageView
 				android:id="@+id/horizontalBreakBar"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="1dp"
 				android:layout_marginEnd="20dp"
 				android:layout_marginStart="20dp"
-				android:layout_marginTop="8dp"
+				android:layout_marginTop="20dp"
 				android:background="@color/horizontalBreakColor"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+				app:layout_constraintTop_toBottomOf="@+id/captionText" />
+
+			<TextView
+				android:id="@+id/requiredLabel"
+				android:layout_width="@dimen/size_required_label"
+				android:layout_height="@dimen/size_required_label"
+				android:layout_marginStart="20dp"
+				android:background="@drawable/required_label"
+				android:gravity="center"
+				android:text="@string/required_label"
+				android:textColor="@android:color/white"
+				android:textSize="@dimen/size_required_label_text"
+				android:textStyle="bold"
+				app:layout_constraintBottom_toBottomOf="@+id/requirementDetails"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toTopOf="@+id/requirementDetails" />
+
+			<TextView
+				android:id="@+id/requirementDetails"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="20dp"
+				android:layout_marginStart="20dp"
+				android:layout_marginTop="20dp"
+				android:textColor="@android:color/black"
+				android:textSize="14sp"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toEndOf="@+id/requiredLabel"
+				app:layout_constraintTop_toBottomOf="@+id/horizontalBreakBar"
+				tools:text="All students will be required to sign in with their ID card." />
+
+
+			<ImageView
+				android:id="@+id/horizontalBreakBar2"
+				android:layout_width="0dp"
+				android:layout_height="1dp"
+				android:layout_marginEnd="20dp"
+				android:layout_marginStart="20dp"
+				android:layout_marginTop="20dp"
+				android:background="@color/horizontalBreakColor"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/requirementDetails" />
+
+
+			<TextView
+				android:id="@+id/additionalText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="20dp"
+				android:layout_marginStart="20dp"
+				android:layout_marginTop="20dp"
+				android:textSize="@dimen/size_detail"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/horizontalBreakBar2"
+				tools:text="Some additional info" />
 
 			<TextView
 				android:id="@+id/descriptionText"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_margin="@dimen/margin"
+				android:layout_marginEnd="20dp"
+				android:layout_marginStart="20dp"
+				android:layout_marginTop="20dp"
 				android:textSize="@dimen/size_detail"
-				tools:text="No description available at this time." />
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/additionalText"
+				tools:text="This will be your official welcome from university administrators, as well as from your student body president and other key student leaders with" />
+
+			<TextView
+				android:id="@+id/moreButton"
+				android:layout_width="wrap_content"
+				android:layout_height="0dp"
+				android:paddingLeft="8dp"
+				android:text="@string/more_button"
+				android:textColor="@color/colorPrimary"
+				android:textSize="@dimen/size_detail"
+				app:layout_constraintBottom_toBottomOf="@+id/descriptionText"
+				app:layout_constraintEnd_toEndOf="@+id/descriptionText" />
+
+
+			<Button
+				android:id="@+id/directionsButton"
+				style="@style/Widget.AppCompat.Button.Colored"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/directions_button"
+				app:layout_constraintBottom_toBottomOf="@+id/map"
+				app:layout_constraintRight_toRightOf="@+id/map" />
 
 			<fragment
 				android:id="@+id/map"
 				android:name="com.google.android.gms.maps.MapFragment"
-				android:layout_width="match_parent"
+				android:layout_width="0dp"
 				android:layout_height="@dimen/height_map"
-				app:layout_constraintTop_toBottomOf="parent" />
+				android:layout_marginTop="20dp"
+				app:layout_constraintBottom_toBottomOf="parent"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
 
-			<TextView
-				android:id="@+id/additionalText"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_alignParentBottom="true"
-				android:layout_alignParentStart="true"
-				android:paddingTop="8dp"
-				android:textSize="@dimen/size_detail"
-				android:visibility="gone" />
-
-		</LinearLayout>
+		</android.support.constraint.ConstraintLayout>
 
 	</android.support.v4.widget.NestedScrollView>
 

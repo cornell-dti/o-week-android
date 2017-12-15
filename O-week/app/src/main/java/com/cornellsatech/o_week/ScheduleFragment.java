@@ -6,6 +6,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.percent.PercentRelativeLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.util.Log;
 import android.util.SparseArray;
@@ -20,6 +21,8 @@ import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.eventbus.Subscribe;
 
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 
@@ -62,6 +65,9 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	private static final List<LocalTime> HOURS;
 	public static final int START_HOUR = 7;
 	public static final int END_HOUR = 2;
+	private LocalDate date;
+
+	private static final String DATE_BUNDLE_KEY = "date";
 	private static final String TAG = ScheduleFragment.class.getSimpleName();
 
 	/**
@@ -80,7 +86,28 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	}
 
 	/**
-	 * Sets up listener, associate views, retrieve final values	 from {@link R.dimen}, then draws everything.
+	 * Create an instance of {@link ScheduleFragment} with the given date.
+	 * This should be the only way you create instances of {@link ScheduleFragment}.
+	 *
+	 * It passes the given date as a Bundle to {@link ScheduleFragment}.
+	 *
+	 * @param date The date the schedule will display.
+	 * @return Instance of the schedule.
+	 */
+	public static ScheduleFragment newInstance(LocalDate date)
+	{
+		ScheduleFragment scheduleFragment = new ScheduleFragment();
+
+		Bundle args = new Bundle();
+		args.putSerializable(DATE_BUNDLE_KEY, date);
+		scheduleFragment.setArguments(args);
+
+		return scheduleFragment;
+	}
+
+	/**
+	 * Sets up listener, associate views, retrieve final values from {@link R.dimen}, then draws everything.
+	 * Retrieves {@link #date} from the bundle.
 	 *
 	 * @param inflater {@inheritDoc}
 	 * @param container {@inheritDoc}
@@ -94,8 +121,15 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		NotificationCenter.DEFAULT.register(this);
 
 		View view = inflater.inflate(R.layout.fragment_schedule, container, false);
-		scheduleContainer = (RelativeLayout) view.findViewById(R.id.scheduleContainer);
-		eventsContainer = (PercentRelativeLayout) view.findViewById(R.id.eventsContainer);
+
+		//retrieve date from bundle
+		if (getArguments() != null)
+			date = (LocalDate) getArguments().getSerializable(DATE_BUNDLE_KEY);
+		else
+			Log.e(TAG, "onCreateView: date not found");
+
+		scheduleContainer = view.findViewById(R.id.scheduleContainer);
+		eventsContainer = view.findViewById(R.id.eventsContainer);
 		HOUR_HEIGHT = getActivity().getResources().getDimensionPixelSize(R.dimen.distance_between_time_lines);
 		HOUR_TEXT_HEIGHT = getActivity().getResources().getDimensionPixelSize(R.dimen.size_hour_textview);
 		drawTimeLines();
@@ -121,7 +155,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		{
 			View timeLine = inflater.inflate(R.layout.time_line, scheduleContainer, false);
 			timeLine.setId(hourToId(hour.getHourOfDay()));    //id of view = hour
-			TextView hourText = (TextView) timeLine.findViewById(R.id.hourText);
+			TextView hourText = timeLine.findViewById(R.id.hourText);
 			hourText.setText(hour.toString("h a")); //Ex: 11 AM
 			scheduleContainer.addView(timeLine, timeLineMargins(timeLine, hour));
 		}
@@ -131,7 +165,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	 */
 	private void drawCells()
 	{
-		List<Event> selectedEvents = UserData.selectedEvents.get(UserData.selectedDate);
+		List<Event> selectedEvents = UserData.selectedEvents.get(date);
 		Collections.sort(selectedEvents);
 		if (selectedEvents.isEmpty())
 			return;
@@ -193,8 +227,15 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 
 		scheduleCell.setLayoutParams(scheduleCellMargins(scheduleCell, event, slot, newNumSlots, eventForSlot, newEventForSlot));
 		scheduleCell.setOnClickListener(this);
-		TextView title = (TextView) scheduleCell.findViewById(R.id.titleText);
-		TextView caption = (TextView) scheduleCell.findViewById(R.id.captionText);
+		if (eventOngoing(event))
+			scheduleCell.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_schedule_cell_ripple));
+		TextView required = scheduleCell.findViewById(R.id.requiredLabel);
+		TextView time = scheduleCell.findViewById(R.id.timeText);
+		TextView title = scheduleCell.findViewById(R.id.titleText);
+		TextView caption = scheduleCell.findViewById(R.id.captionText);
+		if (UserData.requiredForUser(event, getContext()))
+			required.setVisibility(View.VISIBLE);
+		time.setText(event.startTime.toString("h:mm") + " - " + event.endTime.toString("h:mm a"));
 		title.setText(event.title);
 		caption.setText(event.caption);
 		eventsContainer.addView(scheduleCell);
@@ -402,6 +443,17 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		int pk = id - 31;
 		return pkToEvent.get(pk);
 	}
+	private boolean eventOngoing(Event event)
+	{
+		LocalDateTime today = LocalDateTime.now();
+		if (!date.isEqual(today.toLocalDate()))
+			return false;
+
+		LocalTime now = today.toLocalTime();
+		boolean eventIsOngoing = minutesBetween(event.startTime, now) >= 0 &&
+				minutesBetween(now, event.endTime) >= 0;
+		return eventIsOngoing;
+	}
 	/**
 	 * Returns the number of minutes between 2 given times. Note that this accounts for events that cross
 	 * over midnight. An event that begins at 11PM and ends at 2AM lasts 3 hours, not -21.
@@ -437,16 +489,6 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		Intent intent = new Intent(getContext(), DetailsActivity.class);
 		intent.putExtra(DetailsActivity.EVENT_KEY, event.toString());
 		startActivity(intent);
-	}
-	/**
-	 * Listener for a change in user selected dates. If the dates change, we should display events for
-	 * the new date.
-	 * @param eventDateSelected Ignored
-	 */
-	@Subscribe
-	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
-	{
-		redrawEvents();
 	}
 	/**
 	 * Listener for the selection or deselection of an event. This means we might need to display more

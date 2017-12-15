@@ -1,11 +1,14 @@
 package com.cornellsatech.o_week.util;
 
+import com.cornellsatech.o_week.DatePickerAdapter;
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.DateCell;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.FeedAdapter;
 import com.cornellsatech.o_week.UserData;
 import com.google.common.eventbus.EventBus;
+
+import org.joda.time.LocalDate;
 
 /**
  * Used for communication between objects that have no reference to each other.
@@ -33,28 +36,16 @@ public final class NotificationCenter
 	 * Indicates information about events have changed. Anything that displays a list of events should update.
 	 */
 	public static class EventReload {}
+
 	/**
-	 * Indicates the user selected a new date. The new date can be accessed with {@link DateCell#getDate()}.
-	 * Note: {@link UserData#selectedDate} will not be accurate at this time.
+	 * Indicates the user either
+	 * 1. Swiped to a new date in {@link com.cornellsatech.o_week.DatePagerAdapter}.
+	 * 2. Clicked on a new date in {@link DatePickerAdapter}.
+	 * Note: {@link UserData#selectedDate} will contain the new date.
 	 */
-	public static class EventDateSelected
+	public static class EventDateChanged
 	{
-		public final DateCell selectedCell;
-		public EventDateSelected(DateCell selectedCell)
-		{
-			this.selectedCell = selectedCell;
-		}
-	}
-	/**
-	 * Indicates the user clicked on an event in a list of events. The event clicked is {@link #event}.
-	 */
-	public static class EventEventClicked
-	{
-		public final Event event;
-		public EventEventClicked(Event event)
-		{
-			this.event = event;
-		}
+		public EventDateChanged() {}
 	}
 	/**
 	 * Indicates the {@link #event} has been selected or unselected.

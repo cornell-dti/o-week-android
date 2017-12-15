@@ -37,8 +37,8 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	public DateCell(View view)
 	{
 		super(view);
-		dayNum = (TextView) view.findViewById(R.id.dayNumView);
-		weekDay = (TextView) view.findViewById(R.id.weekDayView);
+		dayNum = view.findViewById(R.id.dayNumView);
+		weekDay = view.findViewById(R.id.weekDayView);
 		view.setOnClickListener(this);
 	}
 
@@ -57,10 +57,10 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		dayNum.setText(Integer.toString(date.getDayOfMonth()));
 		weekDay.setText(DateTimeFormat.forPattern("E").print(date).toUpperCase());
 
-		if (!configured)
-			if (UserData.selectedDate.isEqual(date))
-				onClick(dayNum);
-		configured = true;
+		if (UserData.selectedDate.isEqual(date))
+			setClick();
+		else
+			unClick();
 	}
 
 	/**
@@ -74,11 +74,10 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	}
 	/**
 	 * Selects this cell, changing its colors and propagating an event for listeners to catch. The
-	 * event ({@link NotificationCenter.EventDateSelected}) will contain a reference to this object,
-	 * which is useful should the listener wish to access the date selected through {@link #getDate()}.
+	 * event ({@link NotificationCenter.EventDateChanged}) will contain a reference to this date.
 	 *
 	 * @param v Ignored.
-	 * @see DatePickerAdapter#onItemClick(NotificationCenter.EventDateSelected)
+	 * @see MainActivity#onDateChanged(NotificationCenter.EventDateChanged)
 	 */
 	@Override
 	public void onClick(View v)
@@ -86,15 +85,25 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		//can't double select
 		if (dayNum.isSelected())
 			return;
+		setClick();
+		UserData.selectedDate = date;
+		NotificationCenter.DEFAULT.post(new NotificationCenter.EventDateChanged());
+	}
+
+	/**
+	 * Selects this cell & changes its colors.
+	 *
+	 * @see #unClick()
+	 */
+	public void setClick()
+	{
 		dayNum.setSelected(true);
 		dayNum.setTextColor(Color.BLACK);
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventDateSelected(this));
 	}
 	/**
-	 * Deselects this cell, reverting its colors. Called by {@link DatePickerAdapter} so that only
-	 * one cell looks like it's selected at any time.
+	 * Deselects this cell, reverting its colors.
 	 *
-	 * @see #onClick(View)
+	 * @see #setClick()
 	 */
 	public void unClick()
 	{

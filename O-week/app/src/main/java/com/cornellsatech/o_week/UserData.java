@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
@@ -15,8 +16,10 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 import org.joda.time.LocalDate;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,12 +34,12 @@ import java.util.Set;
  * {@link #DATES}: Dates of the orientation. Determined from {@link #YEAR}, {@link #MONTH}, {@link #START_DAY},
  *                 and {@link #END_DAY}.
  * {@link #selectedDate}: The date to display events for.
- * {@link #selectedFilterIndex}: A number that represents the current filter for events that should
+ * {@link #selectedFilters}: An integer array that represents all the currently selected filters.
  *                               appear in the feed. See {@link FeedAdapter#applyFilters()} for its usage.
  *                               0 = show all events.
  *                               1 = show required events.
  *                               2+ = show events of with {@link Event#category} where
- *                               {@link Category#pk} - 2 = {@link #selectedFilterIndex}.
+ *                               {@link Category#pk} - 2 = {@link #selectedFilters}.
  */
 public final class UserData
 {
@@ -45,7 +48,8 @@ public final class UserData
 	public static List<Category> categories = new ArrayList<>();
 	public static final List<LocalDate> DATES;
 	public static LocalDate selectedDate;
-	public static int selectedFilterIndex = 0;
+	public static Set<Integer> selectedFilters = new HashSet<>();
+	public static boolean filterRequired = false;
 	private static final int YEAR = 2017;
 	private static final int MONTH = 8;
 	private static final int START_DAY = 18;    //Dates range: [START_DAY, END_DAY], inclusive
@@ -231,4 +235,41 @@ public final class UserData
 			Collections.sort(events);
 		Collections.sort(UserData.categories);
 	}
+
+	/**
+	 * Checks whether the given event is required for the current user
+	 * @param event
+	 * @param context the context of the app
+	 * @return true if this event is required for the current user, false otherwise.
+	 */
+	public static boolean requiredForUser(Event event, Context context) {
+		boolean requiredForStudentsCategory = CollegeType.toCollegeType(event.category) == Settings.getStudentSavedCollegeType(context);
+		return event.required || (event.categoryRequired && requiredForStudentsCategory);
+	}
+
+
+	public static boolean[] getBooleanArrayForCheckedFilters(Set<Integer> checkedFilters){
+		ArrayList<Boolean> returnBooleans = new ArrayList<>();
+		if(filterRequired) returnBooleans.add(true);
+		if(!filterRequired) returnBooleans.add(false);
+		for(int i = 0; i < categories.size(); i++){
+			if(checkedFilters.contains(UserData.categories.get(i).pk)){
+				returnBooleans.add(true);
+			}
+			else{
+				returnBooleans.add(false);
+			}
+		}
+
+		boolean[] primitives = new boolean[returnBooleans.size()];
+		int index = 0;
+		for (Boolean object : returnBooleans) {
+			primitives[index] = object;
+			index++;
+		}
+
+		return primitives;
+	}
+
+
 }

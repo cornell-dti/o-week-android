@@ -2,12 +2,15 @@ package com.cornellsatech.o_week;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.eventbus.Subscribe;
+
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -24,16 +27,22 @@ import java.util.List;
  */
 public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 {
+	private final LocalDate date;
 	public List<Event> events;
 	private static final String TAG = FeedAdapter.class.getSimpleName();
+	private View recyclerView;
+	private View emptyView;
 
 	/**
 	 * Registers this object to listen in on notifications.
 	 * Unregisters itself in {@link #onDetachedFromRecyclerView(RecyclerView)} to avoid memory leaks.
 	 */
-	public FeedAdapter()
+	public FeedAdapter(LocalDate date, View recyclerView, View emptyView)
 	{
 		NotificationCenter.DEFAULT.register(this);
+		this.recyclerView = recyclerView;
+		this.emptyView = emptyView;
+		this.date = date;
 		loadData();
 	}
 	/**
@@ -73,29 +82,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	}
 
 	/**
-	 * Listens for event selections or de-selections. Updates only the event that has been changed.
-	 *
-	 * @param eventSelectionChanged Event object containing the selected {@link Event}
-	 */
-	@Subscribe
-	public void onSelectionChanged(NotificationCenter.EventSelectionChanged eventSelectionChanged)
-	{
-		Event event = eventSelectionChanged.event;
-		int index = events.indexOf(event);
-		notifyItemChanged(index);
-	}
-	/**
-	 * Listens for date changes. The entire list of events to show is swapped out.
-	 *
-	 * @param eventDateSelected Ignored.
-	 */
-	@Subscribe
-	public void onDateChanged(NotificationCenter.EventDateSelected eventDateSelected)
-	{
-		loadData();
-		notifyDataSetChanged();
-	}
-	/**
 	 * Listens for updates to the list from the database. We don't know which events were updated, so
 	 * the entire list is swapped out.
 	 *
@@ -119,7 +105,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 		notifyDataSetChanged();
 	}
 	/**
-	 * Unregisters this object as a listener to avoid memory leaks. Registered in {@link #FeedAdapter()}.
+	 * Unregisters this object as a listener to avoid memory leaks. Registered in {@link FeedAdapter()}.
 	 * @param recyclerView Ignored.
 	 */
 	@Override
@@ -128,61 +114,59 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 		NotificationCenter.DEFAULT.unregister(this);
 	}
 	/**
-	 * Saves shallow copies of lists of events from {@link UserData#allEvents} and {@link UserData#selectedEvents}.
+	 * Saves shallow copies of lists of events from {@link UserData#allEvents}.
 	 * The copies allow list manipulation of which events are displayed depending on the user's filter.
 	 */
 	private void loadData()
 	{
-		events = new ArrayList<>(UserData.allEvents.get(UserData.selectedDate));
+		if (date == null)
+			return;
+		events = new ArrayList<>(UserData.allEvents.get(date));
 		applyFilters();
+		if(events.size() == 0) {
+			recyclerView.setVisibility(View.GONE);
+			emptyView.setVisibility(View.VISIBLE);
+		}
+		else {
+			recyclerView.setVisibility(View.VISIBLE);
+			emptyView.setVisibility(View.GONE);
+		}
 	}
+
+
+
 	/**
 	 * Depending on the filter the user applied, filter the events shown.
 	 *
-	 * @see UserData for documentation on {@link UserData#selectedFilterIndex}
+	 * @see UserData for documentation on {@link UserData#selectedFilters}
 	 */
 	private void applyFilters()
 	{
-		switch (UserData.selectedFilterIndex)
-		{
-			case 0: //show all events, don't do anything special
-				break;
-			case 1: //show required events
-				filterRequired(events);
-				break;
-			default:
-				Category category = UserData.categories.get(UserData.selectedFilterIndex - 2);
-				filterForCategory(category.pk, events);
-				break;
+		for(int i = 0; i < UserData.categories.size(); i++){
+			if(UserData.selectedFilters.contains(UserData.categories.get(i).pk)){
+				filterEvents(events);
+			}
 		}
+
 	}
+
 	/**
-	 * Removes all events that are not required.
+	 * Removes all events that are not part of the given category or required (if that option is selected).
 	 * @param events The list of events to remove from.
 	 */
-	private void filterRequired(Collection<Event> events)
+	private void filterEvents(Collection<Event> events)
 	{
 		Iterator<Event> eventsIterator = events.iterator();
 		while (eventsIterator.hasNext())
 		{
 			Event event = eventsIterator.next();
-			if (!event.required)
-				eventsIterator.remove();
-		}
-	}
-	/**
-	 * Removes all events that are not part of the given category.
-	 * @param category {@link Category#pk}
-	 * @param events The list of events to remove from.
-	 */
-	private void filterForCategory(int category, Collection<Event> events)
-	{
-		Iterator<Event> eventsIterator = events.iterator();
-		while (eventsIterator.hasNext())
-		{
-			Event event = eventsIterator.next();
-			if (event.category != category)
-				eventsIterator.remove();
+			if(UserData.filterRequired){
+				if (!UserData.selectedFilters.contains(event.category) && !event.required)
+					eventsIterator.remove();
+			}else if(!UserData.filterRequired){
+				if (!UserData.selectedFilters.contains(event.category))
+					eventsIterator.remove();
+			}
 		}
 	}
 }

@@ -1,9 +1,9 @@
 package com.cornellsatech.o_week;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -12,13 +12,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.Internet;
@@ -35,15 +34,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * Displays a user-selected event in a separate page. An {@link android.app.Activity} is used instead
  * of a Fragment since this page should have a back button.
- *
+ * <p>
  * {@link #EVENT_KEY}: See {@link #onCreate(Bundle)}.
  * {@link #event}: The event displayed to the user.
  * {@link #coordinatorLayout}: Layout that will be shouldActUpon to
- *                             {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout, boolean)}.
- *                             A reference to the {@link CoordinatorLayout} is necessary to display
- *                             {@link android.support.design.widget.Snackbar}.
+ * {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout, boolean)}.
+ * A reference to the {@link CoordinatorLayout} is necessary to display
+ * {@link android.support.design.widget.Snackbar}.
  */
-public class DetailsActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, OnMapReadyCallback, Button.OnClickListener
+public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback, Button.OnClickListener
 {
 	public static String EVENT_KEY = "event";
 	private Event event;
@@ -51,15 +50,19 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	private ImageView eventImage;
 	private TextView titleText;
 	private TextView captionText;
-	private TextView startTimeText;
-	private TextView endTimeText;
+	private TextView timeText;
 	private TextView descriptionText;
 	private TextView additionalText;
-	private CheckBox checkBox;
-	private TextView requiredButton;
+	private TextView requiredLabel;
+	private TextView requirementDetails;
+	private View horizontalBreakBar;
+
 	private Button addButton;
+	private TextView moreButton;
+	private Button directionsButton;
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	public static final int MAP_ZOOM = 16;
+	private static final int NUM_LINES_IN_CONDENSED_DESCRIPTION = 3;
 
 	/**
 	 * Link to layout, add back button to toolbar, sets up views. Retrieves {@link #event} from the
@@ -72,7 +75,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_details);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		Toolbar toolbar = findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 
 		//set back button
@@ -84,25 +87,30 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		findViews();
 		setEventData();
 	}
+
 	/**
 	 * Links {@link android.view.View}s with their pointers.
 	 */
 	private void findViews()
 	{
-		coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinatorLayout);
-		eventImage = (ImageView) findViewById(R.id.eventImage);
-		titleText = (TextView) findViewById(R.id.titleText);
-		captionText = (TextView) findViewById(R.id.captionText);
-		startTimeText = (TextView) findViewById(R.id.startTimeText);
-		endTimeText = (TextView) findViewById(R.id.endTimeText);
-		descriptionText = (TextView) findViewById(R.id.descriptionText);
-		additionalText = (TextView) findViewById(R.id.additionalText);
-		requiredButton = (TextView) findViewById(R.id.requiredLabel);
-		addButton = (Button) findViewById(R.id.addButton);
+		coordinatorLayout = findViewById(R.id.coordinatorLayout);
+		eventImage = findViewById(R.id.eventImage);
+		titleText = findViewById(R.id.titleText);
+		captionText = findViewById(R.id.captionText);
+		timeText = findViewById(R.id.timeText);
+		horizontalBreakBar = findViewById(R.id.horizontalBreakBar);
+		requiredLabel = findViewById(R.id.requiredLabel);
+		requirementDetails = findViewById(R.id.requirementDetails);
+		additionalText = findViewById(R.id.additionalText);
+		descriptionText = findViewById(R.id.descriptionText);
+		addButton = findViewById(R.id.addButton);
+		moreButton = findViewById(R.id.moreButton);
+		directionsButton = findViewById(R.id.directionsButton);
 
 		MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 		mapFragment.getMapAsync(this);
 	}
+
 	/**
 	 * Shows the {@link #event}'s data on screen. Attempts to retrieve an image from the database or
 	 * from saved files.
@@ -115,20 +123,88 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 			return;
 		}
 
+		setTitle(event.readableDate());
+
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
 		descriptionText.setText(event.description);
-		startTimeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT));
-		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
-		if(!event.required){
-			requiredButton.setVisibility(View.GONE);
-		}
-		if(UserData.selectedEventsContains(event)){
+		timeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT) + " - " + event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
+		if (UserData.selectedEventsContains(event))
 			addButton.setText(R.string.button_text_event_added);
-		}
 		addButton.setOnClickListener(this);
-		setAdditionalText();
+		moreButton.setOnClickListener(this);
+		directionsButton.setOnClickListener(this);
 
+		configureDescription();
+		configureRequired();
+		configureImage();
+	}
+
+	/**
+	 * Set the text to {@link #descriptionText} and {@link #additionalText}, showing/hiding the
+	 * {@link #moreButton} as necessary.
+	 */
+	private void configureDescription()
+	{
+		descriptionText.setMaxLines(NUM_LINES_IN_CONDENSED_DESCRIPTION);
+		//find out how many lines the description text will be
+		descriptionText.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+		{
+			@Override
+			public boolean onPreDraw()
+			{
+				if (moreButton.getVisibility() != View.VISIBLE)
+					return true;
+
+				int lineCount = descriptionText.getLayout().getLineCount();
+				if (lineCount > NUM_LINES_IN_CONDENSED_DESCRIPTION)
+					moreButton.setVisibility(View.VISIBLE);
+				else
+					moreButton.setVisibility(View.GONE);
+				return true;
+			}
+		});
+
+		if (!event.additional.isEmpty())
+		{
+			additionalText.setVisibility(View.VISIBLE);
+			additionalText.setText(event.formattedAdditionalText());
+		}
+		else
+			additionalText.setVisibility(View.GONE);
+	}
+
+	/**
+	 * Show/hide the {@link #requiredLabel} and set the text for {@link #requirementDetails} based
+	 * on whether the event is required. If the event is required (but not for this user),
+	 * {@link #requiredLabel} will be gray.
+	 */
+	private void configureRequired()
+	{
+		if (!(event.required || event.categoryRequired))
+		{
+			requiredLabel.setVisibility(View.GONE);
+			requirementDetails.setVisibility(View.GONE);
+			horizontalBreakBar.setVisibility(View.GONE);
+		}
+		else
+		{
+			//change color of RQ label based on whether or not it's required for this user
+			int requiredLabelBg = UserData.requiredForUser(event, this) ? R.drawable.required_label : R.drawable.required_label_gray;
+			requiredLabel.setBackground(ContextCompat.getDrawable(this, requiredLabelBg));
+
+			if (event.required)
+				requirementDetails.setText(R.string.required_for_all);
+			else
+				requirementDetails.setText(getString(R.string.required_for_category, UserData.categoryForPk(event.category).name));
+		}
+	}
+
+	/**
+	 * Set the image, asking the user for permission to save the image on disk if necessary.
+	 */
+	private void configureImage()
+	{
 		//we must know if we can write the image we downloaded to file
 		boolean canWriteToFile = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
 		if (!canWriteToFile)
@@ -136,86 +212,58 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 
 		Internet.getImageForEvent(event, eventImage, coordinatorLayout, canWriteToFile);
 	}
-	/**
-	 * Sets {@link #additionalText} if {@link Event#additional} is non-empty.
-	 */
-	private void setAdditionalText()
-	{
-		if (event.additional.isEmpty())
-			return;
-		additionalText.setVisibility(View.VISIBLE);
-		additionalText.setText(event.formattedAdditionalText());
-	}
 
 	/**
-	 * Put the {@link #checkBox} to the top right.
-	 * @param menu {@inheritDoc}
-	 * @return {@inheritDoc}
+	 * This runs when a button is clicked on the activity_details.xml view. All buttons
+	 * share the same onClick handler (this), and therefore should be distinguished from one
+	 * another programmatically instead of creating new listeners for each button. Do this by checking Resource ID.
+	 *
+	 * @param pressedButton {@inheritDoc}
 	 */
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
+	public void onClick(View pressedButton)
 	{
-		getMenuInflater().inflate(R.menu.menu_details, menu);
-
-		checkBox = (CheckBox) menu.findItem(R.id.checkbox).getActionView();
-		//hacky way to set right margin of check box
-		checkBox.setText("   ");
-		//set checkbox to white
-		int[][] states = {{android.R.attr.state_checked}, {}};
-		int[] colors = {Color.WHITE, Color.WHITE};
-		checkBox.setButtonTintList(new ColorStateList(states, colors));
-		//set checkbox checked based on whether event is selected
-		checkBox.setChecked(UserData.selectedEventsContains(event));
-		checkBox.setVisibility(View.GONE);
-		checkBox.setOnCheckedChangeListener(this);
-
-		return true;
-	}
-
-	@Override
-	public void onClick(View addButton){
-		Button button = (Button) addButton;
-		if(UserData.selectedEventsContains(event)){
-			UserData.removeFromSelectedEvents(event);
-			Notifications.unscheduleForEvent(event, this);
-			button.setText(R.string.button_text_event_not_added);
-		}else{
-			UserData.insertToSelectedEvents(event);
-			if (Settings.getReceiveReminders(this))
-				Notifications.scheduleForEvent(event, this);
-			button.setText(R.string.button_text_event_added);
-		}
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, button.getText()==getString(R.string.button_text_event_added)));
-	}
-
-	/**
-	 * Handle user selection of event.
-	 * @param buttonView Ignored.
-	 * @param isChecked Whether the {@link #checkBox} is checked.
-	 */
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-	{
-		if (isChecked)
+		switch (pressedButton.getId())
 		{
-			UserData.insertToSelectedEvents(event);
-			if (Settings.getReceiveReminders(this))
-				Notifications.scheduleForEvent(event, this);
+			case R.id.addButton:
+				boolean selected;
+				if (UserData.selectedEventsContains(event))
+				{
+					UserData.removeFromSelectedEvents(event);
+					Notifications.unscheduleForEvent(event, this);
+					addButton.setText(R.string.button_text_event_not_added);
+					Toast.makeText(this, R.string.toast_text_event_removed, Toast.LENGTH_SHORT).show();
+					selected = false;
+				}
+				else
+				{
+					UserData.insertToSelectedEvents(event);
+					if (Settings.getReceiveReminders(this))
+						Notifications.scheduleForEvent(event, this);
+					addButton.setText(R.string.button_text_event_added);
+					Toast.makeText(this, R.string.toast_text_event_added, Toast.LENGTH_SHORT).show();
+					selected = true;
+				}
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, selected));
+				break;
+			case R.id.moreButton:
+				descriptionText.setMaxLines(Integer.MAX_VALUE);
+				moreButton.setVisibility(View.GONE);
+				break;
+			case R.id.directionsButton:
+				startMap();
+				break;
+			default:
+				Log.e(TAG, "onClick: Unknown button pressed");
 		}
-		else
-		{
-			UserData.removeFromSelectedEvents(event);
-			Notifications.unscheduleForEvent(event, this);
-		}
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, isChecked));
 	}
 
 	/**
 	 * This runs when the user answers the dialog that asks for file-writing permissions. If the user
 	 * grants us permission this time, re-download the image and save it.
 	 *
-	 * @param requestCode {@inheritDoc}
-	 * @param permissions {@inheritDoc}
+	 * @param requestCode  {@inheritDoc}
+	 * @param permissions  {@inheritDoc}
 	 * @param grantResults {@inheritDoc}
 	 */
 	@Override
@@ -227,7 +275,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 	}
 
 	/**
-	 * Save the selected events to file in case the user checked/unchecked the {@link #checkBox}.
+	 * Save the selected events to file in case the user checked/unchecked the {@link #addButton}.
 	 */
 	@Override
 	protected void onStop()
@@ -238,6 +286,7 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 
 	/**
 	 * Loads {@link Event#latitude} and longitude onto the map, adds a marker.
+	 *
 	 * @param map {@inheritDoc}
 	 */
 	@Override
@@ -246,5 +295,16 @@ public class DetailsActivity extends AppCompatActivity implements CompoundButton
 		LatLng position = new LatLng(event.latitude, event.longitude);
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
 		map.addMarker(new MarkerOptions().position(position).title(event.caption));
+	}
+
+	/**
+	 * Open the map with the event's location.
+	 */
+	private void startMap()
+	{
+		Uri uri = Uri.parse("geo:0,0?q=" + event.latitude + "," + event.longitude + "(" + event.caption + ")");
+		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+		intent.setPackage("com.google.android.apps.maps");
+		startActivity(intent);
 	}
 }
