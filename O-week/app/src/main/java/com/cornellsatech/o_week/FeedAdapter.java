@@ -138,50 +138,35 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	/**
 	 * Depending on the filter the user applied, filter the events shown.
 	 *
-	 * @see UserData for documentation on {@link UserData#selectedFilterIndex}
+	 * @see UserData for documentation on {@link UserData#selectedFilters}
 	 */
 	private void applyFilters()
 	{
-		switch (UserData.selectedFilterIndex)
-		{
-			case 0: //show all events, don't do anything special
-				break;
-			case 1: //show required events
-				filterRequired(events);
-				break;
-			default:
-				Category category = UserData.categories.get(UserData.selectedFilterIndex - 2);
-				filterForCategory(category.pk, events);
-				break;
+		for(int i = 0; i < UserData.categories.size(); i++){
+			if(UserData.selectedFilters.contains(UserData.categories.get(i).pk)){
+				filterEvents(events);
+			}
 		}
+
 	}
+
 	/**
-	 * Removes all events that are not required.
+	 * Removes all events that are not part of the given category or required (if that option is selected).
 	 * @param events The list of events to remove from.
 	 */
-	private void filterRequired(Collection<Event> events)
+	private void filterEvents(Collection<Event> events)
 	{
 		Iterator<Event> eventsIterator = events.iterator();
 		while (eventsIterator.hasNext())
 		{
 			Event event = eventsIterator.next();
-			if (!event.required)
-				eventsIterator.remove();
-		}
-	}
-	/**
-	 * Removes all events that are not part of the given category.
-	 * @param category {@link Category#pk}
-	 * @param events The list of events to remove from.
-	 */
-	private void filterForCategory(int category, Collection<Event> events)
-	{
-		Iterator<Event> eventsIterator = events.iterator();
-		while (eventsIterator.hasNext())
-		{
-			Event event = eventsIterator.next();
-			if (event.category != category)
-				eventsIterator.remove();
+			if(UserData.filterRequired){
+				if (!UserData.selectedFilters.contains(event.category) && !event.required)
+					eventsIterator.remove();
+			}else if(!UserData.filterRequired){
+				if (!UserData.selectedFilters.contains(event.category))
+					eventsIterator.remove();
+			}
 		}
 	}
 }

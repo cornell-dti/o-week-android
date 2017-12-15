@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="be778b10-fb6a-4800-86b5-39c332c9360b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/O-week/app/src/main/res/animator/selector.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/O-week/app/src/main/java/com/cornellsatech/o_week/SearchFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/O-week/app/src/main/res/drawable/ic_search_white_24dp.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/O-week/.idea/misc.xml" afterPath="$PROJECT_DIR$/O-week/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/O-week/app/src/main/java/com/cornellsatech/o_week/MainActivity.java" afterPath="$PROJECT_DIR$/O-week/app/src/main/java/com/cornellsatech/o_week/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/O-week/app/src/main/java/com/cornellsatech/o_week/SettingsFragment.java" afterPath="$PROJECT_DIR$/O-week/app/src/main/java/com/cornellsatech/o_week/SettingsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/O-week/app/src/main/res/layout/activity_main.xml" afterPath="$PROJECT_DIR$/O-week/app/src/main/res/layout/activity_main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/O-week/app/src/main/java/com/cornellsatech/o_week/ScheduleFragment.java" afterPath="$PROJECT_DIR$/O-week/app/src/main/java/com/cornellsatech/o_week/ScheduleFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/O-week/app/src/main/res/menu/bottom_nav.xml" afterPath="$PROJECT_DIR$/O-week/app/src/main/res/menu/bottom_nav.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/O-week/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/O-week/app/src/main/res/values/strings.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -45,11 +47,11 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="AndroidView" />
       <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
