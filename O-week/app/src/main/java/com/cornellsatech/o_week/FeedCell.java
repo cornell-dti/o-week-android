@@ -28,7 +28,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	private final TextView requiredLabel;
 	private final Context context;
 	private Event event;
-	private static final String TAG = FeedCell.class.getSimpleName();
+	private static final String	TAG = FeedCell.class.getSimpleName();
 
 	/**
 	 * Stores pointers to all the subviews and sets up listeners.

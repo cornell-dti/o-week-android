@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	private RecyclerView datePickerRecycler;
 	private DatePickerAdapter datePickerAdapter;
 	private MenuItem filterMenu;
+	private boolean filterMenuIsHidden = false;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -83,6 +84,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 startFragment(new SettingsFragment(), settingsTitle);
 	            setFilterVisible(false);
 	            break;
+            case R.id.bottom_nav_search:
+              FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+              transaction.replace(R.id.fragmentContainer, new SearchFragment());
+              transaction.commit();
+              getSupportActionBar().setDisplayShowTitleEnabled(false);
+              datePickerRecycler.setVisibility(View.GONE);
+              setFilterVisible(false);
+              break;
             default:
                 return false;
         }
@@ -132,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             datePickerRecycler.setVisibility(View.VISIBLE);
         }
     }
+
 
 	/**
 	 * Shows the dialog that allows the user to choose what {@link Category} to filter events by.
@@ -187,6 +197,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	{
 		getMenuInflater().inflate(R.menu.menu_of_feed, menu);
 		filterMenu = menu.findItem(R.id.filterMenu);
+		if(filterMenuIsHidden) {
+            filterMenu.setVisible(false);
+        }
 		return true;
 	}
 
