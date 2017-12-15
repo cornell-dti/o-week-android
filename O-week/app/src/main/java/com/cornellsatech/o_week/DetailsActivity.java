@@ -1,6 +1,7 @@
 package com.cornellsatech.o_week;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -65,6 +66,17 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	public static final int MAP_ZOOM = 16;
 	private static final int NUM_LINES_IN_CONDENSED_DESCRIPTION = 3;
 
+	/**
+	 * Starts {@link DetailsActivity} with the event.
+	 * @param event Event to display.
+	 * @param context Context to start the activity in
+	 */
+	public static void startWithEvent(Event event, Context context)
+	{
+		Intent intent = new Intent(context, DetailsActivity.class);
+		intent.putExtra(DetailsActivity.EVENT_KEY, event.toString());
+		context.startActivity(intent);
+	}
 	/**
 	 * Link to layout, add back button to toolbar, sets up views. Retrieves {@link #event} from the
 	 * bundle shouldActUpon in the parameter, which contains a String that describes an Event.

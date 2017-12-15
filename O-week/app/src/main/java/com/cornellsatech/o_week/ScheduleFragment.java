@@ -486,9 +486,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		}
 
 		//start details
-		Intent intent = new Intent(getContext(), DetailsActivity.class);
-		intent.putExtra(DetailsActivity.EVENT_KEY, event.toString());
-		startActivity(intent);
+		DetailsActivity.startWithEvent(event, getContext());
 	}
 	/**
 	 * Listener for the selection or deselection of an event. This means we might need to display more

@@ -67,10 +67,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	@Override
 	public void onClick(View v)
 	{
-		//entire view was clicked
-		Intent intent = new Intent(context, DetailsActivity.class);
-		intent.putExtra(DetailsActivity.EVENT_KEY, event.toString());
-		context.startActivity(intent);
+		DetailsActivity.startWithEvent(event, context);
 	}
 
 	/**
