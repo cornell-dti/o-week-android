@@ -39,6 +39,8 @@
 	<string name="notify_me_2_hours">2 hours before</string>
 	<string name="notify_me_5_hours">5 hours before</string>
 	<string name="notify_me_1_day">1 day before</string>
+    <string name="header_my_calendar">My Calendar</string>
+	<string name="header_all_events">All Events</string>
 	<string-array name="settings_notify_me_titles">
 		<item>@string/notify_me_time_of</item>
 		<item>@string/notify_me_1_hour</item>

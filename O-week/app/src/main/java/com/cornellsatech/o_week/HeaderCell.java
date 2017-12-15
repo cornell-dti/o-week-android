@@ -1,11 +1,8 @@
 package com.cornellsatech.o_week;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-
-import com.cornellsatech.o_week.models.Event;
 
 /**
  * HeaderCell for Search Page
@@ -14,25 +11,28 @@ import com.cornellsatech.o_week.models.Event;
 public class HeaderCell extends RecyclerView.ViewHolder {
 
     private final TextView titleTextView;
-    private final Context context;
-    private Event event;
 
     /**
-     * Stores pointers to all the subviews and sets up listeners.
+     * Initializes header cell with title
      * @param itemView {@inheritDoc}
      */
     public HeaderCell(View itemView)
     {
         super(itemView);
         titleTextView = itemView.findViewById(R.id.headerTextView);
-        context = itemView.getContext();
     }
 
+    /**
+     * If first header, set title to {@link R.string#header_my_calendar}.
+     * Else, set title to {@link R.string#header_all_events}
+     * @param isFirstHeader
+     */
     public void configure(boolean isFirstHeader) {
         if(isFirstHeader) {
-            titleTextView.setText("My Calendar");
+            titleTextView.setText(R.string.header_my_calendar);
+        } else {
+            titleTextView.setText(R.string.header_all_events);
         }
-        titleTextView.setText("All Events");
     }
 
 
