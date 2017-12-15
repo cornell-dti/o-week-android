@@ -80,7 +80,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	}
 
 	/**
-	 * Sets up listener, associate views, retrieve final values from {@link R.dimen}, then draws everything.
+	 * Sets up listener, associate views, retrieve final values	 from {@link R.dimen}, then draws everything.
 	 *
 	 * @param inflater {@inheritDoc}
 	 * @param container {@inheritDoc}

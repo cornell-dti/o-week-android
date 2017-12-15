@@ -8,6 +8,10 @@
         android:title="@string/menu_feed"
         android:icon="@drawable/ic_view_list_white_24dp"
         android:enabled="true" />
+    <item android:id="@+id/bottom_nav_search"
+        android:title="@string/menu_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:enabled="true"/>
     <item android:id="@+id/bottom_nav_settings"
         android:title="@string/menu_settings"
         android:icon="@drawable/ic_settings_white_24dp"

@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	private RecyclerView datePickerRecycler;
 	private DatePickerAdapter datePickerAdapter;
 	private MenuItem filterMenu;
+	private boolean filterMenuIsHidden = false;
 
 	/**
 	 * Sets up toolbar, {@link #datePickerRecycler}, and starts {@link FeedFragment}
@@ -52,9 +53,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         BottomNavigationView bottomNavBar = (BottomNavigationView) findViewById(R.id.navigation);
         bottomNavBar.setOnNavigationItemSelectedListener(this);
-        //Highlights feed tab bar button
-        bottomNavBar.getMenu().getItem(0).setChecked(false);
-        bottomNavBar.getMenu().getItem(1	).setChecked(true);
+		//Highlights feed tab bar button
+		bottomNavBar.getMenu().getItem(0).setChecked(false);
+		bottomNavBar.getMenu().getItem(1	).setChecked(true);
 
     }
 
@@ -63,15 +64,27 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	    switch (item.getItemId()) {
             case R.id.bottom_nav_feed:
                 String feedTitle = getResources().getString(R.string.title_fragment_feed);
+				getSupportActionBar().setDisplayShowTitleEnabled(true);
                 startFragment(new FeedFragment(), feedTitle);
                 break;
             case R.id.bottom_nav_my_schedule:
                 String scheduleTitle = getResources().getString(R.string.title_fragment_my_schedule);
+				getSupportActionBar().setDisplayShowTitleEnabled(true);
                 startFragment(new ScheduleFragment(), scheduleTitle);
                 break;
             case R.id.bottom_nav_settings:
                 String settingsTitle = getResources().getString(R.string.title_activity_settings);
+				getSupportActionBar().setDisplayShowTitleEnabled(true);
                 startFragment(new SettingsFragment(), settingsTitle);
+                filterMenuIsHidden = true;
+                break;
+			case R.id.bottom_nav_search:
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainer, new SearchFragment());
+                transaction.commit();
+                getSupportActionBar().setDisplayShowTitleEnabled(false);
+                datePickerRecycler.setVisibility(View.GONE);
+                filterMenuIsHidden = true;
                 break;
             default:
                 return false;
@@ -121,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
+
 	/**
 	 * Shows the dialog that allows the user to choose what {@link Category} to filter events by.
 	 * If the user does select a NEW category to filter by, an event is sent out notifying listeners.
@@ -166,6 +180,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	{
 		getMenuInflater().inflate(R.menu.menu_of_feed, menu);
 		filterMenu = menu.findItem(R.id.filterMenu);
+		if(filterMenuIsHidden) {
+            filterMenu.setVisible(false);
+        }
 		return true;
 	}
 
