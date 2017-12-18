@@ -1,111 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:paddingTop="@dimen/double_margin"
+	android:paddingLeft="@dimen/margin"
+	android:paddingRight="@dimen/margin">
 
     <TextView
-        android:id="@+id/studentTypeQuestion"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:text="What type of incoming student are you?"
-        android:textColor="#000"
-        android:textSize="23sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+	    android:fontFamily="@font/avenir_next_bold"
+        android:text="@string/initial_settings_student"
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/size_initial_settings_title"/>
 
     <Button
         android:id="@+id/freshman"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_button_ripple"
-        android:textColor="@color/colorPrimary"
-        android:text="Incoming Freshman"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/studentTypeQuestion" />
+        style="@style/Button"
+	    android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_initial_settings_big_button"
+	    android:layout_marginTop="@dimen/margin"
+        android:text="@string/initial_settings_student_freshman"
+        android:textSize="@dimen/size_initial_settings_big_button"/>
 
     <Button
         android:id="@+id/transfer"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/bg_button_ripple"
-        android:textColor="@color/colorPrimary"
-        android:text="Transfer"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/freshman" />
+        style="@style/Button"
+	    android:textAppearance="@style/TextAppearance.AppCompat"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_initial_settings_big_button"
+	    android:layout_marginTop="@dimen/margin"
+        android:text="@string/initial_settings_student_transfer"
+        android:textSize="@dimen/size_initial_settings_big_button"/>
 
-    <TextView
-        android:id="@+id/internationalStudentQuestion"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:text="Are you an International Student?"
-        android:textColor="#000"
-        android:textSize="23sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/transfer" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/internationalStudentQuestion">
-
-        <Button
-            android:id="@+id/notInternationalStudent"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_button_ripple"
-            android:textColor="@color/colorPrimary"
-            android:text="No"
-            android:textSize="18sp"
-            tools:layout_editor_absoluteX="180dp"
-            tools:layout_editor_absoluteY="325dp" />
-
-        <Button
-            android:id="@+id/isInternationalStudent"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_button_ripple"
-            android:textColor="@color/colorPrimary"
-            android:text="Yes"
-            android:textSize="18sp"
-            tools:layout_editor_absoluteX="84dp"
-            tools:layout_editor_absoluteY="325dp" />
-    </LinearLayout>
-
-
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

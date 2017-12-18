@@ -18,7 +18,7 @@
 
 	<View
 		android:layout_width="match_parent"
-		android:layout_height="@dimen/height_time_line"
+		android:layout_height="@dimen/height_line"
 		android:alpha="@dimen/alpha_time_line"
 		android:background="@android:color/black"
 		android:layout_marginLeft="@dimen/margin_left_time_line"

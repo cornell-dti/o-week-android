@@ -1,125 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Welcome to Cornell Orientation Week!"
-        android:textColor="#000"
-        android:textSize="23sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical"
+		android:paddingTop="@dimen/double_margin"
+		android:paddingLeft="@dimen/margin"
+		android:paddingRight="@dimen/margin">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:text="Get There."
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="@string/initial_settings_welcome"
+			android:textColor="@android:color/black"
+			android:textSize="@dimen/size_initial_settings_title"
+			android:fontFamily="@font/avenir_next_bold"/>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="Use your customized calendar to find events for your class and college. "
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/double_margin"
+			android:text="@string/initial_settings_welcome_header_1"
+			android:textSize="@dimen/size_header"
+			android:textColor="@color/colorPrimary"
+			android:fontFamily="@font/avenir_next_bold"/>
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Explore."
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/initial_settings_welcome_body_1"
+			android:layout_marginTop="@dimen/half_margin"
+			android:fontFamily="@font/avenir_next_medium"
+			android:textColor="@android:color/black"/>
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="Browse, search, and filter through orientation events to add to your calendar."
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin"
+			android:text="@string/initial_settings_welcome_header_2"
+			android:textColor="@color/colorPrimary"
+			android:textSize="@dimen/size_header"
+			android:fontFamily="@font/avenir_next_bold"/>
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:text="Stay Informed."
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/half_margin"
+			android:fontFamily="@font/avenir_next_medium"
+			android:textColor="@android:color/black"
+			android:text="@string/initial_settings_welcome_body_2" />
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:text="Use your Orientation pamphlet for other important information and resources."
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/margin"
+			android:text="@string/initial_settings_welcome_header_3"
+			android:textColor="@color/colorPrimary"
+			android:fontFamily="@font/avenir_next_bold"
+			android:textSize="@dimen/size_header"/>
 
-    <Button
-        android:id="@+id/getStartedButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/bg_button_ripple"
-        android:textColor="@color/colorPrimary"
-        android:text="Get Started"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/half_margin"
+			android:text="@string/initial_settings_welcome_body_3"
+			android:fontFamily="@font/avenir_next_medium"
+			android:textSize="@dimen/size_initial_settings_body"
+			android:textColor="@android:color/black"/>
 
+		<Button
+			android:id="@+id/getStartedButton"
+			style="@style/Button"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/height_initial_settings_big_button"
+			android:layout_marginTop="@dimen/double_margin"
+			android:text="@string/initial_settings_start_button"
+			android:textAppearance="@style/TextAppearance.AppCompat"
+			android:textSize="@dimen/size_initial_settings_big_button"
+			android:layout_marginBottom="@dimen/double_margin"/>
 
-</android.support.constraint.ConstraintLayout>
+	</LinearLayout>
+
+</ScrollView>

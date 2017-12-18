@@ -5,72 +5,71 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_feed_cell"
     android:background="?attr/selectableItemBackground"
-    android:orientation="horizontal"
-    tools:layout_editor_absoluteY="81dp">
-
-    <TextView
-        android:id="@+id/endTimeText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:alpha="@dimen/alpha_feed_secondary_text"
-        android:textSize="@dimen/size_caption"
-        app:layout_constraintStart_toStartOf="@+id/startTimeText"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        tools:text="10:00 AM" />
-
-    <TextView
-        android:id="@+id/captionText"
-        android:layout_width="0dp"
-        android:layout_height="16dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="2dp"
-        android:layout_weight="1"
-        android:alpha="@dimen/alpha_feed_secondary_text"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:scrollHorizontally="true"
-        android:textSize="@dimen/size_caption"
-        app:layout_constraintEnd_toStartOf="@+id/requiredLabel"
-        app:layout_constraintStart_toStartOf="@+id/titleText"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        tools:text="Event caption" />
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/startTimeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginBottom="@dimen/half_margin_multiline"
+        android:layout_marginStart="@dimen/margin"
         android:alpha="1"
         android:textSize="@dimen/size_caption"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+	    android:fontFamily="@font/avenir_next_medium"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideline"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="08:00 AM" />
+
+    <TextView
+        android:id="@+id/endTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="@dimen/alpha_feed_secondary_text"
+        android:textSize="@dimen/size_caption"
+	    android:layout_marginTop="@dimen/half_margin_multiline"
+	    android:fontFamily="@font/avenir_next_medium"
+        app:layout_constraintStart_toStartOf="@+id/startTimeText"
+        app:layout_constraintTop_toTopOf="@+id/horizontalGuideline"
+        tools:text="10:00 AM" />
 
     <TextView
         android:id="@+id/titleText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginBottom="@dimen/half_margin_multiline"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_marginStart="@dimen/margin"
         android:layout_weight="0"
         android:ellipsize="end"
         android:maxLines="1"
-        android:scrollHorizontally="true"
         android:textAlignment="viewStart"
         android:textSize="@dimen/size_title"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+	    android:fontFamily="@font/avenir_next_demi_bold"
+        app:layout_constraintBottom_toTopOf="@+id/horizontalGuideline"
         app:layout_constraintEnd_toStartOf="@+id/requiredLabel"
         app:layout_constraintStart_toEndOf="@+id/startTimeText"
-        tools:text="Event title that is really really long" />
+        tools:text="Event title that is really really really long" />
+
+    <TextView
+        android:id="@+id/captionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin"
+	    android:layout_marginTop="@dimen/half_margin_multiline"
+	    android:layout_weight="1"
+        android:alpha="@dimen/alpha_feed_secondary_text"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="@dimen/size_caption"
+        app:layout_constraintEnd_toStartOf="@+id/requiredLabel"
+        app:layout_constraintStart_toStartOf="@+id/titleText"
+        app:layout_constraintTop_toTopOf="@+id/horizontalGuideline"
+        tools:text="Event caption" />
 
     <TextView
         android:id="@+id/requiredLabel"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/size_required_label"
+        android:layout_height="@dimen/size_required_label"
         android:layout_gravity="right"
         android:layout_marginEnd="24dp"
         android:background="@drawable/required_label"
@@ -78,16 +77,15 @@
         android:text="@string/required_label"
         android:textColor="@android:color/white"
         android:textSize="@dimen/size_required_label_text"
-        android:textStyle="bold"
+        android:fontFamily="@font/avenir_next_demi_bold"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="RQ"
         tools:visibility="visible" />
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/horizontalGuideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

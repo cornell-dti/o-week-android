@@ -8,6 +8,7 @@
 		<item name="colorAccent">@color/colorAccent</item>
 		<item name="android:textColorPrimary">@color/primary_text_material_light</item>
 		<item name="android:textColorSecondary">@color/secondary_text_material_light</item>
+		<item name="android:fontFamily">@font/avenir_next_regular</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
@@ -18,6 +19,15 @@
 
 	<style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+	<style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+		<item name="android:fontFamily">@font/avenir_next_demi_bold</item>  <!-- toolbar is demi bold -->
+	</style>
+
+	<style name="Button">
+		<item name="android:background">@drawable/bg_button_ripple</item>
+		<item name="android:textColor">@color/colorPrimary</item>
+		<item name="android:fontFamily">@font/avenir_next_demi_bold</item>
+		<item name="android:elevation">2dp</item>
+	</style>
 
 </resources>

@@ -7,13 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	private RecyclerView datePickerRecycler;
 	private DatePickerAdapter datePickerAdapter;
 	private MenuItem filterMenu;
-	private boolean filterMenuIsHidden = false;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -71,28 +68,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	    {
             case R.id.bottom_nav_feed:
                 String feedTitle = getString(R.string.title_fragment_feed);
-	            startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Feed), feedTitle);
-	            setFilterVisible(true);
+	            startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Feed), feedTitle, true, true);
 	            break;
             case R.id.bottom_nav_my_schedule:
                 String scheduleTitle = getString(R.string.title_fragment_my_schedule);
-                startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Schedule), scheduleTitle);
-	            setFilterVisible(false);
+                startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Schedule), scheduleTitle, true, false);
 	            break;
             case R.id.bottom_nav_settings:
                 String settingsTitle = getString(R.string.title_activity_settings);
-                startFragment(new SettingsFragment(), settingsTitle);
-	            setFilterVisible(false);
+                startFragment(new SettingsFragment(), settingsTitle, false, false);
 	            break;
-            case R.id.bottom_nav_search:
-              FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-              transaction.replace(R.id.fragmentContainer, new SearchFragment());
-              transaction.commit();
-              getSupportActionBar().setDisplayShowTitleEnabled(false);
-              datePickerRecycler.setVisibility(View.GONE);
-              setFilterVisible(false);
-              break;
-            default:
+		    case R.id.bottom_nav_search:
+			    startFragment(new SearchFragment(), null, false, false);
+			    break;
+		    default:
                 return false;
         }
         return true;
@@ -128,18 +117,23 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 	/**
 	 * Switches out the fragment for {@link FeedFragment}, {@link ScheduleFragment}, or {@link SettingsFragment},
-     * sets an appropriate title and changes visibility of date picker bar
+     * sets an appropriate title and changes visibility of date picker bar.
+	 *
+	 * @param fragment Fragment to transition to
+	 * @param title New title of toolbar. Null if none is to be set
+	 * @param showDatePicker Whether {@link #datePickerRecycler} should be visible
+	 * @param showFilter Whether {@link #filterMenu} should be visible
 	 */
-	private void startFragment(Fragment fragment, String title) {
+	private void startFragment(Fragment fragment, @Nullable String title, boolean showDatePicker, boolean showFilter)
+	{
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.commit();
-        getSupportActionBar().setTitle(title);
-        if (fragment instanceof SettingsFragment) {
-            datePickerRecycler.setVisibility(View.GONE);
-        } else {
-            datePickerRecycler.setVisibility(View.VISIBLE);
-        }
+        if (title != null)
+            getSupportActionBar().setTitle(title);
+		datePickerRecycler.setVisibility(showDatePicker ? View.VISIBLE : View.GONE);
+		if (filterMenu != null)
+			filterMenu.setVisible(showFilter);
     }
 
 
@@ -197,20 +191,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	{
 		getMenuInflater().inflate(R.menu.menu_of_feed, menu);
 		filterMenu = menu.findItem(R.id.filterMenu);
-		if(filterMenuIsHidden) {
-            filterMenu.setVisible(false);
-        }
+		filterMenu.setVisible(false);
 		return true;
-	}
-
-	/**
-	 * Sets the visibility of the {@link #filterMenu} with a null check.
-	 * @param visible Whether the filter should be visible
-	 */
-	private void setFilterVisible(boolean visible)
-	{
-		if (filterMenu != null)
-			filterMenu.setVisible(visible);
 	}
 
 	/**

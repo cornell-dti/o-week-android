@@ -4,7 +4,8 @@
 	android:layout_width="wrap_content"
 	android:layout_height="match_parent"
 	android:gravity="center_vertical"
-	xmlns:tools="http://schemas.android.com/tools">
+	xmlns:tools="http://schemas.android.com/tools"
+	tools:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/dayNumView"
@@ -16,6 +17,7 @@
 	    android:textSize="@dimen/size_date_cell_day_num"
 	    android:textColor="@android:color/white"
 	    android:background="@drawable/bg_date_cell"
+	    android:fontFamily="@font/avenir_next_medium"
         tools:text="13" />
 
 	<TextView
@@ -27,5 +29,6 @@
 		android:layout_marginBottom="@dimen/margin_date_cell_weekday_to_day_num"
 		android:textSize="@dimen/size_date_cell_weekday"
 		android:textColor="@android:color/white"
+		android:fontFamily="@font/avenir_next_medium"
 		tools:text="FRI" />
 </RelativeLayout>

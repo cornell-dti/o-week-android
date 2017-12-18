@@ -2,15 +2,13 @@
 	<string name="app_name">O-week</string>
 	<string name="menu_filter">Filter</string>
 	<string name="menu_my_schedule">My Schedule</string>
-	<string name="menu_feed">Feed</string>
+	<string name="menu_feed">Browse</string>
 	<string name="menu_search">Search</string>
 	<string name="search_hint">Search for orientation events</string>
-    <string name="search_image_description">Search Magnifying Glass</string>
 	<string name="menu_select_event">Select Event</string>
 	<string name="menu_settings">Settings</string>
-	<string name="title_activity_details">Details</string>
 	<string name="title_activity_settings">Settings</string>
-	<string name="title_fragment_feed">O-week Schedule</string>
+	<string name="title_fragment_feed">Browse</string>
 	<string name="title_fragment_my_schedule">My Schedule</string>
 	<string name="snackbar_image_error">Image could not be downloaded</string>
 	<string name="dialog_positive_button">OK</string>
@@ -28,6 +26,19 @@
 	<string name="toast_text_event_added">Added event to schedule.</string>
 	<string name="toast_text_event_removed">Removed event from schedule.</string>
 	<string name="more_button">more</string>
+
+	<string name="initial_settings_student">What type of incoming student are you?</string>
+	<string name="initial_settings_student_freshman">Incoming Freshman</string>
+	<string name="initial_settings_student_transfer">Transfer</string>
+	<string name="initial_settings_college">What college do you belong to?</string>
+	<string name="initial_settings_welcome">Welcome to Cornell Orientation Week!</string>
+	<string name="initial_settings_welcome_header_1">Get There.</string>
+	<string name="initial_settings_welcome_body_1">Use your customized calendar to find events for your class and college.</string>
+	<string name="initial_settings_welcome_header_2">Explore.</string>
+	<string name="initial_settings_welcome_body_2">Browse, search, and filter through orientation events to add to your calendar.</string>
+	<string name="initial_settings_welcome_header_3">Stay Informed.</string>
+	<string name="initial_settings_welcome_body_3">Use your Orientation pamphlet for other important information and resources.</string>
+	<string name="initial_settings_start_button">Get Started</string>
 
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>

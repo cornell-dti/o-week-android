@@ -10,7 +10,6 @@ import com.cornellsatech.o_week.UserData;
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
-import com.cornellsatech.o_week.models.InternationalStudentStatus;
 import com.cornellsatech.o_week.models.StudentType;
 
 import java.util.HashSet;
@@ -29,7 +28,6 @@ public final class Settings
 	private static final String KEY_CATEGORIES = "categories";
 	private static final String KEY_VERSION = "version";
 	private static final String KEY_STUDENT_TYPE = "studentType";
-	private static final String KEY_INTL_STUDENT_STATUS = "internationalStudentStatus";
 	private static final String KEY_COLLEGE_TYPE = "collegeType";
 
 	private static final String TAG = Settings.class.getSimpleName();
@@ -41,14 +39,12 @@ public final class Settings
 	 * Saves the student information from app initial settings to disk.
 	 * @param context
 	 * @param studentType whether a student is a transfer or freshman
-	 * @param internationalStudentStatus whether a student is an international student
 	 * @param collegeType the name of the college the student is in.
 	 */
-	public static void setStudentInfo(Context context, StudentType studentType, InternationalStudentStatus internationalStudentStatus, CollegeType collegeType){
+	public static void setStudentInfo(Context context, StudentType studentType, CollegeType collegeType){
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
 		editor.putString(KEY_STUDENT_TYPE, studentType.toString());
-		editor.putString(KEY_INTL_STUDENT_STATUS, internationalStudentStatus.toString());
 		editor.putString(KEY_COLLEGE_TYPE, collegeType.toString());
 		editor.apply();
 	}
@@ -61,16 +57,6 @@ public final class Settings
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		String studentTypeStringRepresentation = preferences.getString(KEY_STUDENT_TYPE, "NOTSET");
 		return StudentType.valueOf(studentTypeStringRepresentation);
-	}
-
-	/**
-	 * Gets the saved international status of the student.
-	 * @return an InterationalStudentStatus Enum indicating the student's saved international student status
-	 */
-	public static InternationalStudentStatus getStudentSavedInternationalStatus(Context context){
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		String internationalStudentStatusStringRepresentation = preferences.getString(KEY_INTL_STUDENT_STATUS, "NOTSET");
-		return InternationalStudentStatus.valueOf(internationalStudentStatusStringRepresentation);
 	}
 
 	/**

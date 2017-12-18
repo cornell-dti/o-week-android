@@ -7,18 +7,7 @@
 	android:layout_height="match_parent"
 	tools:context=".DetailsActivity">
 
-	<android.support.design.widget.AppBarLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:theme="@style/AppTheme.AppBarOverlay">
-
-		<android.support.v7.widget.Toolbar
-			android:id="@+id/toolbar"
-			android:layout_width="match_parent"
-			android:layout_height="?attr/actionBarSize"
-			app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-	</android.support.design.widget.AppBarLayout>
+	<include layout="@layout/toolbar" />
 
 	<android.support.v4.widget.NestedScrollView
 		android:layout_width="match_parent"
@@ -56,16 +45,13 @@
 				android:id="@+id/titleText"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginBottom="20dp"
-				android:layout_marginEnd="20dp"
-				android:layout_marginStart="20dp"
-				android:focusable="true"
-				android:focusableInTouchMode="true"
-				android:scrollHorizontally="false"
+				android:layout_marginBottom="@dimen/margin"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
 				android:singleLine="false"
-				android:textColor="@color/common_google_signin_btn_text_dark_default"
-				android:textSize="24sp"
-				android:textStyle="bold"
+				android:textColor="@android:color/white"
+				android:textSize="@dimen/size_title_details"
+				android:fontFamily="@font/avenir_next_demi_bold"
 				app:layout_constraintBottom_toBottomOf="@+id/eventImage"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -75,10 +61,11 @@
 				android:id="@+id/timeText"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginStart="20dp"
-				android:layout_marginTop="20dp"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
 				android:textColor="@color/common_google_signin_btn_text_dark_focused"
-				android:textSize="16sp"
+				android:textSize="@dimen/size_time_details"
+				android:fontFamily="@font/avenir_next_medium"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/eventImage"
 				tools:text="10:00 AM - 12:00 PM" />
@@ -87,38 +74,37 @@
 				android:id="@+id/captionText"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="5dp"
-				android:layout_marginStart="20dp"
-				android:layout_marginTop="2dp"
+				android:layout_marginEnd="@dimen/half_margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/half_margin_multiline"
 				android:ellipsize="end"
 				android:scrollHorizontally="true"
 				android:textSize="@dimen/size_secondary_details"
 				app:layout_constraintEnd_toStartOf="@+id/addButton"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/timeText"
-				tools:text="This is a really long caption which is being used to test the caption box's ability to accommodate long strings." />
+				tools:text="Location" />
 
 			<Button
 				android:id="@+id/addButton"
 				android:layout_width="100dp"
 				android:layout_height="40dp"
 				android:layout_centerVertical="true"
-				android:layout_marginEnd="20dp"
-				android:background="@drawable/bg_button_ripple"
+				android:layout_marginEnd="@dimen/margin"
 				android:text="@string/button_text_event_not_added"
 				android:textAppearance="@style/TextAppearance.AppCompat"
-				android:textColor="@color/colorPrimary"
 				android:textSize="16sp"
+				style="@style/Button"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toTopOf="@+id/timeText" />
 
-			<ImageView
+			<View
 				android:id="@+id/horizontalBreakBar"
 				android:layout_width="0dp"
-				android:layout_height="1dp"
-				android:layout_marginEnd="20dp"
-				android:layout_marginStart="20dp"
-				android:layout_marginTop="20dp"
+				android:layout_height="@dimen/height_line"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
 				android:background="@color/horizontalBreakColor"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -128,13 +114,13 @@
 				android:id="@+id/requiredLabel"
 				android:layout_width="@dimen/size_required_label"
 				android:layout_height="@dimen/size_required_label"
-				android:layout_marginStart="20dp"
+				android:layout_marginStart="@dimen/margin"
 				android:background="@drawable/required_label"
 				android:gravity="center"
 				android:text="@string/required_label"
 				android:textColor="@android:color/white"
 				android:textSize="@dimen/size_required_label_text"
-				android:textStyle="bold"
+				android:fontFamily="@font/avenir_next_demi_bold"
 				app:layout_constraintBottom_toBottomOf="@+id/requirementDetails"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toTopOf="@+id/requirementDetails" />
@@ -143,24 +129,25 @@
 				android:id="@+id/requirementDetails"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="20dp"
-				android:layout_marginStart="20dp"
-				android:layout_marginTop="20dp"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
 				android:textColor="@android:color/black"
-				android:textSize="14sp"
+				android:textSize="@dimen/size_detail"
+				android:fontFamily="@font/avenir_next_medium"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toEndOf="@+id/requiredLabel"
 				app:layout_constraintTop_toBottomOf="@+id/horizontalBreakBar"
 				tools:text="All students will be required to sign in with their ID card." />
 
 
-			<ImageView
+			<View
 				android:id="@+id/horizontalBreakBar2"
 				android:layout_width="0dp"
-				android:layout_height="1dp"
-				android:layout_marginEnd="20dp"
-				android:layout_marginStart="20dp"
-				android:layout_marginTop="20dp"
+				android:layout_height="@dimen/height_line"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
 				android:background="@color/horizontalBreakColor"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -171,9 +158,9 @@
 				android:id="@+id/additionalText"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="20dp"
-				android:layout_marginStart="20dp"
-				android:layout_marginTop="20dp"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
 				android:textSize="@dimen/size_detail"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
@@ -182,7 +169,7 @@
 
 			<View
 				android:id="@+id/moreButtonGradient"
-				android:layout_width="35dp"
+				android:layout_width="@dimen/width_more_button_gradient"
 				android:layout_height="0dp"
 				app:layout_constraintBottom_toBottomOf="@+id/moreButton"
 				app:layout_constraintRight_toLeftOf="@+id/moreButton"
@@ -195,6 +182,7 @@
 				android:text="@string/more_button"
 				android:textColor="@color/colorPrimary"
 				android:textSize="@dimen/size_detail"
+				android:fontFamily="@font/avenir_next_medium"
 				app:layout_constraintBottom_toBottomOf="@+id/descriptionText"
 				app:layout_constraintEnd_toEndOf="@+id/descriptionText" />
 
@@ -202,15 +190,15 @@
 				android:id="@+id/descriptionText"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
-				android:layout_marginEnd="20dp"
-				android:layout_marginStart="20dp"
-				android:layout_marginTop="20dp"
-				android:maxLines="3"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
 				android:textSize="@dimen/size_detail"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
 				app:layout_constraintTop_toBottomOf="@+id/additionalText"
-				tools:text="This will be your official welcome from university administrators, as well as from your student body president and other key student leaders with blah blah blah more blah blah blah" />
+				tools:text="This will be your official welcome from university administrators, as well as from your student body president and other key student leaders with blah blah blah more blah blah blah"
+				tools:maxLines="3"/>
 
 
 			<Button
@@ -227,7 +215,7 @@
 				android:name="com.google.android.gms.maps.MapFragment"
 				android:layout_width="0dp"
 				android:layout_height="@dimen/height_map"
-				android:layout_marginTop="20dp"
+				android:layout_marginTop="@dimen/margin"
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"

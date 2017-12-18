@@ -1,6 +1,5 @@
 package com.cornellsatech.o_week;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,11 +12,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 import com.cornellsatech.o_week.models.Event;
-import com.cornellsatech.o_week.util.NotificationCenter;
-import com.google.common.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +30,7 @@ import java.util.List;
 
 public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener, MenuItem.OnActionExpandListener
 {
-
-	private RelativeLayout emptyView;
+	private LinearLayout emptyView;
 	private RecyclerView searchRecycler;
 	private SearchAdapter searchAdapter;
 	private static final int MIN_NUM_LETTERS = 3;
@@ -52,7 +48,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.fragment_search, container, false);
-		emptyView = view.findViewById(R.id.searchEmptyView);
+		emptyView = view.findViewById(R.id.searchEmptyState);
 
 		searchRecycler = view.findViewById(R.id.searchRecycler);
 		setUpRecycler();

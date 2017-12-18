@@ -72,7 +72,7 @@ public class FeedFragment extends Fragment
 			Log.e(TAG, "onCreateView: date not found");
 
 		feedRecycler = view.findViewById(R.id.feedRecycler);
-		setUpRecycler(view.findViewById(R.id.empty_feed_view), view.findViewById(R.id.feedRecycler));
+		setUpRecycler(view.findViewById(R.id.emptyState), view.findViewById(R.id.feedRecycler));
 		return view;
 	}
 

@@ -4,157 +4,118 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.cornellsatech.o_week.models.CollegeType;
-import com.cornellsatech.o_week.models.InternationalStudentStatus;
-import com.cornellsatech.o_week.models.StudentType;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- *
  * The pager fragment for the college settings page.
  */
 
-public class InitialSettingsPage2Fragment extends Fragment implements View.OnClickListener{
+public class InitialSettingsPage2Fragment extends Fragment implements View.OnClickListener
+{
+	private final Map<Button, CollegeType> collegeButtons = new HashMap<>(CollegeType.values().length);
 
-    private Button ALS;
-    private Button AAP;
-    private Button AS;
-    private Button ENG;
-    private Button ILR;
-    private Button HE;
-    private Button JOHNSON;
-    private ArrayList<Button> buttonGroup;
-    private CollegeType collegeType = CollegeType.NOTSET;
+	/**
+	 * Sets up the views
+	 *
+	 * @param inflater
+	 * @param container
+	 * @param savedInstanceState
+	 * @return
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	{
+		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.initial_settings_college, container, false);
+		createCollegeButtons(rootView);
+		return rootView;
+	}
 
-    /**
-     * Sets up the views
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.initial_settings_college, container,false);
+	/**
+	 * Creates buttons for each college in {@link CollegeType}.
+	 * @param rootView View created in {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}
+	 */
+	private void createCollegeButtons(View rootView)
+	{
+		LinearLayout linearLayout = rootView.findViewById(R.id.linearLayout);
+		int MARGIN = getResources().getDimensionPixelSize(R.dimen.margin);
+		int HEIGHT = getResources().getDimensionPixelSize(R.dimen.height_initial_settings_small_button);
+		float TEXT_SIZE = getResources().getDimension(R.dimen.size_initial_settings_small_button);
 
-        ALS = rootView.findViewById(R.id.ALS);
-        AAP = rootView.findViewById(R.id.AAP);
-        AS = rootView.findViewById(R.id.AS);
-        ENG = rootView.findViewById(R.id.ENG);
-        ILR = rootView.findViewById(R.id.ILR);
-        HE = rootView.findViewById(R.id.HE);
-        JOHNSON = rootView.findViewById(R.id.Johnson);
+		for (CollegeType collegeType : CollegeType.values())
+		{
+			Button button = new Button(getContext(), null, R.style.Button);
+			button.setText(collegeType.toString());
+			button.setTextAppearance(getContext(), R.style.TextAppearance_AppCompat);
+			button.setTextSize(TypedValue.COMPLEX_UNIT_PX, TEXT_SIZE);
+			button.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+			button.setOnClickListener(this);
+			collegeButtons.put(button, collegeType);
 
-        buttonGroup = new ArrayList<Button>();
-        buttonGroup.add(ALS);
-        buttonGroup.add(AAP);
-        buttonGroup.add(AS);
-        buttonGroup.add(ENG);
-        buttonGroup.add(ILR);
-        buttonGroup.add(HE);
-        buttonGroup.add(JOHNSON);
-        for(Button button : buttonGroup) {
-            button.setOnClickListener(this);
-        }
+			//set constraints, add to linear layout
+			LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, HEIGHT);
+			layoutParams.topMargin = MARGIN;
+			linearLayout.addView(button, layoutParams);
+		}
+	}
 
-        return rootView;
-    }
+	/**
+	 * Set the given button as active, other buttons in the class as inactive.
+	 *
+	 * @param button A button representing a college type.
+	 */
+	private void setActiveButton(Button button)
+	{
+		for (Button collegeButton : collegeButtons.keySet())
+			disableSelected(collegeButton);
+		setSelected(button);
+	}
 
-    /**
-     * Set the given button as active, other buttons in the class as inactive.
-     * @param button
-     */
-    private void setActiveButton(Button button) {
-        setSelected(button);
-        for(Button b : buttonGroup) {
-            if(b != button) {
-                disableSelected(b);
-            }
-        }
+	/**
+	 * Set a button's style as selected
+	 *
+	 * @param button A button representing a college type.
+	 */
+	private void setSelected(Button button)
+	{
+		button.setBackgroundResource(R.drawable.bg_button_selected_ripple);
+		button.setTextColor(Color.WHITE);
+	}
 
-    }
+	/**
+	 * set a button's style as not selected
+	 *
+	 * @param button A button representing a college type.
+	 */
+	private void disableSelected(Button button)
+	{
+		button.setBackgroundResource(R.drawable.bg_button_ripple);
+		button.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
+	}
 
-    /**
-     * Set a button's style as selected
-     * @param button
-     */
-    private void setSelected(Button button){
-        button.setBackgroundResource(R.drawable.bg_button_selected_ripple);
-        button.setTextColor(Color.WHITE);
-    }
+	/**
+	 * Handles button clicks. Set the new value and advance to the next fragment.
+	 *
+	 * @param view The button click
+	 */
+	@Override
+	public void onClick(View view)
+	{
+		Button buttonClicked = (Button) view;
+		CollegeType collegeClicked = collegeButtons.get(buttonClicked);
+		setActiveButton(buttonClicked);
 
-    /**
-     * set a button's style as not selected
-     * @param button
-     */
-    private void disableSelected(Button button){
-        button.setBackgroundResource(R.drawable.bg_button_ripple);
-        button.setTextColor(ContextCompat.getColor(this.getContext(), R.color.colorPrimary));
-    }
-
-    /**
-     * switch to the next page of initial settings.
-     */
-    private void jumpToNextFragment(){
-        if(collegeType != CollegeType.NOTSET) {
-            InitialSettingsActivity parentActivity = (InitialSettingsActivity)getActivity();
-            parentActivity.setCollegeType(collegeType);
-            parentActivity.switchToNextPage();
-        }
-    }
-
-    /**
-     * Handles button clicks.
-     * @param view {@link ALS}, {@link AAP, {@link AS}, {@link ENG}, {@link ILR}, {@link HE}, {@link JOHNSON}
-     */
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.ALS:
-                setActiveButton(ALS);
-                collegeType = CollegeType.ALS;
-                jumpToNextFragment();
-                break;
-            case R.id.AAP:
-                setActiveButton(AAP);
-                collegeType = CollegeType.AAP;
-                jumpToNextFragment();
-                break;
-            case R.id.AS:
-                setActiveButton(AS);
-                collegeType = CollegeType.AS;
-                jumpToNextFragment();
-                break;
-            case R.id.ENG:
-                setActiveButton(ENG);
-                collegeType = CollegeType.ENG;
-                jumpToNextFragment();
-                break;
-            case R.id.ILR:
-                setActiveButton(ILR);
-                collegeType = CollegeType.ILR;
-                jumpToNextFragment();
-                break;
-            case R.id.HE:
-                setActiveButton(HE);
-                collegeType = CollegeType.HE;
-                jumpToNextFragment();
-                break;
-            case R.id.Johnson:
-                setActiveButton(JOHNSON);
-                collegeType = CollegeType.JOHNSON;
-                jumpToNextFragment();
-                break;
-            default:
-                Log.e("InitialPage2Fragment", "onClick unexpected id: " + view);
-                return;
-        }
-    }
+		InitialSettingsActivity parentActivity = (InitialSettingsActivity) getActivity();
+		parentActivity.setCollegeType(collegeClicked);
+		parentActivity.switchToNextPage();
+	}
 }

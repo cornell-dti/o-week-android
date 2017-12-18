@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
 
 import com.cornellsatech.o_week.DetailsActivity;
 import com.cornellsatech.o_week.R;
@@ -69,7 +68,7 @@ public final class Notifications
 		intent.putExtra(DetailsActivity.EVENT_KEY, event.toString());
 		PendingIntent pendingIntent = PendingIntent.getActivity(context, event.pk, intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+		Notification.Builder builder = new Notification.Builder(context);
 		builder.setVisibility(Notification.VISIBILITY_PUBLIC)
 				.setSmallIcon(R.drawable.ic_notification)
 				.setContentTitle(event.title)
