@@ -7,6 +7,7 @@ import android.util.Log;
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
+import com.cornellsatech.o_week.models.StudentType;
 import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Settings;
@@ -33,12 +34,11 @@ import java.util.Set;
  * {@link #DATES}: Dates of the orientation. Determined from {@link #YEAR}, {@link #MONTH}, {@link #START_DAY},
  *                 and {@link #END_DAY}.
  * {@link #selectedDate}: The date to display events for.
- * {@link #selectedFilters}: An integer array that represents all the currently selected filters.
- *                               appear in the feed. See {@link FeedAdapter#applyFilters()} for its usage.
- *                               0 = show all events.
- *                               1 = show required events.
- *                               2+ = show events of with {@link Event#category} where
- *                               {@link Category#pk} - 2 = {@link #selectedFilters}.
+ * {@link #selectedFilters}: An integer set that represents all the currently selected filters.
+ *                               appear in the feed.
+ * {@link #filterRequired}: True if "required events" filter is on.
+ * {@link #collegeType}: Which college the student belongs in.
+ * {@link #studentType}: What kind of student the user is.
  */
 public final class UserData
 {
@@ -49,6 +49,8 @@ public final class UserData
 	public static LocalDate selectedDate;
 	public final static Set<Integer> selectedFilters = new HashSet<>();
 	public static boolean filterRequired = false;
+	private static CollegeType collegeType;
+	private static StudentType studentType;
 	private static final int YEAR = 2017;
 	private static final int MONTH = 8;
 	private static final int START_DAY = 18;    //Dates range: [START_DAY, END_DAY], inclusive
@@ -224,6 +226,8 @@ public final class UserData
 				Settings.setVersion(Integer.valueOf(msg), context);
 			}
 		});
+
+		loadStudentCollegeTypes(context);
 	}
 	/**
 	 * Sorts {@link #allEvents} and {@link #categories}.
@@ -236,14 +240,33 @@ public final class UserData
 	}
 
 	/**
+	 * Sets {@link #collegeType} and {@link #studentType} based on saved settings.
+	 * Necessary for {@link #requiredForUser(Event)} to always return the correct result.
+	 *
+	 * @param context
+	 */
+	public static void loadStudentCollegeTypes(Context context)
+	{
+		collegeType = Settings.getStudentSavedCollegeType(context);
+		studentType = Settings.getStudentSavedType(context);
+	}
+
+	/**
 	 * Checks whether the given event is required for the current user
 	 * @param event
-	 * @param context the context of the app
 	 * @return true if this event is required for the current user, false otherwise.
 	 */
-	public static boolean requiredForUser(Event event, Context context) {
-		boolean requiredForStudentsCategory = CollegeType.toCollegeType(event.category) == Settings.getStudentSavedCollegeType(context);
-		return event.required || (event.categoryRequired && requiredForStudentsCategory);
+	public static boolean requiredForUser(Event event)
+	{
+		if (event.required)
+			return true;
+
+		if (!event.categoryRequired)
+			return false;
+
+		boolean collegeRequired = CollegeType.toCollegeType(event.category) == collegeType;
+		boolean studentTypeRequired = StudentType.toStudentType(event.category) == studentType;
+		return collegeRequired || studentTypeRequired;
 	}
 
 	/**
@@ -269,7 +292,7 @@ public final class UserData
 	 */
 	public static boolean[] getCheckedFilters()
 	{
-		boolean[] filters = new boolean[selectedFilters.size() + 1];
+		boolean[] filters = new boolean[categories.size() + 1];
 		//index 0 represents filter for "required events"
 		filters[0] = filterRequired;
 		//all other indices represent categories, in order.

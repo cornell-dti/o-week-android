@@ -210,7 +210,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		else
 		{
 			//change color of RQ label based on whether or not it's required for this user
-			int requiredLabelBg = UserData.requiredForUser(event, this) ? R.drawable.required_label : R.drawable.required_label_gray;
+			int requiredLabelBg = UserData.requiredForUser(event) ? R.drawable.required_label : R.drawable.required_label_gray;
 			requiredLabel.setBackground(ContextCompat.getDrawable(this, requiredLabelBg));
 
 			if (event.required)

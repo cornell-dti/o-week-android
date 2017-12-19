@@ -72,7 +72,7 @@ public class FeedFragment extends Fragment
 			Log.e(TAG, "onCreateView: date not found");
 
 		feedRecycler = view.findViewById(R.id.feedRecycler);
-		setUpRecycler(view.findViewById(R.id.emptyState), view.findViewById(R.id.feedRecycler));
+		setUpRecycler(view.findViewById(R.id.emptyState));
 		return view;
 	}
 
@@ -90,12 +90,11 @@ public class FeedFragment extends Fragment
 	}
 	/**
 	 * Connects {@link #feedRecycler} to {@link #feedAdapter}.
-	 * @param emptyView the empty view the recycler should use when there are no elements
-	 * @param recyclerView the default recycler view
+	 * @param emptyView the empty view the recycler should display when there are no elements
 	 */
-	private void setUpRecycler(View emptyView, View recyclerView)
+	private void setUpRecycler(View emptyView)
 	{
-		feedAdapter = new FeedAdapter(date, recyclerView, emptyView);
+		feedAdapter = new FeedAdapter(date, emptyView);
 		feedRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 		feedRecycler.setAdapter(feedAdapter);
 		scrollToNextEvent();

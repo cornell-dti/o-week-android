@@ -82,7 +82,7 @@ public class InitialSettingsActivity extends AppCompatActivity
 		Set<Event> allEvents = Settings.getAllEvents(this);
 		Set<Event> requiredEvents = new HashSet<>();
 		for (Event e : allEvents)
-			if (UserData.requiredForUser(e, this))
+			if (UserData.requiredForUser(e))
 				requiredEvents.add(e);
 		for (Event e : requiredEvents)
 		{

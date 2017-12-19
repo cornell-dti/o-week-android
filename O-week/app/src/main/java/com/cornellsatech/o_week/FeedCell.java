@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.cornellsatech.o_week.models.Event;
+
 /**
  * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
  * is in {@link R.layout#cell_feed}.
@@ -52,7 +54,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		endTimeText.setText(event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
 		titleText.setText(event.title);
 		captionText.setText(event.caption);
-		setVisible(UserData.requiredForUser(event, context), requiredLabel);
+		setVisible(UserData.requiredForUser(event), requiredLabel);
 	}
 	/**
 	 * This object has been clicked. Open the details page.

@@ -72,6 +72,8 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 		datePager = view.findViewById(R.id.viewPager);
 		datePager.setAdapter(adapter);
 		datePager.addOnPageChangeListener(this);
+		//trigger a call to onDateChanged so this fragment starts out with the correct date
+		onDateChanged(null);
 
 		NotificationCenter.DEFAULT.register(this);
 		return view;

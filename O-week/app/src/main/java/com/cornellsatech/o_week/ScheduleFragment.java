@@ -232,7 +232,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		TextView time = scheduleCell.findViewById(R.id.timeText);
 		TextView title = scheduleCell.findViewById(R.id.titleText);
 		TextView caption = scheduleCell.findViewById(R.id.captionText);
-		if (UserData.requiredForUser(event, getContext()))
+		if (UserData.requiredForUser(event))
 			required.setVisibility(View.VISIBLE);
 		time.setText(event.startTime.toString("h:mm") + " - " + event.endTime.toString("h:mm a"));
 		title.setText(event.title);

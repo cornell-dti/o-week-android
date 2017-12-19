@@ -103,7 +103,7 @@ public class SearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             case CONTENT_VIEW:
                 Event event = events.get(position);
                 FeedCell feedCell = (FeedCell) viewHolder;
-                feedCell.configure(event, UserData.selectedEventsContains(event));
+                feedCell.configure(event);
                 break;
             default:
                 break;

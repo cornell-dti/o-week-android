@@ -28,18 +28,17 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 {
 	private final LocalDate date;
 	public List<Event> events;
-	private static final String TAG = FeedAdapter.class.getSimpleName();
-	private final View recyclerView;
 	private final View emptyView;
+
+	private static final String TAG = FeedAdapter.class.getSimpleName();
 
 	/**
 	 * Registers this object to listen in on notifications.
 	 * Unregisters itself in {@link #onDetachedFromRecyclerView(RecyclerView)} to avoid memory leaks.
 	 */
-	public FeedAdapter(LocalDate date, View recyclerView, View emptyView)
+	public FeedAdapter(LocalDate date, View emptyView)
 	{
 		NotificationCenter.DEFAULT.register(this);
-		this.recyclerView = recyclerView;
 		this.emptyView = emptyView;
 		this.date = date;
 		loadData();
@@ -90,7 +89,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	public void onEventReload(NotificationCenter.EventReload eventReload)
 	{
 		loadData();
-		notifyDataSetChanged();
 	}
 	/**
 	 * Listens for a new filter the user chose. Reloads all events.
@@ -101,7 +99,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	public void onFilterChanged(NotificationCenter.EventFilterChanged eventFilterChanged)
 	{
 		loadData();
-		notifyDataSetChanged();
 	}
 	/**
 	 * Unregisters this object as a listener to avoid memory leaks. Registered in {@link FeedAdapter()}.
@@ -118,35 +115,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	 */
 	private void loadData()
 	{
-		if (date == null)
-			return;
-		events = new ArrayList<>(UserData.allEvents.get(date));
-		applyFilters();
-		if(events.size() == 0) {
-			recyclerView.setVisibility(View.GONE);
+		List<Event> events = new ArrayList<>(UserData.allEvents.get(date));
+		filterEvents(events);
+
+		if (events.isEmpty())
 			emptyView.setVisibility(View.VISIBLE);
-		}
-		else {
-			recyclerView.setVisibility(View.VISIBLE);
+		else
 			emptyView.setVisibility(View.GONE);
-		}
-	}
 
-
-
-	/**
-	 * Depending on the filter the user applied, filter the events shown.
-	 *
-	 * @see UserData for documentation on {@link UserData#selectedFilters}
-	 */
-	private void applyFilters()
-	{
-		for(int i = 0; i < UserData.categories.size(); i++){
-			if(UserData.selectedFilters.contains(UserData.categories.get(i).pk)){
-				filterEvents(events);
-			}
-		}
-
+		this.events = events;
+		notifyDataSetChanged();
 	}
 
 	/**
@@ -155,17 +133,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	 */
 	private void filterEvents(Collection<Event> events)
 	{
+		if (UserData.selectedFilters.isEmpty() && !UserData.filterRequired)
+			return;
+
 		Iterator<Event> eventsIterator = events.iterator();
 		while (eventsIterator.hasNext())
 		{
 			Event event = eventsIterator.next();
-			if(UserData.filterRequired){
-				if (!UserData.selectedFilters.contains(event.category) && !event.required)
-					eventsIterator.remove();
-			}else if(!UserData.filterRequired){
-				if (!UserData.selectedFilters.contains(event.category))
-					eventsIterator.remove();
-			}
+
+			if (UserData.selectedFilters.contains(event.category))
+				continue;
+			if (UserData.filterRequired && UserData.requiredForUser(event))
+				continue;
+			eventsIterator.remove();
 		}
 	}
 }
