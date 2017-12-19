@@ -38,7 +38,7 @@ Design Choices
       doSomethingElse();
    }
    ```
-   * If a statement is singleLine, don't use brackets at all, like so:
+   * If a statement fits in a single line, don't use brackets at all, like so:
    ```java
    if (blah)
       doSomething();
