@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/bottom_nav_my_schedule"
         android:title="@string/menu_my_schedule"
-        android:icon="@drawable/ic_event_available_white_24dp"
+        android:icon="@drawable/ic_home_white_24dp"
         android:enabled="true"/>
     <item android:id="@+id/bottom_nav_feed"
         android:title="@string/menu_feed"
-        android:icon="@drawable/ic_view_list_white_24dp"
+        android:icon="@drawable/ic_today_white_24dp"
         android:enabled="true" />
     <item android:id="@+id/bottom_nav_search"
         android:title="@string/menu_search"

@@ -27,7 +27,7 @@
 			android:layout_height="@dimen/size_empty_state"
 			android:layout_marginBottom="@dimen/margin"
 			android:tint="@color/darkGray"
-			android:src="@drawable/ic_event_available_white_24dp" />
+			android:src="@drawable/ic_today_white_24dp" />
 
 		<TextView
 			android:layout_width="wrap_content"
