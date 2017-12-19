@@ -45,7 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
  */
 public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback, Button.OnClickListener
 {
-	public static String EVENT_KEY = "event";
+	public static final String EVENT_KEY = "event";
 	private Event event;
 	private CoordinatorLayout coordinatorLayout;
 	private ImageView eventImage;
@@ -63,7 +63,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	private Button directionsButton;
 
 	private static final String TAG = DetailsActivity.class.getSimpleName();
-	public static final int MAP_ZOOM = 16;
+	private static final int MAP_ZOOM = 16;
 	private static final int NUM_LINES_IN_CONDENSED_DESCRIPTION = 3;
 
 	/**

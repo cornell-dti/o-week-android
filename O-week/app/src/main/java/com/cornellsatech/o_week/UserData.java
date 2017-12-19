@@ -16,7 +16,6 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 
 import org.joda.time.LocalDate;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -48,7 +47,7 @@ public final class UserData
 	public static List<Category> categories = new ArrayList<>();
 	public static final List<LocalDate> DATES;
 	public static LocalDate selectedDate;
-	public static Set<Integer> selectedFilters = new HashSet<>();
+	public final static Set<Integer> selectedFilters = new HashSet<>();
 	public static boolean filterRequired = false;
 	private static final int YEAR = 2017;
 	private static final int MONTH = 8;
@@ -247,29 +246,35 @@ public final class UserData
 		return event.required || (event.categoryRequired && requiredForStudentsCategory);
 	}
 
-
-	public static boolean[] getBooleanArrayForCheckedFilters(Set<Integer> checkedFilters){
-		ArrayList<Boolean> returnBooleans = new ArrayList<>();
-		if(filterRequired) returnBooleans.add(true);
-		if(!filterRequired) returnBooleans.add(false);
-		for(int i = 0; i < categories.size(); i++){
-			if(checkedFilters.contains(UserData.categories.get(i).pk)){
-				returnBooleans.add(true);
-			}
-			else{
-				returnBooleans.add(false);
-			}
-		}
-
-		boolean[] primitives = new boolean[returnBooleans.size()];
-		int index = 0;
-		for (Boolean object : returnBooleans) {
-			primitives[index] = object;
-			index++;
-		}
-
-		return primitives;
+	/**
+	 * Returns an array of Strings of filters available to the user for {@link FeedFragment}.
+	 * @param context Context to get the string for "Show required events" {@link R.string#filter_show_required_events}
+	 * @return See method description.
+	 */
+	public static String[] getFilters(Context context)
+	{
+		String[] filters = new String[categories.size() + 1];
+		//index 0 represents filter for "required events"
+		filters[0] = context.getString(R.string.filter_show_required_events);
+		for (int i = 1; i < filters.length; i++)
+			filters[i] = categories.get(i - 1).name;
+		return filters;
 	}
 
-
+	/**
+	 * Returns an array of booleans that represents whether the filter is checked.
+	 *
+	 * @see #getFilters(Context)
+	 * @return See method description
+	 */
+	public static boolean[] getCheckedFilters()
+	{
+		boolean[] filters = new boolean[selectedFilters.size() + 1];
+		//index 0 represents filter for "required events"
+		filters[0] = filterRequired;
+		//all other indices represent categories, in order.
+		for (int i = 0; i < categories.size(); i++)
+			filters[i+1] = selectedFilters.contains(categories.get(i).pk);
+		return filters;
+	}
 }

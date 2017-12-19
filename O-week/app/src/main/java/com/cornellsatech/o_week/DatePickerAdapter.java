@@ -4,8 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
-import com.cornellsatech.o_week.util.NotificationCenter;
-
 /**
  * Displays the dates that the user can select to see his/her events on that particular date.
  * @see DateCell

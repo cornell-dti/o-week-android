@@ -2,13 +2,10 @@ package com.cornellsatech.o_week.util;
 
 import com.cornellsatech.o_week.DatePickerAdapter;
 import com.cornellsatech.o_week.models.Category;
-import com.cornellsatech.o_week.DateCell;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.FeedAdapter;
 import com.cornellsatech.o_week.UserData;
 import com.google.common.eventbus.EventBus;
-
-import org.joda.time.LocalDate;
 
 /**
  * Used for communication between objects that have no reference to each other.

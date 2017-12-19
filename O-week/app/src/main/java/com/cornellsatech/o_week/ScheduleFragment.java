@@ -1,6 +1,5 @@
 package com.cornellsatech.o_week;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -59,7 +58,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 {
 	private RelativeLayout scheduleContainer;
 	private PercentRelativeLayout eventsContainer;
-	private SparseArray<Event> pkToEvent = new SparseArray<>();
+	private final SparseArray<Event> pkToEvent = new SparseArray<>();
 	private int HOUR_HEIGHT;
 	private int HOUR_TEXT_HEIGHT;
 	private static final List<LocalTime> HOURS;
@@ -450,9 +449,8 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 			return false;
 
 		LocalTime now = today.toLocalTime();
-		boolean eventIsOngoing = minutesBetween(event.startTime, now) >= 0 &&
+		return minutesBetween(event.startTime, now) >= 0 &&
 				minutesBetween(now, event.endTime) >= 0;
-		return eventIsOngoing;
 	}
 	/**
 	 * Returns the number of minutes between 2 given times. Note that this accounts for events that cross

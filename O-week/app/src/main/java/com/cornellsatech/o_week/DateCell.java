@@ -25,9 +25,8 @@ import org.joda.time.format.DateTimeFormat;
  */
 public class DateCell extends RecyclerView.ViewHolder implements View.OnClickListener
 {
-	private boolean configured = false;
-	private TextView dayNum;
-	private TextView weekDay;
+	private final TextView dayNum;
+	private final TextView weekDay;
 	private LocalDate date;
 
 	/**
@@ -44,17 +43,13 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 
 	/**
 	 * Sets the {@link #date} that this cell will represent, and updates the text it is displaying.
-	 * If this is the first time this cell has been set up, {@link #configured} will be false.
-	 * We will then attempt to computationally select this cell if its {@link #date} matches
-	 * {@link UserData#selectedDate}. If this is NOT the first time this cell has been set up,
-	 * {@link #configured} will be true, and a cell should already be selected.
 	 *
 	 * @param date The {@link LocalDate} that this cell will represent as long as it is visible.
 	 */
 	public void configure(LocalDate date)
 	{
 		this.date = date;
-		dayNum.setText(Integer.toString(date.getDayOfMonth()));
+		dayNum.setText(date.toString("dd"));
 		weekDay.setText(DateTimeFormat.forPattern("E").print(date).toUpperCase());
 
 		if (UserData.selectedDate.isEqual(date))
@@ -95,7 +90,7 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	 *
 	 * @see #unClick()
 	 */
-	public void setClick()
+	private void setClick()
 	{
 		dayNum.setSelected(true);
 		dayNum.setTextColor(Color.BLACK);
@@ -105,7 +100,7 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	 *
 	 * @see #setClick()
 	 */
-	public void unClick()
+	private void unClick()
 	{
 		dayNum.setSelected(false);
 		dayNum.setTextColor(Color.WHITE);

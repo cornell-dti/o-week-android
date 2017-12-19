@@ -23,7 +23,7 @@ import com.google.common.eventbus.Subscribe;
 
 /**
  * The first {@link android.app.Activity} that will execute when the app launches.
- *
+ * <p>
  * {@link #datePickerRecycler}: List of all dates for the orientation.
  * {@link #filterMenu}: Button to filter events by category. Should only be visible when {@link FeedFragment} is showing.
  */
@@ -37,55 +37,58 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 	/**
 	 * Sets up toolbar, {@link #datePickerRecycler}, and starts {@link FeedFragment}
+	 *
 	 * @param savedInstanceState Ignored.
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        setUpRecycler();
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		Toolbar toolbar = findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		setUpRecycler();
 
-	    NotificationCenter.DEFAULT.register(this);
+		NotificationCenter.DEFAULT.register(this);
 
-        BottomNavigationView bottomNavBar = findViewById(R.id.navigation);
-        bottomNavBar.setOnNavigationItemSelectedListener(this);
-	    //Highlights feed tab bar button
-	    bottomNavBar.setSelectedItemId(R.id.bottom_nav_my_schedule);
-    }
+		BottomNavigationView bottomNavBar = findViewById(R.id.navigation);
+		bottomNavBar.setOnNavigationItemSelectedListener(this);
+		//Highlights feed tab bar button
+		bottomNavBar.setSelectedItemId(R.id.bottom_nav_my_schedule);
+	}
 
 	/**
 	 * Called when an item on the bottom navigation bar is selected.
+	 *
 	 * @param item The item that was selected.
 	 * @return True if the event was handled, false otherwise.
 	 */
 	@Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item)
-    {
-	    switch (item.getItemId())
-	    {
-            case R.id.bottom_nav_feed:
-                String feedTitle = getString(R.string.title_fragment_feed);
-	            startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Feed), feedTitle, true, true);
-	            break;
-            case R.id.bottom_nav_my_schedule:
-                String scheduleTitle = getString(R.string.title_fragment_my_schedule);
-                startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Schedule), scheduleTitle, true, false);
-	            break;
-            case R.id.bottom_nav_settings:
-                String settingsTitle = getString(R.string.title_activity_settings);
-                startFragment(new SettingsFragment(), settingsTitle, false, false);
-	            break;
-		    case R.id.bottom_nav_search:
-			    startFragment(new SearchFragment(), null, false, false);
-			    break;
-		    default:
-                return false;
-        }
-        return true;
-    }
+	public boolean onNavigationItemSelected(@NonNull MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.bottom_nav_feed:
+				String feedTitle = getString(R.string.title_fragment_feed);
+				startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Feed), feedTitle, true, true);
+				break;
+			case R.id.bottom_nav_my_schedule:
+				String scheduleTitle = getString(R.string.title_fragment_my_schedule);
+				startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Schedule), scheduleTitle, true, false);
+				break;
+			case R.id.bottom_nav_settings:
+				String settingsTitle = getString(R.string.title_activity_settings);
+				startFragment(new SettingsFragment(), settingsTitle, false, false);
+				break;
+			case R.id.bottom_nav_search:
+				startFragment(new SearchFragment(), null, false, false);
+				break;
+			default:
+				return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Trigger {@link DatePickerAdapter#onDetachedFromRecyclerView(RecyclerView)} so it unregisters itself
 	 * as a listener.
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		datePickerRecycler.setAdapter(null);
 		NotificationCenter.DEFAULT.unregister(this);
 	}
+
 	/**
 	 * Connect {@link #datePickerRecycler} to {@link #datePickerAdapter}. Set up orientation for the
 	 * recycler, set margin between items.
@@ -117,24 +121,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
 	/**
 	 * Switches out the fragment for {@link FeedFragment}, {@link ScheduleFragment}, or {@link SettingsFragment},
-     * sets an appropriate title and changes visibility of date picker bar.
+	 * sets an appropriate title and changes visibility of date picker bar.
 	 *
-	 * @param fragment Fragment to transition to
-	 * @param title New title of toolbar. Null if none is to be set
+	 * @param fragment       Fragment to transition to
+	 * @param title          New title of toolbar. Null if none is to be set
 	 * @param showDatePicker Whether {@link #datePickerRecycler} should be visible
-	 * @param showFilter Whether {@link #filterMenu} should be visible
+	 * @param showFilter     Whether {@link #filterMenu} should be visible
 	 */
 	private void startFragment(Fragment fragment, @Nullable String title, boolean showDatePicker, boolean showFilter)
 	{
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentContainer, fragment);
-        transaction.commit();
-        if (title != null)
-            getSupportActionBar().setTitle(title);
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.fragmentContainer, fragment);
+		transaction.commit();
+		if (title != null)
+			getSupportActionBar().setTitle(title);
 		datePickerRecycler.setVisibility(showDatePicker ? View.VISIBLE : View.GONE);
 		if (filterMenu != null)
 			filterMenu.setVisible(showFilter);
-    }
+	}
 
 
 	/**
@@ -146,43 +150,46 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle(R.string.menu_filter);
 
-		//get an array of categories
-		String[] categories = new String[UserData.categories.size() + 1];
-		//1 default filter
-		categories[0] = getString(R.string.filter_show_required_events);
-		for (int i = 1; i < categories.length; i++) {
-			categories[i] = UserData.categories.get(i - 1).name;
-		}
-
-		builder.setMultiChoiceItems(categories, UserData.getBooleanArrayForCheckedFilters(UserData.selectedFilters), new DialogInterface.OnMultiChoiceClickListener() {
+		builder.setMultiChoiceItems(UserData.getFilters(this), UserData.getCheckedFilters(), new DialogInterface.OnMultiChoiceClickListener()
+		{
 			@Override
-			public void onClick(DialogInterface dialogInterface, int i, boolean b) {
-				if(i!=0){
-					int categorypk = UserData.categories.get(i - 1).pk;
-					if(UserData.selectedFilters.contains(categorypk)){
-						UserData.selectedFilters.remove(categorypk);
-						NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
-					}
-					else if(!UserData.selectedFilters.contains(categorypk)){
-						UserData.selectedFilters.add(categorypk);
-						NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
-					}
-				}else{
-					if(UserData.filterRequired){
-						UserData.filterRequired = false;
-					}else if(!UserData.filterRequired){
-						UserData.filterRequired = true;
-					}
-					NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+			public void onClick(DialogInterface dialogInterface, int index, boolean b)
+			{
+				//row 0 is reserved for "required events"
+				if (index == 0)
+				{
+					UserData.filterRequired = !UserData.filterRequired;
 				}
+				else
+				{
+					int categoryPk = UserData.categories.get(index - 1).pk;
+					if (UserData.selectedFilters.contains(categoryPk))
+						UserData.selectedFilters.remove(categoryPk);
+					else
+						UserData.selectedFilters.add(categoryPk);
+				}
+
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
 			}
 		});
-		builder.setNegativeButton(R.string.dialog_positive_button, null);
+		//clear button to remove all filters
+		builder.setNegativeButton(R.string.dialog_clear_button, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i)
+			{
+				UserData.filterRequired = false;
+				UserData.selectedFilters.clear();
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+			}
+		});
+		builder.setPositiveButton(R.string.dialog_positive_button, null);
 		builder.show();
 	}
 
 	/**
 	 * Sets references to button in toolbar.
+	 *
 	 * @param menu {@inheritDoc}
 	 * @return {@inheritDoc}
 	 */

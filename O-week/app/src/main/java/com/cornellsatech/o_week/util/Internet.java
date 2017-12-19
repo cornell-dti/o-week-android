@@ -12,6 +12,7 @@ import android.support.annotation.WorkerThread;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
+import android.util.SparseArray;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -33,11 +34,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -48,9 +47,9 @@ import java.util.Set;
 public final class Internet
 {
 	public static final String DATABASE = "https://oweekapp.herokuapp.com/flow/";
-	public static final String ORIENTATION_PAMPHLET = "http://ccengagement.cornell.edu/sites/ccengagement.cornell.edu/files/a3c/cornell_orientation_guide_08_2017.pdf";
+	public static final String ORIENTATION_PAMPHLET = "http://ccengagement.cornell.edu/sites/ccengagement.cornell.edu/files/rnsp/documents/january_orientation_guide_2018.pdf";
 	public static final String CAMPUS_MAP = "https://www.cornell.edu/about/maps/cornell-campus-map-2015.pdf";
-	public static final String NEW_STUDENTS_WEBPAGE = "https://newstudents.cornell.edu/fall-2017/first-year/cornell-orientation-august-18-21-2017";
+	public static final String NEW_STUDENTS_WEBPAGE = "https://newstudents.cornell.edu/spring-2018/first-year/orientation";
 	public static final String CORNELL_RESCUER = "market://details?id=cornell.sa.rescuer";
 	public static final String IMAGE_DIRECTORY = "OweekImages";
 	private static final String TAG = Internet.class.getSimpleName();
@@ -131,7 +130,7 @@ public final class Internet
 					}
 
 					//keep track of all changed events to notify the user
-					Map<Integer, String> changedEventsTitleAndPk = new HashMap<>();
+					SparseArray<String> changedEventsTitleAndPk = new SparseArray<>();
 					//update/remove notifications
 					boolean remindersOn = Settings.getReceiveReminders(context);
 					//update events
@@ -173,7 +172,7 @@ public final class Internet
 					NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
 
 					//send a toast to alert the user that their events were updated
-					if (!changedEventsTitleAndPk.isEmpty())
+					if (changedEventsTitleAndPk.size() != 0)
 					{
 						Set<String> pkStrings = Settings.getSelectedEventsPks(context);
 

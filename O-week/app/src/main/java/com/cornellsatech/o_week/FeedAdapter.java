@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.eventbus.Subscribe;
@@ -30,8 +29,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	private final LocalDate date;
 	public List<Event> events;
 	private static final String TAG = FeedAdapter.class.getSimpleName();
-	private View recyclerView;
-	private View emptyView;
+	private final View recyclerView;
+	private final View emptyView;
 
 	/**
 	 * Registers this object to listen in on notifications.
@@ -69,7 +68,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	public void onBindViewHolder(FeedCell viewHolder, int position)
 	{
 		Event event = events.get(position);
-		viewHolder.configure(event, UserData.selectedEventsContains(event));
+		viewHolder.configure(event);
 	}
 	/**
 	 * Returns total number of events that will be shown in the {@link RecyclerView}.

@@ -31,7 +31,6 @@
 				tools:src="@mipmap/ic_launcher" />
 
 			<View
-				android:id="@+id/imageGradient"
 				android:layout_width="0dp"
 				android:layout_height="0dp"
 				android:background="@drawable/gradient_image"

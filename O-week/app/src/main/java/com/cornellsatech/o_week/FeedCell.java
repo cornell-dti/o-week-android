@@ -1,14 +1,9 @@
 package com.cornellsatech.o_week;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-
-import com.cornellsatech.o_week.models.Event;
-import com.cornellsatech.o_week.util.NotificationCenter;
 
 /**
  * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
@@ -49,9 +44,8 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	 * Sets the current event to display. Time display formats are specified here: {@link Event#DISPLAY_TIME_FORMAT}.
 	 *
 	 * @param event The {@link Event} this cell will represent as long as it is visible.
-	 * @param selected Whether this {@link #event} is selected.
 	 */
-	public void configure(Event event, boolean selected)
+	public void configure(Event event)
 	{
 		this.event = event;
 		startTimeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT));

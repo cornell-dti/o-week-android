@@ -3,7 +3,6 @@
     <color name="colorPrimary">#d72335</color>
     <color name="colorPrimaryDark">#9e000f</color>
 	<color name="colorAccent">#0d47a1</color>
-	<color name="pink">#ffcccc</color>
 	<color name="colorPrimaryFaded">#99d72335</color>
 	<color name="primary_text_material_light">#000000</color>
 	<color name="secondary_text_material_light">#80000000</color>
