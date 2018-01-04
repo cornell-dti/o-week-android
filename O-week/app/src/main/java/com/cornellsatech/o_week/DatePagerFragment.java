@@ -32,6 +32,7 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	private static final String TYPE_BUNDLE_KEY = "type";
 	private DatePagerAdapter.Type type;
 	private ViewPager datePager;
+	private MenuItem filterMenu;
 
 	/**
 	 * Create an instance of {@link DatePagerFragment} on the given type.
@@ -119,6 +120,8 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.menu_of_feed, menu);
+		filterMenu = menu.findItem(R.id.filterMenu);
+		updateFilterIcon();
 	}
 
 	/**
@@ -171,6 +174,7 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 				}
 
 				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+				updateFilterIcon();
 			}
 		});
 		//clear button to remove all filters
@@ -179,15 +183,34 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 			@Override
 			public void onClick(DialogInterface dialogInterface, int i)
 			{
-				UserData.filterRequired = false;
-				UserData.selectedFilters.clear();
+				clearFilters();
 				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+				updateFilterIcon();
 			}
 		});
 		builder.setPositiveButton(R.string.dialog_positive_button, null);
 		builder.show();
 	}
 
+	/**
+	 * Remove all filters.
+	 */
+	private void clearFilters()
+	{
+		UserData.filterRequired = false;
+		UserData.selectedFilters.clear();
+	}
+
+	/**
+	 * Change the filter icon based on whether any filters are activated.
+	 */
+	private void updateFilterIcon()
+	{
+		if (UserData.selectedFilters.isEmpty() && !UserData.filterRequired)
+			filterMenu.setIcon(R.drawable.ic_tune_white_24dp);
+		else
+			filterMenu.setIcon(R.drawable.ic_tune_inverted);
+	}
 
 	/**
 	 * Flip the page to the location of the new date.
