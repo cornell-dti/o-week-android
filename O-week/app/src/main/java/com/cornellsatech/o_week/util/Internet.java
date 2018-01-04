@@ -31,7 +31,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -291,13 +290,12 @@ public final class Internet
 	private static class GET extends AsyncTask<Void, Void, String>
 	{
 		private final String URL_STRING;
-		//use a weak reference to prevent memory leaks
-		private final WeakReference<Callback<String>> CALLBACK;
+		private final Callback<String> CALLBACK;
 
 		private GET(String urlString, Callback<String> callback)
 		{
 			URL_STRING = urlString;
-			CALLBACK = new WeakReference<>(callback);
+			CALLBACK = callback;
 		}
 		@Override
 		@WorkerThread
@@ -323,7 +321,7 @@ public final class Internet
 		@Override
 		protected void onPostExecute(String body)
 		{
-			CALLBACK.get().execute(body);
+			CALLBACK.execute(body);
 		}
 	}
 }

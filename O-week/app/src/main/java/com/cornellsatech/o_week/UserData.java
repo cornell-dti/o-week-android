@@ -153,6 +153,14 @@ public final class UserData
 			eventsForDate.remove(event);
 	}
 	/**
+	 * Clears all selected events.
+	 */
+	private static void clearSelectedEvents()
+	{
+		for (List<Event> eventsOfDay : selectedEvents.values())
+			eventsOfDay.clear();
+	}
+	/**
 	 * Linear search for an event given its pk value.
 	 * @param pk {@link Event#pk}
 	 * @return Event. May be null.
@@ -198,6 +206,10 @@ public final class UserData
 		for (Event event : events)
 			appendToAllEvents(event);
 
+		Set<Event> selectedEvents = Settings.getSelectedEvents(context);
+		for (Event event : selectedEvents)
+			insertToSelectedEvents(event);
+
 		Set<Category> categories = Settings.getCategories(context);
 		UserData.categories = new ArrayList<>(categories);
 
@@ -209,15 +221,16 @@ public final class UserData
 			@Override
 			public void execute(Integer versionNum)
 			{
-				//all version updates have been processed. Now, load events that the user has selected into selectedEvents.
-				//this assumes selectedEvents is empty
+				//save all the new data if available
+				if (versionNum == 0)
+					return;
+
+				//re-add selected events, since events might have been updated
+				clearSelectedEvents();
 				Set<Event> selectedEvents = Settings.getSelectedEvents(context);
 				for (Event selectedEvent : selectedEvents)
 					insertToSelectedEvents(selectedEvent);
 
-				//save all the new data if available
-				if (versionNum == 0)
-					return;
 				//sort everything again, since things have been updated
 				sortEventsAndCategories();
 				Settings.setAllEvents(context);
