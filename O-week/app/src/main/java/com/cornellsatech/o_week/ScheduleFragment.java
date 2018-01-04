@@ -1,5 +1,6 @@
 package com.cornellsatech.o_week;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -61,6 +63,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	private final SparseArray<Event> pkToEvent = new SparseArray<>();
 	private int HOUR_HEIGHT;
 	private int HOUR_TEXT_HEIGHT;
+	private int EVENT_PADDING;
 	private static final List<LocalTime> HOURS;
 	public static final int START_HOUR = 7;
 	public static final int END_HOUR = 2;
@@ -131,6 +134,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		eventsContainer = view.findViewById(R.id.eventsContainer);
 		HOUR_HEIGHT = getResources().getDimensionPixelSize(R.dimen.distance_between_time_lines);
 		HOUR_TEXT_HEIGHT = getResources().getDimensionPixelSize(R.dimen.size_hour_textview);
+		EVENT_PADDING = getResources().getDimensionPixelSize(R.dimen.half_margin);
 		drawTimeLines();
 		drawCells();
 		return view;
@@ -166,6 +170,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	{
 		List<Event> selectedEvents = UserData.selectedEvents.get(date);
 		Collections.sort(selectedEvents);
+		Log.i(TAG, "drawing cells, num events: " + selectedEvents.size());
 		if (selectedEvents.isEmpty())
 			return;
 		drawEvent(1, new SparseArray<Event>(), new ArrayDeque<>(selectedEvents));
@@ -224,6 +229,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 				drawEvent(1, new SparseArray<Event>(), events);
 		}
 
+		//actually drawing the event cell
 		scheduleCell.setLayoutParams(scheduleCellMargins(scheduleCell, event, slot, newNumSlots, eventForSlot, newEventForSlot));
 		scheduleCell.setOnClickListener(this);
 		if (eventOngoing(event))
@@ -237,6 +243,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		time.setText(event.startTime.toString("h:mm") + " - " + event.endTime.toString("h:mm a"));
 		title.setText(event.title);
 		caption.setText(event.caption);
+		compressEventText(scheduleCell, title, caption, time);
 		eventsContainer.addView(scheduleCell);
 		pkToEvent.put(event.pk, event);
 
@@ -311,6 +318,55 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		layoutParams.height = heightForEvent(event);
 
 		return layoutParams;
+	}
+
+	/**
+	 *
+	 *
+	 * @param scheduleCell
+	 * @param title
+	 * @param caption
+	 * @param time
+	 */
+	private void compressEventText(final View scheduleCell, final TextView title, final TextView caption, final TextView time)
+	{
+		title.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
+		{
+			@Override
+			public boolean onPreDraw()
+			{
+				if (scheduleCell == null || caption == null || time == null)
+					return true;
+
+				int numLinesAvailable = availableLinesForEvent(scheduleCell.getLayoutParams().height, title);
+				int numLinesUsed = title.getLayout().getLineCount();
+				int numLinesRemaining = numLinesAvailable - numLinesUsed;
+
+				if (numLinesRemaining <= 0)
+				{
+					//only have room to show title
+					title.setMaxLines(numLinesAvailable);
+					caption.setVisibility(View.GONE);
+					time.setVisibility(View.GONE);
+				}
+				else if (numLinesRemaining == 1)
+				{
+					//only have 1 line left to show caption
+					caption.setMaxLines(1);
+					time.setVisibility(View.GONE);
+				}
+				else if (numLinesRemaining == 2)
+				{
+					//2 lines, one for time, one for caption
+					caption.setMaxLines(1);
+					time.setMaxLines(1);
+				}
+				//can't really handle the other logic, since we don't know how many lines
+				//caption or time take up
+
+				return true;
+			}
+		});
 	}
 
 	/**
@@ -409,6 +465,26 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	}
 
 	/**
+	 * Returns the number of lines that will display fully for the event, rounded down.
+	 * @param containerHeight The height of the event's container, calculated by {@link #heightForEvent(Event)}.
+	 * @param titleText The TextView containing the event's title, {@link R.id#titleText}.
+	 * @return Number of lines that will display fully, minimum of 0.
+	 */
+	private int availableLinesForEvent(int containerHeight, TextView titleText)
+	{
+		//temporarily change the text to see how tall it is
+		CharSequence originalText = titleText.getText();
+		titleText.setText("A");
+		Paint.FontMetrics fontMetrics = titleText.getPaint().getFontMetrics();
+		float height = fontMetrics.bottom - fontMetrics.top;
+		titleText.setText(originalText);
+
+		int num = (int) ((containerHeight - EVENT_PADDING * 2) / height);
+		Log.i(TAG, "Num available lines for " + originalText + ": " + num);
+		return num;
+	}
+
+	/**
 	 * Converts an hour (that a time line represents) into the time line's view ID. This is required
 	 * since view IDs must be positive (rule of Android), but we must accept hour 0.
 	 * @param hour The hour a time line represents.
@@ -442,6 +518,12 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		int pk = id - 31;
 		return pkToEvent.get(pk);
 	}
+
+	/**
+	 * Returns whether or not the event is currently ongoing.
+	 * @param event Event to check
+	 * @return True if the the event is occurring as we speak. False otherwise.
+	 */
 	private boolean eventOngoing(Event event)
 	{
 		LocalDateTime today = LocalDateTime.now();
