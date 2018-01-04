@@ -12,6 +12,7 @@
 	<string name="snackbar_image_error">Image could not be downloaded</string>
 	<string name="dialog_positive_button">OK</string>
 	<string name="dialog_clear_button">Clear</string>
+	<string name="dialog_retry_button">Retry</string>
 	<string name="filter_show_required_events">Show Required Events</string>
 	<string name="required_label">RQ</string>
 	<string name="required_for_all">Required for All Students</string>
@@ -37,6 +38,7 @@
 	<string name="initial_settings_welcome_header_3">Stay Informed.</string>
 	<string name="initial_settings_welcome_body_3">Use your Orientation pamphlet for other important information and resources.</string>
 	<string name="initial_settings_start_button">Get Started</string>
+	<string name="initial_settings_redownload">Orientation events could not be downloaded</string>
 
 	<string name="college_als">Agriculture and Life Sciences</string>
 	<string name="college_aap">Architecture, Art, and Planning</string>

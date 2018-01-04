@@ -341,14 +341,14 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 			@Override
 			public boolean onPreDraw()
 			{
-				if (scheduleCell == null || caption == null || time == null)
+				if (title.getLayout() == null)
 					return true;
 				if (drawn)
 					return true;
 				drawn = true;
 
-				int numLinesAvailable = availableLinesForEvent(scheduleCell.getLayoutParams().height, title);
 				int numLinesUsed = title.getLayout().getLineCount();
+				int numLinesAvailable = availableLinesForEvent(scheduleCell.getLayoutParams().height, title);
 				int numLinesRemaining = numLinesAvailable - numLinesUsed;
 
 				if (numLinesRemaining <= 0)
