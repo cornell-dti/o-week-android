@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -59,8 +60,7 @@ public final class Internet
 
 	/**
 	 * Downloads all events and categories to update the app to the database's newest version.
-	 * The {@link Callback} provided will be executed when the data has been processed. The String msg used
-	 * as the parameter for {@link Callback#execute(String)} will be the string for the new version (int).
+	 * The {@link Callback} provided will be executed when the data has been processed. The parameter for {@link Callback#execute(Object)} will be the new version (int).
 	 * A toast is sent out with titles of changed events that the user had selected.
 	 *
 	 * Note: {@link UserData#selectedEvents} will not be updated by this method.
@@ -85,16 +85,16 @@ public final class Internet
 	 * @param version Current version of database on file. Should be 0 if never downloaded from database.
 	 * @param onCompletion Function to execute when data is processed. String in parameter is new version.
 	 */
-	public static void getUpdatesForVersion(int version, final Context context, final Callback onCompletion)
+	public static void getUpdatesForVersion(int version, final Context context, final Callback<Integer> onCompletion)
 	{
-		get(DATABASE + "version/" + version, new Callback()
+		get(DATABASE + "version/" + version, new Callback<String>()
 		{
 			@Override
 			public void execute(String msg)
 			{
 				if (msg.isEmpty())
 				{
-					onCompletion.execute(null);
+					onCompletion.execute(0);
 					NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
 					return;
 				}
@@ -168,7 +168,7 @@ public final class Internet
 						}
 					}
 
-					onCompletion.execute(String.valueOf(newestVersion));
+					onCompletion.execute(newestVersion);
 					NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
 
 					//send a toast to alert the user that their events were updated
@@ -268,52 +268,62 @@ public final class Internet
 		context.startActivity(websiteIntent);
 	}
 	/**
-	 * Connects to the website given, then calls {@link Callback#execute(String)} with the output
+	 * Connects to the website given, then calls {@link Callback#execute(Object)} with the output
 	 * received from the website as the String parameter.
 	 * Identical to a GET request.
 	 *
 	 * @param urlString Link to the website
 	 * @param callback Contains method to execute once the website responds
 	 */
-	private static void get(final String urlString, final Callback callback)
+	private static void get(final String urlString, final Callback<String> callback)
 	{
-		//must use AsyncTask since going on internet may lag app & should be done in bg
-		new AsyncTask<Void, Void, String>()
-		{
-			@Override
-			@WorkerThread
-			protected String doInBackground(Void... params)
-			{
-				try
-				{
-					URL url = new URL(urlString);
-					HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-					String body = CharStreams.toString(new InputStreamReader(connection.getInputStream()));
-					connection.disconnect();
-					Log.i("Internet", "GET from database succeeded");
-					return body;
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					Log.e("Internet", "GET from database failed :(");
-				}
-				return "";
-			}
-
-			@Override
-			protected void onPostExecute(String body)
-			{
-				callback.execute(body);
-			}
-		}.execute(null, null, null);
+		new GET(urlString, callback).execute();
 	}
 
 	/**
-	 * Alternative to functional programming in Java 7. A wrapper for a function that takes a String.
+	 * Retrieves data from {@link #URL_STRING} and calls {@link #CALLBACK} with it.
+	 * Must be private static class to prevent memory leaks from inner classes.
+	 * Extends AsyncTask since going on internet may lag app & should be done in bg.
+	 *
+	 * @see #get(String, Callback)
+	 * @see <a href="https://stackoverflow.com/questions/44309241/warning-this-asynctask-class-should-be-static-or-leaks-might-occur">StackOverFlow</a>
 	 */
-	public interface Callback
+	private static class GET extends AsyncTask<Void, Void, String>
 	{
-		void execute(String msg);
+		private final String URL_STRING;
+		//use a weak reference to prevent memory leaks
+		private final WeakReference<Callback<String>> CALLBACK;
+
+		private GET(String urlString, Callback<String> callback)
+		{
+			URL_STRING = urlString;
+			CALLBACK = new WeakReference<>(callback);
+		}
+		@Override
+		@WorkerThread
+		protected String doInBackground(Void... params)
+		{
+			try
+			{
+				URL url = new URL(URL_STRING);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				String body = CharStreams.toString(new InputStreamReader(connection.getInputStream()));
+				connection.disconnect();
+				Log.i(TAG, "GET from database succeeded");
+				return body;
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				Log.e(TAG, "GET from database failed :(");
+			}
+			return "";
+		}
+
+		@Override
+		protected void onPostExecute(String body)
+		{
+			CALLBACK.get().execute(body);
+		}
 	}
 }

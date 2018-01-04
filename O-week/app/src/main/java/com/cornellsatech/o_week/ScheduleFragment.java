@@ -129,8 +129,8 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 
 		scheduleContainer = view.findViewById(R.id.scheduleContainer);
 		eventsContainer = view.findViewById(R.id.eventsContainer);
-		HOUR_HEIGHT = getActivity().getResources().getDimensionPixelSize(R.dimen.distance_between_time_lines);
-		HOUR_TEXT_HEIGHT = getActivity().getResources().getDimensionPixelSize(R.dimen.size_hour_textview);
+		HOUR_HEIGHT = getResources().getDimensionPixelSize(R.dimen.distance_between_time_lines);
+		HOUR_TEXT_HEIGHT = getResources().getDimensionPixelSize(R.dimen.size_hour_textview);
 		drawTimeLines();
 		drawCells();
 		return view;

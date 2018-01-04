@@ -79,7 +79,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 		//Makes search bar expands automatically when open Search page
 		searchView.setIconified(false);
 		searchView.clearFocus();
-		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.models.StudentType;
+import com.cornellsatech.o_week.util.Callback;
 import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Settings;
@@ -202,11 +203,11 @@ public final class UserData
 
 		sortEventsAndCategories();
 
-		Internet.getUpdatesForVersion(Settings.getVersion(context), context, new Internet.Callback()
+		Internet.getUpdatesForVersion(Settings.getVersion(context), context, new Callback<Integer>()
 		{
-			//msg is the versionNum as a String. null if failed
+			//versionNum is 0 if failed
 			@Override
-			public void execute(String msg)
+			public void execute(Integer versionNum)
 			{
 				//all version updates have been processed. Now, load events that the user has selected into selectedEvents.
 				//this assumes selectedEvents is empty
@@ -215,13 +216,13 @@ public final class UserData
 					insertToSelectedEvents(selectedEvent);
 
 				//save all the new data if available
-				if (msg == null)
+				if (versionNum == 0)
 					return;
 				//sort everything again, since things have been updated
 				sortEventsAndCategories();
 				Settings.setAllEvents(context);
 				Settings.setCategories(context);
-				Settings.setVersion(Integer.valueOf(msg), context);
+				Settings.setVersion(versionNum, context);
 			}
 		});
 
