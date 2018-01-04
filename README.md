@@ -1,4 +1,4 @@
-O-Week v1.0
+O-Week v3.0
 ======
 An **Android** app for incoming freshmen to use during their first week as a Cornell student. The **iOS** branch can be found [here](https://github.com/cornell-dti/o-week-ios).
 
