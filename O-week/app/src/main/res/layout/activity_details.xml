@@ -91,7 +91,6 @@
 				android:layout_centerVertical="true"
 				android:layout_marginEnd="@dimen/margin"
 				android:text="@string/button_text_event_not_added"
-				android:textAppearance="@style/TextAppearance.AppCompat"
 				android:textSize="16sp"
 				style="@style/Button"
 				app:layout_constraintEnd_toEndOf="parent"

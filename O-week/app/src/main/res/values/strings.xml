@@ -38,6 +38,15 @@
 	<string name="initial_settings_welcome_body_3">Use your Orientation pamphlet for other important information and resources.</string>
 	<string name="initial_settings_start_button">Get Started</string>
 
+	<string name="college_als">Agriculture and Life Sciences</string>
+	<string name="college_aap">Architecture, Art, and Planning</string>
+	<string name="college_arts">Arts &amp; Sciences</string>
+	<string name="college_eng">Engineering</string>
+	<string name="college_johnson">Johnson School of Business</string>
+	<string name="college_ilr">Industrial Labor Relations</string>
+	<string name="college_he">Human Ecology</string>
+	<string name="college_not_set">ERROR: College not set</string>
+
     <!-- Strings related to Settings -->
 	<string name="settings_category_notifications">Notifications</string>
 	<string name="settings_category_resources">Resources</string>
@@ -50,7 +59,6 @@
 	<string name="settings_notify_me">Notify me…</string>
 	<string name="key_notify_me">notifyMe</string>
 	<string name="schedule_auto_add_notice">All required events have been added to your schedule ; )</string>
-
 
 	<string name="notify_me_time_of">At time of event</string>
 	<string name="notify_me_1_hour">1 hour before</string>

@@ -1,5 +1,9 @@
 package com.cornellsatech.o_week.models;
 
+import android.support.annotation.StringRes;
+
+import com.cornellsatech.o_week.R;
+
 /**
  * Enum to represent the college a student is in.
  */
@@ -14,7 +18,8 @@ public enum CollegeType {
     HE,
     NOTSET;
 
-    public String toString(){
+    public String toString()
+    {
         return name();
     }
 
@@ -51,4 +56,28 @@ public enum CollegeType {
             default: return -1;
         }
     }
+
+	@StringRes
+	public int toStringRes()
+	{
+		switch (this)
+		{
+			case ALS:
+				return R.string.college_als;
+			case AAP:
+				return R.string.college_aap;
+			case AS:
+				return R.string.college_arts;
+			case ENG:
+				return R.string.college_eng;
+			case JOHNSON:
+				return R.string.college_johnson;
+			case ILR:
+				return R.string.college_ilr;
+			case HE:
+				return R.string.college_he;
+			default:
+				return R.string.college_not_set;
+		}
+	}
 }

@@ -13,7 +13,6 @@ import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -66,7 +65,7 @@ public class InitialSettingsActivity extends AppCompatActivity
 			if (studentType != StudentType.NOTSET && collegeType != CollegeType.NOTSET)
 			{
 				Settings.setStudentInfo(this, studentType, collegeType);
-				NotificationCenter.DEFAULT.post(new NotificationCenter.EventReload());
+				UserData.loadStudentCollegeTypes(this);
 				addRequiredEvents();
 				Toast.makeText(this, R.string.schedule_auto_add_notice, Toast.LENGTH_SHORT).show();
 				finish();
@@ -80,17 +79,15 @@ public class InitialSettingsActivity extends AppCompatActivity
 	private void addRequiredEvents()
 	{
 		Set<Event> allEvents = Settings.getAllEvents(this);
-		Set<Event> requiredEvents = new HashSet<>();
 		for (Event e : allEvents)
-			if (UserData.requiredForUser(e))
-				requiredEvents.add(e);
-		for (Event e : requiredEvents)
 		{
+			if (!UserData.requiredForUser(e))
+				continue;
 			UserData.insertToSelectedEvents(e);
-			if (Settings.getReceiveReminders(this))
-				Notifications.scheduleForEvent(e, this);
 			NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(e, true));
 		}
+
+		Notifications.scheduleForEvents(this);
 	}
 
 	/**
@@ -103,7 +100,6 @@ public class InitialSettingsActivity extends AppCompatActivity
 		startMain.addCategory(Intent.CATEGORY_HOME);
 		startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(startMain);
-
 	}
 
 	/**

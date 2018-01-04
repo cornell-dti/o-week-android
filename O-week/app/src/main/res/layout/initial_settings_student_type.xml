@@ -19,7 +19,6 @@
     <Button
         android:id="@+id/freshman"
         style="@style/Button"
-	    android:textAppearance="@style/TextAppearance.AppCompat"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_initial_settings_big_button"
 	    android:layout_marginTop="@dimen/margin"
@@ -29,7 +28,6 @@
     <Button
         android:id="@+id/transfer"
         style="@style/Button"
-	    android:textAppearance="@style/TextAppearance.AppCompat"
         android:layout_width="match_parent"
         android:layout_height="@dimen/height_initial_settings_big_button"
 	    android:layout_marginTop="@dimen/margin"

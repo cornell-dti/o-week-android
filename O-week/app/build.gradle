@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.cornellsatech.o_week"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,7 +26,7 @@ dependencies {
         exclude group: 'com.google.code.findbugs'
     })
     compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0-beta3'
+    compile 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
     compile 'com.android.support:percent:27.0.2'
     compile 'com.android.support:design:27.0.2'
     compile 'com.android.support:support-v4:27.0.2'
@@ -35,5 +35,5 @@ dependencies {
     compile 'net.danlew:android.joda:2.9.9'
     //import PreferencesFragmentCompat so Settings Activity can show up in Tab Bar
     compile 'com.android.support:preference-v14:27.0.2'
-    compile 'com.google.android.gms:play-services-maps:11.6.2'
+    compile 'com.google.android.gms:play-services-maps:11.8.0'
 }

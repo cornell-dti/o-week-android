@@ -51,10 +51,10 @@ public final class UserData
 	public static boolean filterRequired = false;
 	private static CollegeType collegeType;
 	private static StudentType studentType;
-	private static final int YEAR = 2017;
-	private static final int MONTH = 8;
+	private static final int YEAR = 2018;
+	private static final int MONTH = 1;
 	private static final int START_DAY = 18;    //Dates range: [START_DAY, END_DAY], inclusive
-	private static final int END_DAY = 26;      //Note: END_DAY must > START_DAY
+	private static final int END_DAY = 23;      //Note: END_DAY must > START_DAY
 	private static final String TAG = UserData.class.getSimpleName();
 
 	/**
@@ -105,10 +105,7 @@ public final class UserData
 	{
 		List<Event> eventsForDate = allEvents.get(event.date);
 		if (eventsForDate == null)
-		{
-			Log.e(TAG, "appendToAllEvents: attempted to add event with date outside orientation");
 			return;
-		}
 		if (!eventsForDate.contains(event))
 			eventsForDate.add(event);
 	}
@@ -119,7 +116,8 @@ public final class UserData
 	public static void removeFromAllEvents(Event event)
 	{
 		List<Event> eventsForDate = allEvents.get(event.date);
-		eventsForDate.remove(event);
+		if (eventsForDate != null)
+			eventsForDate.remove(event);
 	}
 	/**
 	 * Adds event to {@link #selectedEvents}. The date should match a date in {@link #DATES}.

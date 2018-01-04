@@ -4,7 +4,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.TypedValue;
+import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,11 +56,15 @@ public class InitialSettingsPage2Fragment extends Fragment implements View.OnCli
 
 		for (CollegeType collegeType : CollegeType.values())
 		{
-			Button button = new Button(getContext(), null, R.style.Button);
-			button.setText(collegeType.toString());
-			button.setTextAppearance(getContext(), R.style.TextAppearance_AppCompat);
+			if (collegeType == CollegeType.NOTSET)
+				continue;
+
+			Button button = new Button(new ContextThemeWrapper(getContext(), R.style.Button), null, 0);
 			button.setTextSize(TypedValue.COMPLEX_UNIT_PX, TEXT_SIZE);
 			button.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+			button.setText(collegeType.toStringRes());
+			button.setGravity(Gravity.CENTER);
+			button.setTypeface(ResourcesCompat.getFont(getContext(), R.font.avenir_next_demi_bold));
 			button.setOnClickListener(this);
 			collegeButtons.put(button, collegeType);
 

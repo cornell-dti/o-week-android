@@ -35,7 +35,7 @@
 	<dimen name="height_line">1dp</dimen>
 	<dimen name="height_map">150dp</dimen>
 	<dimen name="height_header">60dp</dimen>
-	<dimen name="height_initial_settings_small_button">40dp</dimen>
+	<dimen name="height_initial_settings_small_button">50dp</dimen>
 	<dimen name="height_initial_settings_big_button">60dp</dimen>
 	<dimen name="width_more_button_gradient">35dp</dimen>
 	<dimen name="width_schedule_cell_border">2dp</dimen>
