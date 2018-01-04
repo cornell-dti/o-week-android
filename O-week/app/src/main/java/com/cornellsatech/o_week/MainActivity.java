@@ -1,22 +1,18 @@
 package com.cornellsatech.o_week;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Settings;
 import com.google.common.eventbus.Subscribe;
@@ -25,13 +21,11 @@ import com.google.common.eventbus.Subscribe;
  * The first {@link android.app.Activity} that will execute when the app launches.
  * <p>
  * {@link #datePickerRecycler}: List of all dates for the orientation.
- * {@link #filterMenu}: Button to filter events by category. Should only be visible when {@link FeedFragment} is showing.
  */
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener
 {
 	private RecyclerView datePickerRecycler;
 	private DatePickerAdapter datePickerAdapter;
-	private MenuItem filterMenu;
 
 	private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -70,18 +64,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		{
 			case R.id.bottom_nav_feed:
 				String feedTitle = getString(R.string.title_fragment_feed);
-				startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Feed), feedTitle, true, true);
+				startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Feed), feedTitle, true);
 				break;
 			case R.id.bottom_nav_my_schedule:
 				String scheduleTitle = getString(R.string.title_fragment_my_schedule);
-				startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Schedule), scheduleTitle, true, false);
+				startFragment(DatePagerFragment.newInstance(DatePagerAdapter.Type.Schedule), scheduleTitle, true);
 				break;
 			case R.id.bottom_nav_settings:
 				String settingsTitle = getString(R.string.title_activity_settings);
-				startFragment(new SettingsFragment(), settingsTitle, false, false);
+				startFragment(new SettingsFragment(), settingsTitle, false);
 				break;
 			case R.id.bottom_nav_search:
-				startFragment(new SearchFragment(), null, false, false);
+				startFragment(new SearchFragment(), null, false);
 				break;
 			default:
 				return false;
@@ -126,9 +120,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	 * @param fragment       Fragment to transition to
 	 * @param title          New title of toolbar. Null if none is to be set
 	 * @param showDatePicker Whether {@link #datePickerRecycler} should be visible
-	 * @param showFilter     Whether {@link #filterMenu} should be visible
 	 */
-	private void startFragment(Fragment fragment, @Nullable String title, boolean showDatePicker, boolean showFilter)
+	private void startFragment(Fragment fragment, @Nullable String title, boolean showDatePicker)
 	{
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.fragmentContainer, fragment);
@@ -136,90 +129,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		if (title != null)
 			getSupportActionBar().setTitle(title);
 		datePickerRecycler.setVisibility(showDatePicker ? View.VISIBLE : View.GONE);
-		if (filterMenu != null)
-			filterMenu.setVisible(showFilter);
-	}
-
-
-	/**
-	 * Shows the dialog that allows the user to choose what {@link Category} to filter events by.
-	 * If the user does select a NEW category to filter by, an event is sent out notifying listeners.
-	 */
-	private void showFilterDialog()
-	{
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle(R.string.menu_filter);
-
-		builder.setMultiChoiceItems(UserData.getFilters(this), UserData.getCheckedFilters(), new DialogInterface.OnMultiChoiceClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialogInterface, int index, boolean b)
-			{
-				//row 0 is reserved for "required events"
-				if (index == 0)
-				{
-					UserData.filterRequired = !UserData.filterRequired;
-				}
-				else
-				{
-					int categoryPk = UserData.categories.get(index - 1).pk;
-					if (UserData.selectedFilters.contains(categoryPk))
-						UserData.selectedFilters.remove(categoryPk);
-					else
-						UserData.selectedFilters.add(categoryPk);
-				}
-
-				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
-			}
-		});
-		//clear button to remove all filters
-		builder.setNegativeButton(R.string.dialog_clear_button, new DialogInterface.OnClickListener()
-		{
-			@Override
-			public void onClick(DialogInterface dialogInterface, int i)
-			{
-				UserData.filterRequired = false;
-				UserData.selectedFilters.clear();
-				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
-			}
-		});
-		builder.setPositiveButton(R.string.dialog_positive_button, null);
-		builder.show();
-	}
-
-	/**
-	 * Sets references to button in toolbar.
-	 *
-	 * @param menu {@inheritDoc}
-	 * @return {@inheritDoc}
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu)
-	{
-		getMenuInflater().inflate(R.menu.menu_of_feed, menu);
-		filterMenu = menu.findItem(R.id.filterMenu);
-		filterMenu.setVisible(false);
-		return true;
-	}
-
-	/**
-	 * Listens for clicks and performs the following actions:
-	 * {@link #filterMenu}: Shows filter dialog.
-	 *
-	 * @param item {@inheritDoc}
-	 * @return {@inheritDoc}
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
-	{
-		switch (item.getItemId())
-		{
-			case R.id.filterMenu:
-				showFilterDialog();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
 	}
 
 	/**

@@ -34,6 +34,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 	private RecyclerView searchRecycler;
 	private SearchAdapter searchAdapter;
 	private static final int MIN_NUM_LETTERS = 3;
+	private static final String TAG = SearchFragment.class.getSimpleName();
 
 	/**
 	 * Initialize search page to display empty view. Set up options menu & recycler.
@@ -57,7 +58,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
 		return view;
 	}
-
 
 	/**
 	 * Initialize search bar

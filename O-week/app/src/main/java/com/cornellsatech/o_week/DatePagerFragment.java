@@ -1,15 +1,21 @@
 package com.cornellsatech.o_week;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.eventbus.Subscribe;
 
@@ -75,6 +81,9 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 		//trigger a call to onDateChanged so this fragment starts out with the correct date
 		onDateChanged(null);
 
+		if (type == DatePagerAdapter.Type.Feed)
+			setHasOptionsMenu(true);
+
 		NotificationCenter.DEFAULT.register(this);
 		return view;
 	}
@@ -105,6 +114,80 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 		UserData.selectedDate = UserData.DATES.get(position);
 		NotificationCenter.DEFAULT.post(new NotificationCenter.EventDateChanged());
 	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	{
+		inflater.inflate(R.menu.menu_of_feed, menu);
+	}
+
+	/**
+	 * Listens for clicks and performs the following actions:
+	 * filterMenu: Shows filter dialog.
+	 *
+	 * @param item {@inheritDoc}
+	 * @return {@inheritDoc}
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		switch (item.getItemId())
+		{
+			case R.id.filterMenu:
+				showFilterDialog();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+
+	/**
+	 * Shows the dialog that allows the user to choose what {@link Category} to filter events by.
+	 * If the user does select a NEW category to filter by, an event is sent out notifying listeners.
+	 */
+	private void showFilterDialog()
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+		builder.setTitle(R.string.menu_filter);
+
+		builder.setMultiChoiceItems(UserData.getFilters(getContext()), UserData.getCheckedFilters(), new DialogInterface.OnMultiChoiceClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialogInterface, int index, boolean b)
+			{
+				//row 0 is reserved for "required events"
+				if (index == 0)
+				{
+					UserData.filterRequired = !UserData.filterRequired;
+				}
+				else
+				{
+					int categoryPk = UserData.categories.get(index - 1).pk;
+					if (UserData.selectedFilters.contains(categoryPk))
+						UserData.selectedFilters.remove(categoryPk);
+					else
+						UserData.selectedFilters.add(categoryPk);
+				}
+
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+			}
+		});
+		//clear button to remove all filters
+		builder.setNegativeButton(R.string.dialog_clear_button, new DialogInterface.OnClickListener()
+		{
+			@Override
+			public void onClick(DialogInterface dialogInterface, int i)
+			{
+				UserData.filterRequired = false;
+				UserData.selectedFilters.clear();
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventFilterChanged());
+			}
+		});
+		builder.setPositiveButton(R.string.dialog_positive_button, null);
+		builder.show();
+	}
+
 
 	/**
 	 * Flip the page to the location of the new date.

@@ -321,22 +321,31 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	}
 
 	/**
+	 * Changes the visibility of the time and caption text based on how much space is available
+	 * within the schedule cell. The title will be shown with the highest priority, then the caption,
+	 * and then the time.
 	 *
-	 *
-	 * @param scheduleCell
-	 * @param title
-	 * @param caption
-	 * @param time
+	 * @param scheduleCell Container for event view
+	 * @param title TextView of event title
+	 * @param caption TextView of event caption
+	 * @param time TextView of event time
+	 * @see #drawEvent(int, SparseArray, Queue)
 	 */
 	private void compressEventText(final View scheduleCell, final TextView title, final TextView caption, final TextView time)
 	{
 		title.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
 		{
+			//used to ensure onPreDraw() is only called once
+			boolean drawn = false;
+
 			@Override
 			public boolean onPreDraw()
 			{
 				if (scheduleCell == null || caption == null || time == null)
 					return true;
+				if (drawn)
+					return true;
+				drawn = true;
 
 				int numLinesAvailable = availableLinesForEvent(scheduleCell.getLayoutParams().height, title);
 				int numLinesUsed = title.getLayout().getLineCount();
@@ -479,9 +488,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		float height = fontMetrics.bottom - fontMetrics.top;
 		titleText.setText(originalText);
 
-		int num = (int) ((containerHeight - EVENT_PADDING * 2) / height);
-		Log.i(TAG, "Num available lines for " + originalText + ": " + num);
-		return num;
+		return (int) ((containerHeight - EVENT_PADDING * 2) / height);
 	}
 
 	/**
