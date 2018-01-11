@@ -152,5 +152,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 	public void onDateChanged(NotificationCenter.EventDateChanged event)
 	{
 		datePickerAdapter.notifyDataSetChanged();
+
+		//scroll to the new date
+		int position = UserData.DATES.indexOf(UserData.selectedDate);
+		datePickerRecycler.scrollToPosition(position);
 	}
 }
