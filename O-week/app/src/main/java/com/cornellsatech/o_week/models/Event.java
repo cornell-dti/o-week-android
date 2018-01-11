@@ -52,6 +52,7 @@ public class Event implements Comparable<Event>
 	public final double latitude;
 	public final int pk;
 	public static final String DISPLAY_TIME_FORMAT = "h:mm a";  //hour:minute AM/PM
+	public static final String DISPLAY_PADDED_TIME_FORMAT = "hh:mm a";
 	private static final String DATABASE_TIME_FORMAT = "HH:mm:ss";
 	private static final String DATABASE_DATE_FORMAT = "yyyy-MM-dd";
 	private static final DateTimeFormatter DATABASE_TIME_FORMATTER = DateTimeFormat.forPattern(DATABASE_TIME_FORMAT);
