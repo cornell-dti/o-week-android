@@ -34,6 +34,7 @@
 			android:layout_height="wrap_content"
 			android:text="@string/initial_settings_welcome_body_1"
 			android:layout_marginTop="@dimen/half_margin"
+			android:textSize="@dimen/size_initial_settings_body"
 			android:fontFamily="@font/avenir_next_medium"
 			android:textColor="@android:color/black"/>
 
@@ -52,6 +53,7 @@
 			android:layout_marginTop="@dimen/half_margin"
 			android:fontFamily="@font/avenir_next_medium"
 			android:textColor="@android:color/black"
+			android:textSize="@dimen/size_initial_settings_body"
 			android:text="@string/initial_settings_welcome_body_2" />
 
 		<TextView
