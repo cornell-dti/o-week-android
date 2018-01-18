@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.cornellsatech.o_week.models.Event;
@@ -28,6 +29,7 @@ import org.joda.time.LocalTime;
 import org.joda.time.Minutes;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
@@ -58,8 +60,10 @@ import java.util.Queue;
  */
 public class ScheduleFragment extends Fragment implements View.OnClickListener
 {
+	private ScrollView scrollView;
 	private RelativeLayout scheduleContainer;
 	private PercentRelativeLayout eventsContainer;
+	private final List<View> timeLines = new ArrayList<>();
 	private final SparseArray<Event> pkToEvent = new SparseArray<>();
 	private int HOUR_HEIGHT;
 	private int HOUR_TEXT_HEIGHT;
@@ -132,11 +136,13 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 
 		scheduleContainer = view.findViewById(R.id.scheduleContainer);
 		eventsContainer = view.findViewById(R.id.eventsContainer);
+		scrollView = view.findViewById(R.id.scrollView);
 		HOUR_HEIGHT = getResources().getDimensionPixelSize(R.dimen.distance_between_time_lines);
 		HOUR_TEXT_HEIGHT = getResources().getDimensionPixelSize(R.dimen.size_hour_textview);
 		EVENT_PADDING = getResources().getDimensionPixelSize(R.dimen.half_margin);
 		drawTimeLines();
 		drawCells();
+		scrollToNow();
 		return view;
 	}
 	/**
@@ -161,6 +167,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 			TextView hourText = timeLine.findViewById(R.id.hourText);
 			hourText.setText(hour.toString("h a")); //Ex: 11 AM
 			scheduleContainer.addView(timeLine, timeLineMargins(timeLine, hour));
+			timeLines.add(timeLine);
 		}
 	}
 	/**
@@ -170,7 +177,6 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	{
 		List<Event> selectedEvents = UserData.selectedEvents.get(date);
 		Collections.sort(selectedEvents);
-		Log.i(TAG, "drawing cells, num events: " + selectedEvents.size());
 		if (selectedEvents.isEmpty())
 			return;
 		drawEvent(1, new SparseArray<Event>(), new ArrayDeque<>(selectedEvents));
@@ -601,5 +607,33 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	{
 		eventsContainer.removeAllViews();
 		drawCells();
+	}
+
+	/**
+	 * Positions the scroll view to show the current hour. Does nothing if the current hour is out of range or if the displayed day isn't today.
+	 */
+	private void scrollToNow()
+	{
+		//date is today?
+		LocalDateTime today = LocalDateTime.now();
+		if (!date.isEqual(today.toLocalDate()))
+			return;
+
+		//time is now?
+		LocalTime now = today.toLocalTime();
+		int timeAfterStart = minutesBetween(HOURS.get(0), now);
+		if (timeAfterStart < 0 || minutesBetween(HOURS.get(HOURS.size()-1), now) > 0)
+			return;
+
+		int hourIndex = timeAfterStart / 60;
+		final View hourView = timeLines.get(hourIndex);
+		scrollView.post(new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				scrollView.smoothScrollTo(0, hourView.getTop());
+			}
+		});
 	}
 }
