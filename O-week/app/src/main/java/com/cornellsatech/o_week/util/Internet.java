@@ -142,8 +142,13 @@ public final class Internet
 						UserData.appendToAllEvents(event);
 
 						//reschedule the event
-						if (remindersOn)
-							Notifications.scheduleForEvent(event, context);
+						if (UserData.selectedEventsContains(event))
+						{
+							UserData.removeFromSelectedEvents(event);
+							UserData.insertToSelectedEvents(event);
+							if (remindersOn)
+								Notifications.scheduleForEvent(event, context);
+						}
 					}
 					//delete events
 					Set<Integer> deletedEventsPks = new HashSet<>(deletedEvents.length());

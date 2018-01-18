@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
 import com.google.common.eventbus.Subscribe;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -119,13 +121,15 @@ public class InitialSettingsActivity extends AppCompatActivity
 	 */
 	private void addRequiredEvents()
 	{
-		Set<Event> allEvents = Settings.getAllEvents(this);
-		for (Event e : allEvents)
+		for (List<Event> eventsForDay : UserData.allEvents.values())
 		{
-			if (!UserData.requiredForUser(e))
-				continue;
-			UserData.insertToSelectedEvents(e);
-			NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(e, true));
+			for (Event e : eventsForDay)
+			{
+				if (!UserData.requiredForUser(e))
+					continue;
+				UserData.insertToSelectedEvents(e);
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(e, true));
+			}
 		}
 
 		Notifications.scheduleForEvents(this);
