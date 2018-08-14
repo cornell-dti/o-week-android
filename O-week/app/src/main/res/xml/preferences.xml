@@ -29,7 +29,7 @@
 			android:key="@string/settings_new_students_webpage"
 			android:title="@string/settings_new_students_webpage"/>
 		<Preference
-			android:key="@string/settings_cornell_rescuer"
-		    android:title="@string/settings_cornell_rescuer"/>
+			android:key="@string/settings_dti"
+		    android:title="@string/settings_dti"/>
 	</PreferenceCategory>
 </android.support.v7.preference.PreferenceScreen>

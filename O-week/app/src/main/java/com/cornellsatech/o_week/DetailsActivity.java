@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -25,12 +26,18 @@ import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
+import com.google.android.gms.location.places.GeoDataClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBufferResponse;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 /**
  * Displays a user-selected event in a separate page. An {@link android.app.Activity} is used instead
@@ -61,6 +68,11 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	private TextView moreButton;
 	private View moreButtonGradient;
 	private Button directionsButton;
+	private GeoDataClient geoDataClient;
+	@Nullable
+	private String placeName;
+	@Nullable
+	private String placeAddress;
 
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	private static final int MAP_ZOOM = 16;
@@ -96,6 +108,8 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
 		//get the event
 		event = Event.fromString(getIntent().getExtras().getString(EVENT_KEY));
+
+		geoDataClient = Places.getGeoDataClient(this);
 
 		findViews();
 		setEventData();
@@ -310,11 +324,32 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	 * @param map {@inheritDoc}
 	 */
 	@Override
-	public void onMapReady(GoogleMap map)
+	public void onMapReady(final GoogleMap map)
 	{
 		LatLng position = new LatLng(event.latitude, event.longitude);
 		map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
 		map.addMarker(new MarkerOptions().position(position).title(event.caption));
+
+//		geoDataClient.getPlaceById(event.placeId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>()
+//		{
+//			@Override
+//			public void onComplete(@NonNull Task<PlaceBufferResponse> task)
+//			{
+//				if (!task.isSuccessful()) {
+//					Log.e(TAG, "onMapReady: place not found");
+//					return;
+//				}
+//
+//				PlaceBufferResponse places = task.getResult();
+//				Place place = places.get(0);
+//				placeName = place.getName().toString();
+//				placeAddress = place.getAddress().toString();
+//				LatLng position = place.getLatLng();
+//				map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
+//				map.addMarker(new MarkerOptions().position(position).title(event.caption));
+//				places.release();
+//			}
+//		});
 	}
 
 	/**
@@ -322,6 +357,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	 */
 	private void startMap()
 	{
+//		if (placeName == null || placeAddress == null)
+//			return;
+//
+//		Uri uri = Uri.parse("geo:0,0?q=" + placeName + ", " + placeAddress);
 		Uri uri = Uri.parse("geo:0,0?q=" + event.latitude + "," + event.longitude + "(" + event.caption + ")");
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		intent.setPackage("com.google.android.apps.maps");

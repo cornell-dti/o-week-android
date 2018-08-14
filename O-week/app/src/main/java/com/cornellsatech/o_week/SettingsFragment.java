@@ -24,7 +24,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 	private Preference orientationPamphlet;
 	private Preference campusMap;
 	private Preference newStudentsWebpage;
-	private Preference cornellRescuer;
+	private Preference dti;
 	private static final String TAG = SettingsFragment.class.getSimpleName();
 
     /**
@@ -43,11 +43,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         orientationPamphlet = findPreference(R.string.settings_orientation_pamphlet);
         campusMap = findPreference(R.string.settings_campus_map);
         newStudentsWebpage = findPreference(R.string.settings_new_students_webpage);
-        cornellRescuer = findPreference(R.string.settings_cornell_rescuer);
+        dti = findPreference(R.string.settings_dti);
         orientationPamphlet.setOnPreferenceClickListener(this);
         campusMap.setOnPreferenceClickListener(this);
         newStudentsWebpage.setOnPreferenceClickListener(this);
-        cornellRescuer.setOnPreferenceClickListener(this);
+        dti.setOnPreferenceClickListener(this);
     }
 
     /**
@@ -70,8 +70,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 			Internet.openToPage(Internet.CAMPUS_MAP, getActivity());
 		else if (preference.equals(newStudentsWebpage))
 			Internet.openToPage(Internet.NEW_STUDENTS_WEBPAGE, getActivity());
-		else if (preference.equals(cornellRescuer))
-			Internet.openToPage(Internet.CORNELL_RESCUER, getActivity());
+		else if (preference.equals(dti))
+			Internet.openToPage(Internet.DTI, getActivity());
 		else
 			Log.e(TAG, "onPreferenceClick: unrecognized preference");
 		return true;
