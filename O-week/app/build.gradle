@@ -8,7 +8,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 4
-        versionName "3.1.1"
+        versionName "3.2.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -20,20 +20,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-        exclude group: 'com.google.code.findbugs'
-    })
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
-    compile 'com.android.support:percent:27.0.2'
-    compile 'com.android.support:design:27.0.2'
-    compile 'com.android.support:support-v4:27.0.2'
-    compile 'com.google.guava:guava:22.0-android'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
+    implementation 'com.android.support:percent:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.google.guava:guava:26.0-android'
     //import Joda-Time (immutable time objects)
-    compile 'net.danlew:android.joda:2.9.9'
+    implementation 'net.danlew:android.joda:2.9.9.4'
     //import PreferencesFragmentCompat so Settings Activity can show up in Tab Bar
-    compile 'com.android.support:preference-v14:27.0.2'
-    compile 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.android.support:preference-v14:27.1.1'
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
+    implementation 'com.google.android.gms:play-services-places:15.0.1'
 }
