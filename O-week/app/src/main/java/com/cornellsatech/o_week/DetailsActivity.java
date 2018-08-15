@@ -319,37 +319,34 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	}
 
 	/**
-	 * Loads {@link Event#latitude} and longitude onto the map, adds a marker.
+	 * Loads {@link Event#placeID} onto the map, adds a marker.
 	 *
 	 * @param map {@inheritDoc}
 	 */
 	@Override
 	public void onMapReady(final GoogleMap map)
 	{
-		LatLng position = new LatLng(event.latitude, event.longitude);
-		map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
-		map.addMarker(new MarkerOptions().position(position).title(event.caption));
+		geoDataClient.getPlaceById(event.placeID).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>()
+		{
+			@Override
+			public void onComplete(@NonNull Task<PlaceBufferResponse> task)
+			{
+				PlaceBufferResponse places = task.getResult();
+				if (!task.isSuccessful() || places.getCount() == 0) {
+					Log.e(TAG, "onMapReady: place not found");
+					places.release();
+					return;
+				}
 
-//		geoDataClient.getPlaceById(event.placeId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>()
-//		{
-//			@Override
-//			public void onComplete(@NonNull Task<PlaceBufferResponse> task)
-//			{
-//				if (!task.isSuccessful()) {
-//					Log.e(TAG, "onMapReady: place not found");
-//					return;
-//				}
-//
-//				PlaceBufferResponse places = task.getResult();
-//				Place place = places.get(0);
-//				placeName = place.getName().toString();
-//				placeAddress = place.getAddress().toString();
-//				LatLng position = place.getLatLng();
-//				map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
-//				map.addMarker(new MarkerOptions().position(position).title(event.caption));
-//				places.release();
-//			}
-//		});
+				Place place = places.get(0);
+				placeName = place.getName().toString();
+				placeAddress = place.getAddress().toString();
+				LatLng position = place.getLatLng();
+				map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
+				map.addMarker(new MarkerOptions().position(position).title(event.caption));
+				places.release();
+			}
+		});
 	}
 
 	/**
@@ -357,11 +354,10 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	 */
 	private void startMap()
 	{
-//		if (placeName == null || placeAddress == null)
-//			return;
-//
-//		Uri uri = Uri.parse("geo:0,0?q=" + placeName + ", " + placeAddress);
-		Uri uri = Uri.parse("geo:0,0?q=" + event.latitude + "," + event.longitude + "(" + event.caption + ")");
+		if (placeName == null || placeAddress == null)
+			return;
+
+		Uri uri = Uri.parse("geo:0,0?q=" + placeName + ", " + placeAddress);
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		intent.setPackage("com.google.android.apps.maps");
 		startActivity(intent);

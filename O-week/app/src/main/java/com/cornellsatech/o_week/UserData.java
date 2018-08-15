@@ -53,9 +53,9 @@ public final class UserData
 	private static CollegeType collegeType;
 	private static StudentType studentType;
 	private static final int YEAR = 2018;
-	private static final int MONTH = 1;
-	private static final int START_DAY = 18;    //Dates range: [START_DAY, END_DAY], inclusive
-	private static final int END_DAY = 23;      //Note: END_DAY must > START_DAY
+	private static final int MONTH = 8;
+	private static final int START_DAY = 17;    //Dates range: [START_DAY, END_DAY], inclusive
+	private static final int END_DAY = 29;      //Note: END_DAY must > START_DAY
 	private static final String TAG = UserData.class.getSimpleName();
 
 	/**
