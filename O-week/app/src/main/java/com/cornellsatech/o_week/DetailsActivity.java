@@ -331,13 +331,13 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 			@Override
 			public void onComplete(@NonNull Task<PlaceBufferResponse> task)
 			{
-				PlaceBufferResponse places = task.getResult();
-				if (!task.isSuccessful() || places.getCount() == 0) {
+
+				if (!task.isSuccessful()) {
 					Log.e(TAG, "onMapReady: place not found");
-					places.release();
 					return;
 				}
 
+				PlaceBufferResponse places = task.getResult();
 				Place place = places.get(0);
 				placeName = place.getName().toString();
 				placeAddress = place.getAddress().toString();
