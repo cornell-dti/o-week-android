@@ -1,4 +1,4 @@
-O-Week v3.0
+O-Week v3.2
 ======
 An **Android** app for incoming freshmen to use during their first week as a Cornell student. The **iOS** branch can be found [here](https://github.com/cornell-dti/o-week-ios).
 
@@ -6,19 +6,19 @@ An **Android** app for incoming freshmen to use during their first week as a Cor
 
 Getting Started
 ------
-You will need **Android Studio 3.0.1** to run the latest version of this app, which uses the following SDKs. Last update **12/19/2017** (remember to check "Show Package Details" on the lower right):
+You will need **Android Studio 3.1.3** to run the latest version of this app, which uses the following SDKs. Last update **8/15/2018** (remember to check "Show Package Details" on the lower right):
 
 SDK Platforms (tab)
  * Android API 27
-   * Android SDK Platform 27
+   * Android SDK Platform 27, Revision 3
 
 SDK Tools (tab)
- * Android SDK Build-Tools 27.0.2
+ * Android SDK Build-Tools 27.0.3
  * Android Emulator (if you don't have an Android phone)
- * Android SDK Platform-Tools 27.0.0
+ * Android SDK Platform-Tools 28.0.0
  * Android SDK Tools 26.1.1
  * Documentation for Android SDK
- * Google Play Services, rev 46
+ * Google Play Services, rev 49
  * Support Repository
    * ConstraintLayout for Android 1.0.2
    * Solver for ConstraintLayout 1.0.2
