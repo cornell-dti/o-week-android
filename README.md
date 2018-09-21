@@ -78,5 +78,5 @@ Contributors
  * **Vicente Caycedo** - Front-End Developer
  * **Arnav Ghosh** - Back-End Developer
 
-We are a team within **Cornell Design & Tech Initiative**. For more information, see its website [here](http://cornelldti.org/).
-<img src="http://cornelldti.org/img/logos/cornelldti-dark.png">
+We are a team within **Cornell Design & Tech Initiative**. For more information, see its website [here](https://cornelldti.org/).
+<img src="https://raw.githubusercontent.com/cornell-dti/design/master/Branding/Wordmark/Dark%20Text/Transparent/Wordmark-Dark%20Text-Transparent%403x.png">
