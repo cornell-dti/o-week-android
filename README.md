@@ -10,9 +10,6 @@
 ## About
 An **Android** app for incoming freshmen to use during their first week as a Cornell student. The **iOS** branch can be found [here](https://github.com/cornell-dti/o-week-ios).
 
-
-<img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/1.png" width="250px">  <img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/2.png" width="250px">  <img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/3.png" width="250px">
-
 ## Getting Started
 You will need **Android Studio 3.1.3** to run the latest version of this app, which uses the following SDKs. Remember to check "Show Package Details" on the lower right:
 
