@@ -1,12 +1,20 @@
-O-Week v3.2
-======
+# O-Week v3.2
+
+#### Contents
+  - [About](#about)
+  - [Getting Started](#getting-started)
+  - [Dependencies & Libraries](#dependencies--libraries)
+  - [Screenshots](#screenshots)
+  - [Contributors](#contributors)
+  
+## About
 An **Android** app for incoming freshmen to use during their first week as a Cornell student. The **iOS** branch can be found [here](https://github.com/cornell-dti/o-week-ios).
+
 
 <img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/1.png" width="250px">  <img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/2.png" width="250px">  <img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/3.png" width="250px">
 
-Getting Started
-------
-You will need **Android Studio 3.1.3** to run the latest version of this app, which uses the following SDKs. Last update **8/15/2018** (remember to check "Show Package Details" on the lower right):
+## Getting Started
+You will need **Android Studio 3.1.3** to run the latest version of this app, which uses the following SDKs. Remember to check "Show Package Details" on the lower right:
 
 SDK Platforms (tab)
  * Android API 27
@@ -24,9 +32,10 @@ SDK Tools (tab)
    * Solver for ConstraintLayout 1.0.2
    * Android Support Repository, rev 47
    * Google Repository 58
+   
+_Last updated **8/15/2018**._
 
-Design Choices
-------
+## Design Choices
  * All objects are presumed to **not be <code>null</code>** when passed into a method as a parameter. If an object can be null, use the annotation <code>@Nullable</code>.
  * Syntax:
    * Indent with tabs.
@@ -52,31 +61,26 @@ Design Choices
    1. An <code>Event</code> that will occur during orientation week.
    2. Something to notify listeners of. For example, a click event.
  
-Used Libraries
-------
+## Dependencies & Libraries
  * <a href="https://github.com/google/guava">Guava</a> - a Google Library containing lots of helpful classes for Java. Most notably, immutable data structures (like ImmutableList) and EventBus, which provides a way for classes that do not have references to each other to communicate.
  * <a href="https://github.com/dlew/joda-time-android">JodaTime</a> - a library for immutable time objects, unsupported by Java 7. Includes lots of useful data structures and methods; plus, immutable objects are almost always safer when passing by reference.
 
-Contributors
-------
+## Screenshots
+
+_Screenshots showing major parts of app_
+
+<img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/1.png" width="250px" style="margin: 10px; border: 1px rgba(0,0,0,0.4) solid;"> <img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/2.png" width="250px" style="margin: 10px; border: 1px rgba(0,0,0,0.4) solid;"> <img src="https://raw.githubusercontent.com/cornell-dti/o-week-android/master/Screenshots/3.png" width="250px" style="margin: 10px; border: 1px rgba(0,0,0,0.4) solid;">
+
+## Contributors
+2018
+ * **David Chu** - Developer Lead
 2017
- * **Julia Kruk** - Product Manager
  * **David Chu** - Product Manager
  * **Amanda Ong** - Front-End Developer
  * **Jagger Brulato** - Front-End Developer
  * **Qichen (Ethan) Hu** - Front-End Developer
- * **Arnav Ghosh** - Back-End Developer
- * **Adit Gupta** - Back-End Developer
- * **Cedric Castillo** - Designer
- * **Lisa LaBarbera** - Designer
- * **Justin Park** - Designer
- 
 2016
- * **Julia Kruk** - Product Manager
- * **Juhwan Park** - Product Manager
  * **David Chu** - Front-End Developer
- * **Vicente Caycedo** - Front-End Developer
- * **Arnav Ghosh** - Back-End Developer
 
 We are a team within **Cornell Design & Tech Initiative**. For more information, see its website [here](https://cornelldti.org/).
 <img src="https://raw.githubusercontent.com/cornell-dti/design/master/Branding/Wordmark/Dark%20Text/Transparent/Wordmark-Dark%20Text-Transparent%403x.png">
