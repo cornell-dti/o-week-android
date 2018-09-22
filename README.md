@@ -74,11 +74,13 @@ _Screenshots showing major parts of app_
 ## Contributors
 2018
  * **David Chu** - Developer Lead
+
 2017
  * **David Chu** - Product Manager
  * **Amanda Ong** - Front-End Developer
  * **Jagger Brulato** - Front-End Developer
  * **Qichen (Ethan) Hu** - Front-End Developer
+
 2016
  * **David Chu** - Front-End Developer
 
