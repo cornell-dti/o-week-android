@@ -1,8 +1,9 @@
 package com.cornellsatech.o_week;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.CollegeType;
@@ -283,7 +284,7 @@ public final class UserData
 
 	/**
 	 * Returns an array of Strings of filters available to the user for {@link FeedFragment}.
-	 * @param context Context to get the string for "Show required events" {@link R.string#filter_show_required_events}
+	 * @param context Context to get the string for "Show required events" {@link com.cornellsatech.o_week.R.string#filter_show_required_events}
 	 * @return See method description.
 	 */
 	public static String[] getFilters(Context context)

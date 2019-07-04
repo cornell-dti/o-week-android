@@ -1,10 +1,11 @@
 package com.cornellsatech.o_week;
 
 import android.graphics.Color;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cornellsatech.o_week.util.NotificationCenter;
 
@@ -13,12 +14,8 @@ import org.joda.time.format.DateTimeFormat;
 
 /**
  * Holds data and reference pointers to {@link View}s for an orientation date button. Its physical
- * representation is in {@link R.layout#cell_date_picker}.
+ * representation is in {@link com.cornellsatech.o_week.R.layout#cell_date_picker}.
  *
- * {@link #configured}: True if the method {@link #configure(LocalDate)} had ever been called.
- *                      Used for determining whether a default orientation date should be selected,
- *                      which should only be done once (on app launch).
- *                      More on that in {@link #configure(LocalDate)}.
  * {@link #date}: The date that this object currently represents.
  *
  * @see DatePickerAdapter

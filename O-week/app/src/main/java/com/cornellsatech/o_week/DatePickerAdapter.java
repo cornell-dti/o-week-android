@@ -1,8 +1,9 @@
 package com.cornellsatech.o_week;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Displays the dates that the user can select to see his/her events on that particular date.
@@ -11,7 +12,7 @@ import android.view.ViewGroup;
 public class DatePickerAdapter extends RecyclerView.Adapter<DateCell>
 {
 	/**
-	 * Creates a {@link DateCell} to display dates by inflating it from {@link R.layout#cell_date_picker}.
+	 * Creates a {@link DateCell} to display dates by inflating it from {@link com.cornellsatech.o_week.R.layout#cell_date_picker}.
 	 *
 	 * @param parent {@inheritDoc}
 	 * @param viewType {@inheritDoc}

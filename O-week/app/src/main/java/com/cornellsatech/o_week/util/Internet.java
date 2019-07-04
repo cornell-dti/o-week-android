@@ -8,18 +8,19 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.annotation.WorkerThread;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.util.SparseArray;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.WorkerThread;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import com.cornellsatech.o_week.R;
 import com.cornellsatech.o_week.UserData;
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.Event;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.common.base.Joiner;
 import com.google.common.io.CharStreams;
 

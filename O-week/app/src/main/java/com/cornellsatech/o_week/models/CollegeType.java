@@ -1,6 +1,6 @@
 package com.cornellsatech.o_week.models;
 
-import android.support.annotation.StringRes;
+import androidx.annotation.StringRes;
 
 import com.cornellsatech.o_week.R;
 

@@ -1,9 +1,10 @@
 package com.cornellsatech.o_week;
 
-import android.support.annotation.IntDef;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import androidx.annotation.IntDef;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cornellsatech.o_week.models.Event;
 

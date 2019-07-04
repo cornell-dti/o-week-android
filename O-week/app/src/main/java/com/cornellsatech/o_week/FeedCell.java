@@ -1,15 +1,16 @@
 package com.cornellsatech.o_week;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cornellsatech.o_week.models.Event;
 
 /**
  * Holds data and reference pointers to {@link View}s for an {@link Event}. Its physical representation
- * is in {@link R.layout#cell_feed}.
+ * is in {@link com.cornellsatech.o_week.R.layout#cell_feed}.
  *
  * {@link #event}: The event that this object currently represents.
  * {@link #context}: To be used in {@link #onClick(View)}

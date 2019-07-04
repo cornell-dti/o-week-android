@@ -6,13 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -20,6 +13,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.Internet;
@@ -48,7 +49,7 @@ import com.google.android.gms.tasks.Task;
  * {@link #coordinatorLayout}: Layout that will be shouldActUpon to
  * {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout, boolean)}.
  * A reference to the {@link CoordinatorLayout} is necessary to display
- * {@link android.support.design.widget.Snackbar}.
+ * {@link com.google.android.material.snackbar.Snackbar}.
  */
 public class DetailsActivity extends AppCompatActivity implements OnMapReadyCallback, Button.OnClickListener
 {
@@ -159,6 +160,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		timeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT) + " - " + event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
 		if (UserData.selectedEventsContains(event))
 			addButton.setText(R.string.button_text_event_added);
+		addButton.setBackgroundResource(R.drawable.bg_button_selected_ripple);
 		addButton.setOnClickListener(this);
 		moreButton.setOnClickListener(this);
 		directionsButton.setOnClickListener(this);

@@ -1,11 +1,12 @@
 package com.cornellsatech.o_week;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.fragment.app.Fragment;
 
 /**
  * the pager fragment for the welcome page.
@@ -13,7 +14,6 @@ import android.widget.Button;
 
 public class InitialSettingsPage3Fragment extends Fragment
 {
-	private Button getStarted;
 
 	/**
 	 * Sets up the view components.
@@ -29,7 +29,8 @@ public class InitialSettingsPage3Fragment extends Fragment
 	{
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.initial_settings_welcome, container, false);
 
-		getStarted = rootView.findViewById(R.id.getStartedButton);
+		Button getStarted = rootView.findViewById(R.id.getStartedButton);
+		getStarted.setBackgroundResource(R.drawable.bg_button_ripple);
 		getStarted.setOnClickListener(new View.OnClickListener()
 		{
 			public void onClick(View v)

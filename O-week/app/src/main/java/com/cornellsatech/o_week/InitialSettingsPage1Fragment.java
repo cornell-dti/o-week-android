@@ -2,13 +2,14 @@ package com.cornellsatech.o_week;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import com.cornellsatech.o_week.models.StudentType;
 
@@ -40,15 +41,19 @@ public class InitialSettingsPage1Fragment extends Fragment implements View.OnCli
 		transfer = rootView.findViewById(R.id.transfer);
 
 		//Sometimes view is reloaded after scrolling back from the third page. This ensures that the options the user had chosen remains visible.
-		if (studentType == StudentType.FRESHMAN)
+		switch (studentType)
 		{
-			setSelected(freshman);
-			disableSelected(transfer);
-		}
-		if (studentType == StudentType.TRANSFER)
-		{
-			setSelected(transfer);
-			disableSelected(freshman);
+			case FRESHMAN:
+				setSelected(freshman);
+				disableSelected(transfer);
+				break;
+			case TRANSFER:
+				setSelected(transfer);
+				disableSelected(freshman);
+				break;
+			case NOTSET:
+				disableSelected(freshman);
+				disableSelected(transfer);
 		}
 
 		freshman.setOnClickListener(this);

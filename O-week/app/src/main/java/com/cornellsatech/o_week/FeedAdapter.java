@@ -1,9 +1,10 @@
 package com.cornellsatech.o_week;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
@@ -44,7 +45,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 		loadData();
 	}
 	/**
-	 * Creates a {@link FeedCell} to display dates by inflating it from {@link R.layout#cell_feed}.
+	 * Creates a {@link FeedCell} to display dates by inflating it from {@link com.cornellsatech.o_week.R.layout#cell_feed}.
 	 *
 	 * @param parent {@inheritDoc}
 	 * @param i {@inheritDoc}

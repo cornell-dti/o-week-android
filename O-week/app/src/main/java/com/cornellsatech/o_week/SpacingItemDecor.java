@@ -1,11 +1,11 @@
 package com.cornellsatech.o_week;
 
-
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.annotation.DimenRes;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import androidx.annotation.DimenRes;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * An item to be set for a {@link RecyclerView} to provide extra spacing between items. Note that this

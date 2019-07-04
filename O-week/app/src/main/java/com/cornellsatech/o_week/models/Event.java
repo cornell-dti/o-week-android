@@ -2,13 +2,13 @@ package com.cornellsatech.o_week.models;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.cornellsatech.o_week.ScheduleFragment;
 import com.cornellsatech.o_week.util.Internet;

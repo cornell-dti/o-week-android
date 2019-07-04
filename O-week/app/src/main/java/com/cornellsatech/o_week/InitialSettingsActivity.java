@@ -3,13 +3,12 @@ package com.cornellsatech.o_week;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.viewpager.widget.ViewPager;
 
 import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
@@ -17,15 +16,15 @@ import com.cornellsatech.o_week.models.StudentType;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.common.eventbus.Subscribe;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Controls interactions of the user initial settings. (student type, whether is international, which college)
  * <p>
- * {@Link #INITIAL_SETTINGS_PAGENUM}: The number of pages that the initial settings contains.
+ * {@link #INITIAL_SETTINGS_PAGENUM}: The number of pages that the initial settings contains.
  * {@link #waitingOnEventDownload}: True if the user is ready to end the tutorial but the events in
  * {@link UserData} have yet to be downloaded.
  */
@@ -148,7 +147,7 @@ public class InitialSettingsActivity extends AppCompatActivity
 	}
 
 	/**
-	 * Sets {@Link #studentType}
+	 * Sets {@link #studentType}
 	 *
 	 * @param s
 	 */
@@ -158,7 +157,7 @@ public class InitialSettingsActivity extends AppCompatActivity
 	}
 
 	/**
-	 * Sets {@Link #collegeType}
+	 * Sets {@link #collegeType}
 	 *
 	 * @param c
 	 */

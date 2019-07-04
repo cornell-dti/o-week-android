@@ -1,12 +1,17 @@
-<android.support.v7.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto">
 
 	<PreferenceCategory
+		app:iconSpaceReserved="false"
 		android:title="@string/settings_category_notifications">
 		<SwitchPreferenceCompat
+			app:iconSpaceReserved="false"
 			android:key="@string/key_receive_reminders"
 			android:title="@string/settings_receive_reminders"
 		    android:defaultValue="true"/>
 		<ListPreference
+			app:iconSpaceReserved="false"
 			android:key="@string/key_notify_me"
 			android:title="@string/settings_notify_me"
 			android:summary="%s"
@@ -18,18 +23,23 @@
 	</PreferenceCategory>
 
 	<PreferenceCategory
+		app:iconSpaceReserved="false"
 		android:title="@string/settings_category_resources">
 		<Preference
+			app:iconSpaceReserved="false"
 			android:key="@string/settings_orientation_pamphlet"
 			android:title="@string/settings_orientation_pamphlet"/>
 		<Preference
+			app:iconSpaceReserved="false"
 			android:key="@string/settings_campus_map"
 			android:title="@string/settings_campus_map"/>
 		<Preference
+			app:iconSpaceReserved="false"
 			android:key="@string/settings_new_students_webpage"
 			android:title="@string/settings_new_students_webpage"/>
 		<Preference
+			app:iconSpaceReserved="false"
 			android:key="@string/settings_dti"
 		    android:title="@string/settings_dti"/>
 	</PreferenceCategory>
-</android.support.v7.preference.PreferenceScreen>
+</androidx.preference.PreferenceScreen>

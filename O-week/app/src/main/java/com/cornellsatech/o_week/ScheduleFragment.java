@@ -2,12 +2,6 @@ package com.cornellsatech.o_week;
 
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.Nullable;
-import android.support.percent.PercentRelativeLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -17,6 +11,13 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.fragment.app.Fragment;
+import androidx.percentlayout.widget.PercentRelativeLayout;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
@@ -112,7 +113,8 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	}
 
 	/**
-	 * Sets up listener, associate views, retrieve final values from {@link R.dimen}, then draws everything.
+	 * Sets up listener, associate views, retrieve final values from
+	 * {@link com.cornellsatech.o_week.R.dimen}, then draws everything.
 	 * Retrieves {@link #date} from the bundle.
 	 *
 	 * @param inflater {@inheritDoc}
@@ -482,7 +484,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	/**
 	 * Returns the number of lines that will display fully for the event, rounded down.
 	 * @param containerHeight The height of the event's container, calculated by {@link #heightForEvent(Event)}.
-	 * @param titleText The TextView containing the event's title, {@link R.id#titleText}.
+	 * @param titleText The TextView containing the event's title, {@link com.cornellsatech.o_week.R.id#titleText}.
 	 * @return Number of lines that will display fully, minimum of 0.
 	 */
 	private int availableLinesForEvent(int containerHeight, TextView titleText)

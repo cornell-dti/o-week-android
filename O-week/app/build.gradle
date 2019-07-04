@@ -1,15 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    compileSdkVersion 28
+    buildToolsVersion '29.0.0'
     defaultConfig {
         applicationId "com.cornellsatech.o_week"
         minSdkVersion 21
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 5
         versionName "3.2"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -20,16 +19,16 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:2.0.0-alpha2'
-    implementation 'com.android.support:percent:27.1.1'
-    implementation 'com.android.support:design:27.1.1'
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.google.guava:guava:26.0-android'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.annotation:annotation:1.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.guava:guava:28.0-android'
     //import Joda-Time (immutable time objects)
-    implementation 'net.danlew:android.joda:2.9.9.4'
+    implementation 'net.danlew:android.joda:2.10.2'
     //import PreferencesFragmentCompat so Settings Activity can show up in Tab Bar
-    implementation 'com.android.support:preference-v14:27.1.1'
-    implementation 'com.google.android.gms:play-services-maps:15.0.1'
-    implementation 'com.google.android.gms:play-services-places:15.0.1'
+    implementation 'androidx.preference:preference:1.1.0-rc01'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
 }

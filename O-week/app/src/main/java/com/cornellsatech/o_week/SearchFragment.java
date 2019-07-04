@@ -1,11 +1,6 @@
 package com.cornellsatech.o_week;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +8,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cornellsatech.o_week.models.Event;
 
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * Search Fragment that displays search results from my calender and feed.
  * This is a {@link Fragment} so that it can be  swapped out with {@link SearchFragment}
- * Layout in {@link R.layout#fragment_search}
+ * Layout in {@link com.cornellsatech.o_week.R.layout#fragment_search}
  * {@link #MIN_NUM_LETTERS} Minimum letters that must be typed in search bar to cause a refresh
  */
 

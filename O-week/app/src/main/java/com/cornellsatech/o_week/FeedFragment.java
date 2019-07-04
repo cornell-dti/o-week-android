@@ -1,14 +1,15 @@
 package com.cornellsatech.o_week;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
@@ -19,7 +20,7 @@ import org.joda.time.LocalTime;
 /**
  * Displays a list of events, ordered chronologically. This is a {@link Fragment} so that it can be
  * easily swapped out with {@link ScheduleFragment} while keeping the same date picker up top.
- * Layout in {@link R.layout#fragment_feed}
+ * Layout in {@link com.cornellsatech.o_week.R.layout#fragment_feed}
  */
 public class FeedFragment extends Fragment
 {

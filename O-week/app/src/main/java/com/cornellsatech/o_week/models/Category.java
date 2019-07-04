@@ -1,6 +1,6 @@
 package com.cornellsatech.o_week.models;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.cornellsatech.o_week.util.Internet;
 
