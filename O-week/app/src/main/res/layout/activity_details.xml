@@ -200,6 +200,20 @@
 				app:layout_constraintBottom_toBottomOf="@+id/descriptionText"
 				app:layout_constraintEnd_toEndOf="@+id/descriptionText" />
 
+			<TextView
+				android:id="@+id/urlText"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_marginEnd="@dimen/margin"
+				android:layout_marginStart="@dimen/margin"
+				android:layout_marginTop="@dimen/margin"
+				android:textSize="@dimen/size_detail"
+				android:autoLink="web"
+				app:layout_constraintEnd_toEndOf="parent"
+				app:layout_constraintStart_toStartOf="parent"
+				app:layout_constraintTop_toBottomOf="@+id/descriptionText"
+				tools:text="https://www.google.com"/>
+
 			<Button
 				android:id="@+id/directionsButton"
 				style="@style/Widget.AppCompat.Button.Colored"
@@ -218,7 +232,7 @@
 				app:layout_constraintBottom_toBottomOf="parent"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/descriptionText" />
+				app:layout_constraintTop_toBottomOf="@+id/urlText" />
 
 		</androidx.constraintlayout.widget.ConstraintLayout>
 

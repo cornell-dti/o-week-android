@@ -50,6 +50,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	private TextView locationText;
 	private TextView timeText;
 	private TextView descriptionText;
+	private TextView urlText;
 	private TextView additionalText;
 	private TextView requiredLabel;
 	private TextView requirementDetails;
@@ -108,6 +109,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		titleText = findViewById(R.id.titleText);
 		locationText = findViewById(R.id.locationText);
 		timeText = findViewById(R.id.timeText);
+		urlText = findViewById(R.id.urlText);
 		horizontalBreakBar = findViewById(R.id.horizontalBreakBar);
 		requiredLabel = findViewById(R.id.requiredLabel);
 		requirementDetails = findViewById(R.id.requirementDetails);
@@ -149,6 +151,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 
 		configureDescription();
 		configureRequired();
+		configureURL();
 		configureImage();
 	}
 
@@ -226,6 +229,18 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		Internet.getImageForEvent(event, eventImage, coordinatorLayout);
 	}
 
+    private void configureURL()
+    {
+        if (event.getUrl() != null && !event.getUrl().isEmpty())
+        {
+            urlText.setVisibility(View.VISIBLE);
+            urlText.setOnClickListener(this);
+            urlText.setText(event.getUrl());
+        }
+        else
+            urlText.setVisibility(View.GONE);
+    }
+
 	/**
 	 * This runs when a button is clicked on the activity_details.xml view. All buttons
 	 * share the same onClick handler (this), and therefore should be distinguished from one
@@ -262,6 +277,9 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 			case R.id.directionsButton:
 				startMap();
 				break;
+            case R.id.urlText:
+                Internet.openToPage(event.getUrl(), this);
+                break;
 			default:
 				Log.e(TAG, "onClick: Unknown button pressed");
 		}
