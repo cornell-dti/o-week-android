@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -18,14 +19,9 @@ public class InitialSettingsPage3Fragment extends Fragment
 	/**
 	 * Sets up the view components.
 	 * Add action listener for button.
-	 *
-	 * @param inflater
-	 * @param container
-	 * @param savedInstanceState
-	 * @return
 	 */
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.initial_settings_welcome, container, false);
 

@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cornellsatech.o_week" >
 
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.INTERNET" />
 
@@ -41,7 +40,7 @@
         <!-- Google maps API key, registered by David Chu -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAfj99YO2rt_bnRE3XBXiL8_0yAaewM_eY" />
+            android:value="@string/maps_api_key" />
 
         <activity
             android:name=".InitialSettingsActivity"

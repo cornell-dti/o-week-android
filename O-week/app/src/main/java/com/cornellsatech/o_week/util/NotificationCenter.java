@@ -1,10 +1,10 @@
 package com.cornellsatech.o_week.util;
 
 import com.cornellsatech.o_week.DatePickerAdapter;
-import com.cornellsatech.o_week.models.Category;
-import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.FeedAdapter;
 import com.cornellsatech.o_week.UserData;
+import com.cornellsatech.o_week.models.Category;
+import com.cornellsatech.o_week.models.Event;
 import com.google.common.eventbus.EventBus;
 
 /**
@@ -30,33 +30,22 @@ public final class NotificationCenter
 	public static final EventBus DEFAULT = new EventBus();
 
 	/**
-	 * Indicates information about events have changed. Anything that displays a list of events should update.
-	 */
-	public static class EventReload {}
-
-	/**
 	 * Indicates the user either
 	 * 1. Swiped to a new date in {@link com.cornellsatech.o_week.DatePagerAdapter}.
 	 * 2. Clicked on a new date in {@link DatePickerAdapter}.
 	 * Note: {@link UserData#selectedDate} will contain the new date.
 	 */
-	public static class EventDateChanged
-	{
-		public EventDateChanged() {}
-	}
+	public static class EventDateChanged {}
+
 	/**
-	 * Indicates the {@link #event} has been selected or unselected.
+	 * Indicates that new events have been loaded from settings or the database.
 	 */
-	public static class EventSelectionChanged
-	{
-		public final Event event;
-		public final boolean selected;
-		public EventSelectionChanged(Event event, boolean selected)
-		{
-			this.event = event;
-			this.selected = selected;
-		}
-	}
+	public static class EventInternetUpdate {}
+
+	/**
+	 * Indicates an event has been selected or unselected.
+	 */
+	public static class EventSelectionChanged {}
 
 	/**
 	 * Indicates a new {@link Category} has been selected as the filter for {@link FeedAdapter}.

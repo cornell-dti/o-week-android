@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cornellsatech.o_week.models.Event;
@@ -14,6 +15,7 @@ import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -83,18 +85,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	/**
 	 * Listens for updates to the list from the database. We don't know which events were updated, so
 	 * the entire list is swapped out.
-	 *
-	 * @param eventReload Ignored.
 	 */
 	@Subscribe
-	public void onEventReload(NotificationCenter.EventReload eventReload)
+	public void onInternetUpdate(NotificationCenter.EventInternetUpdate eventReload)
 	{
 		loadData();
 	}
+
 	/**
 	 * Listens for a new filter the user chose. Reloads all events.
-	 *
-	 * @param eventFilterChanged Ignored.
 	 */
 	@Subscribe
 	public void onFilterChanged(NotificationCenter.EventFilterChanged eventFilterChanged)
@@ -103,10 +102,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	}
 	/**
 	 * Unregisters this object as a listener to avoid memory leaks. Registered in {@link FeedAdapter()}.
-	 * @param recyclerView Ignored.
 	 */
 	@Override
-	public void onDetachedFromRecyclerView(RecyclerView recyclerView)
+	public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView)
 	{
 		NotificationCenter.DEFAULT.unregister(this);
 	}
@@ -116,14 +114,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 	 */
 	private void loadData()
 	{
-		List<Event> events = new ArrayList<>(UserData.allEvents.get(date));
+		List<Event> events = new ArrayList<>();
+		for (Event event : UserData.allEvents)
+			if (event.getStartDate().equals(date))
+				events.add(event);
 		filterEvents(events);
 
-		if (events.isEmpty())
-			emptyView.setVisibility(View.VISIBLE);
-		else
-			emptyView.setVisibility(View.GONE);
+		emptyView.setVisibility(events.isEmpty() ? View.VISIBLE : View.GONE);
 
+		Collections.sort(events);
 		this.events = events;
 		notifyDataSetChanged();
 	}
@@ -142,7 +141,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 		{
 			Event event = eventsIterator.next();
 
-			if (UserData.selectedFilters.contains(event.category))
+			if (!Collections.disjoint(UserData.selectedFilters, event.getCategories()))
 				continue;
 			if (UserData.filterRequired && UserData.requiredForUser(event))
 				continue;

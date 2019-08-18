@@ -23,15 +23,11 @@ public class InitialSettingsPage1Fragment extends Fragment implements View.OnCli
 	private Button freshman;
 	private Button transfer;
 	private StudentType studentType = StudentType.NOTSET;
+	private static final String TAG = InitialSettingsPage1Fragment.class.getSimpleName();
 
 	/**
 	 * Sets up the view components of the student type settings.
 	 * add action listener to each button.
-	 *
-	 * @param inflater
-	 * @param container
-	 * @param savedInstanceState
-	 * @return
 	 */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -64,8 +60,6 @@ public class InitialSettingsPage1Fragment extends Fragment implements View.OnCli
 
 	/**
 	 * Set a button's style as selected
-	 *
-	 * @param button
 	 */
 	private void setSelected(Button button)
 	{
@@ -75,8 +69,6 @@ public class InitialSettingsPage1Fragment extends Fragment implements View.OnCli
 
 	/**
 	 * set a button's style as not selected
-	 *
-	 * @param button
 	 */
 	private void disableSelected(Button button)
 	{
@@ -108,7 +100,7 @@ public class InitialSettingsPage1Fragment extends Fragment implements View.OnCli
 				studentType = StudentType.TRANSFER;
 				break;
 			default:
-				Log.e("InitialPage1Fragment", "onClick unexpected id: " + view);
+				Log.e(TAG, "onClick unexpected id: " + view);
 				return;
 		}
 

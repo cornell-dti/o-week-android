@@ -70,7 +70,7 @@
 				tools:text="10:00 AM - 12:00 PM" />
 
 			<TextView
-				android:id="@+id/captionText"
+				android:id="@+id/locationText"
 				android:layout_width="0dp"
 				android:layout_height="wrap_content"
 				android:layout_marginEnd="@dimen/half_margin"
@@ -92,6 +92,7 @@
 				android:layout_marginEnd="@dimen/margin"
 				android:text="@string/button_text_event_not_added"
 				android:textSize="16sp"
+				android:textColor="@android:color/white"
 				style="@style/Button"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintTop_toTopOf="@+id/timeText" />
@@ -106,7 +107,7 @@
 				android:background="@color/horizontalBreakColor"
 				app:layout_constraintEnd_toEndOf="parent"
 				app:layout_constraintStart_toStartOf="parent"
-				app:layout_constraintTop_toBottomOf="@+id/captionText" />
+				app:layout_constraintTop_toBottomOf="@+id/locationText" />
 
 			<TextView
 				android:id="@+id/requiredLabel"

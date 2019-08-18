@@ -1,4 +1,5 @@
 <resources>
+	<string name="maps_api_key">AIzaSyAmQjkAEHmR0nviI0_aaaQWOfoHKbSb4cw</string>
 	<string name="app_name">O-week</string>
 	<string name="menu_filter">Filter</string>
 	<string name="menu_my_schedule">Calendar</string>
@@ -15,8 +16,8 @@
 	<string name="dialog_retry_button">Retry</string>
 	<string name="filter_show_required_events">Show Required Events</string>
 	<string name="required_label">RQ</string>
-	<string name="required_for_all">Required for All Students</string>
-	<string name="required_for_category">Required for %1$s Students</string>
+	<string name="required_for_you">Required for You</string>
+	<string name="required_for_others">Required for Others</string>
 	<string name="directions_button">Directions</string>
 	<string name="toast_events_changed">Your selected events were updated: %1$s</string>
 	<string name="button_text_event_added">Remove</string>
@@ -47,6 +48,7 @@
 	<string name="college_johnson">Johnson School of Business</string>
 	<string name="college_ilr">Industrial Labor Relations</string>
 	<string name="college_he">Human Ecology</string>
+	<string name="college_hotel">Hotel Administration</string>
 	<string name="college_not_set">ERROR: College not set</string>
 
     <!-- Strings related to Settings -->

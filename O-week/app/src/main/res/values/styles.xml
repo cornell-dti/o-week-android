@@ -10,6 +10,7 @@
 		<item name="android:textColorSecondary">@color/secondary_text_material_light</item>
 		<item name="android:fontFamily">@font/avenir_next_regular</item>
 		<item name="materialButtonStyle">@style/Button</item>
+		<item name="alertDialogTheme">@style/AlertDialogTheme</item>
     </style>
 
 	<style name="AppTheme.NoActionBar">
@@ -31,6 +32,17 @@
 		<item name="android:fontFamily">@font/avenir_next_demi_bold</item>
 		<item name="android:elevation">2dp</item>
 		<item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body1</item>
+	</style>
+
+	<style name="AlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+		<item name="buttonBarPositiveButtonStyle">@style/AlertButton</item>
+		<item name="buttonBarNegativeButtonStyle">@style/AlertButton</item>
+	</style>
+
+	<style name="AlertButton" parent="Widget.MaterialComponents.Button.TextButton">
+		<item name="backgroundTint">@android:color/transparent</item>
+		<item name="rippleColor">@color/lightGray</item>
+		<item name="android:textColor">@color/colorAccent</item>
 	</style>
 
 </resources>

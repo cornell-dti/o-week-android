@@ -1,18 +1,20 @@
 package com.cornellsatech.o_week;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
+
+import java.util.Map;
 
 /**
  * Fragment to allow users to change their preferences.
@@ -22,15 +24,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 {
 	private SwitchPreferenceCompat receiveReminders;
 	private ListPreference notifyMe;
-	private Preference orientationPamphlet;
-	private Preference campusMap;
-	private Preference newStudentsWebpage;
-	private Preference dti;
 	private static final String TAG = SettingsFragment.class.getSimpleName();
 
     /**
      * Sets up preferences for the user with listeners.
-     * @param savedInstanceState Ignored.
+     * Dynamically load resources from {@link UserData#resourceNameLink}.
      */
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, String rootKey)
@@ -41,14 +39,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         notifyMe = (ListPreference) findPreference(R.string.key_notify_me);
         receiveReminders.setOnPreferenceChangeListener(this);
         notifyMe.setOnPreferenceChangeListener(this);
-        orientationPamphlet = findPreference(R.string.settings_orientation_pamphlet);
-        campusMap = findPreference(R.string.settings_campus_map);
-        newStudentsWebpage = findPreference(R.string.settings_new_students_webpage);
-        dti = findPreference(R.string.settings_dti);
-        orientationPamphlet.setOnPreferenceClickListener(this);
-        campusMap.setOnPreferenceClickListener(this);
-        newStudentsWebpage.setOnPreferenceClickListener(this);
-        dti.setOnPreferenceClickListener(this);
+
+	    PreferenceCategory resourceCategory = new PreferenceCategory(getContext());
+	    resourceCategory.setIconSpaceReserved(false);
+	    resourceCategory.setTitle(R.string.settings_category_resources);
+	    getPreferenceScreen().addPreference(resourceCategory);
+
+	    for (Map.Entry<String, String> entry : UserData.resourceNameLink.entrySet()) {
+		    Preference preference = new Preference(getContext());
+		    preference.setTitle(entry.getKey());
+		    preference.setKey(entry.getValue());
+		    preference.setIconSpaceReserved(false);
+		    preference.setOnPreferenceClickListener(this);
+		    resourceCategory.addPreference(preference);
+	    }
     }
 
     /**
@@ -65,16 +69,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 	@Override
 	public boolean onPreferenceClick(Preference preference)
 	{
-		if (preference.equals(orientationPamphlet))
-			Internet.openToPage(Internet.ORIENTATION_PAMPHLET, getActivity());
-		else if (preference.equals(campusMap))
-			Internet.openToPage(Internet.CAMPUS_MAP, getActivity());
-		else if (preference.equals(newStudentsWebpage))
-			Internet.openToPage(Internet.NEW_STUDENTS_WEBPAGE, getActivity());
-		else if (preference.equals(dti))
-			Internet.openToPage(Internet.DTI, getActivity());
-		else
-			Log.e(TAG, "onPreferenceClick: unrecognized preference");
+		Internet.openToPage(preference.getKey(), getContext());
 		return true;
 	}
 	@Override
@@ -83,7 +78,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 		if (preference.equals(receiveReminders))
 			receiveRemindersChanged();
 		else if (preference.equals(notifyMe))   //resend all notifications as necessary
-			Notifications.scheduleForEvents(Settings.getNotifyMe(newValue.toString(), getActivity()), getActivity());
+			Notifications.scheduleForEvents(Settings.getNotifyMe(newValue.toString(), getContext()), getActivity());
 		return true;
 	}
 

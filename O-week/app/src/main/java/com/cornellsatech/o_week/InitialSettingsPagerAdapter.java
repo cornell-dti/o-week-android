@@ -4,6 +4,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import lombok.Getter;
+
 /**
  * Created by Ethan on 10/29/17.
  *
@@ -12,7 +14,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
  */
 
 public class InitialSettingsPagerAdapter extends FragmentPagerAdapter {
-
+    @Getter
     private int progress = 0;
 
     public InitialSettingsPagerAdapter(FragmentManager fm){
@@ -26,17 +28,9 @@ public class InitialSettingsPagerAdapter extends FragmentPagerAdapter {
         progress++;
     }
 
-    /**
-     * gets the current progress.
-     * @return
-     */
-    public int getProgress(){
-        return progress;
-    }
-
     @Override
     public int getCount(){
-        return  progress + 1; //the user cannot scroll pass his progress.
+        return progress + 1; //the user cannot scroll pass his progress.
     }
 
     /**
@@ -52,6 +46,4 @@ public class InitialSettingsPagerAdapter extends FragmentPagerAdapter {
             default: return null;
         }
     }
-
-
 }

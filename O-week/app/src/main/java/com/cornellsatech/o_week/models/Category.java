@@ -3,50 +3,24 @@ package com.cornellsatech.o_week.models;
 import androidx.annotation.NonNull;
 
 import com.cornellsatech.o_week.util.Internet;
+import com.google.gson.Gson;
 
-import org.json.JSONObject;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 /**
  * The category that an {@link Event} belongs in. This will be downloaded from the database via methods
- * in {@link Internet}, where new categories will be compared with saved ones. More in the constructor
- * {@link #Category(int, String, String)} below.
+ * in {@link Internet}, where new categories will be compared with saved ones.
  *
  * @see Event
  */
+@Getter
+@AllArgsConstructor
 public class Category implements Comparable<Category>
 {
-	public final int pk;
-	public final String name;
-	public final String description;
-
-	/**
-	 * Creates a category object in-app. This should never be done organically (without initial input
-	 * from the database in some form), or else we risk becoming out-of-sync with the database.
-	 *
-	 * @param pk Unique positive ID given to each category starting from 1.
-	 * @param name For example, "College of Engineering".
-	 * @param description More information about a {@link Category}. Currently unused.
-	 */
-	public Category(int pk, String name, String description)
-	{
-		this.pk = pk;
-		this.name = name;
-		this.description = description;
-	}
-	/**
-	 * Creates a category object using data downloaded from the database as a {@link JSONObject}.
-	 *
-	 * @param json JSON with the expected keys and values:
-	 *             pk => Int
-	 *             category => String
-	 *             description => String
-	 */
-	public Category(JSONObject json)
-	{
-		pk = json.optInt("pk");
-		name = json.optString("category");
-		description = json.optString("description");
-	}
+	private static final Gson GSON = new Gson();
+	private final String pk;
+	private final String category;
 
 	/**
 	 * Returns whether this object has the same {@link #pk} as the given object.
@@ -60,7 +34,7 @@ public class Category implements Comparable<Category>
 		if (!(obj instanceof Category))
 			return false;
 		Category other = (Category) obj;
-		return other.pk == pk;
+		return other.pk.equals(pk);
 	}
 	/**
 	 * Returns the {@link #pk}, which is unique to each {@link Category}.
@@ -70,10 +44,10 @@ public class Category implements Comparable<Category>
 	@Override
 	public int hashCode()
 	{
-		return pk;
+		return pk.hashCode();
 	}
 	/**
-	 * Compares 2 {@link Category}s using their {@link #name}. Useful for ordering alphabetically.
+	 * Compares 2 {@link Category}s using their {@link #category}. Useful for ordering alphabetically.
 	 *
 	 * @param o {@inheritDoc}
 	 * @return {@inheritDoc}
@@ -81,34 +55,27 @@ public class Category implements Comparable<Category>
 	@Override
 	public int compareTo(@NonNull Category o)
 	{
-		return name.compareTo(o.name);
+		return category.compareTo(o.category);
 	}
-	/**
-	 * Returns a String containing all relevant info about this object. Each field is separated
-	 * by a pipe "|", which David Chu deemed would not be regularly used in a String and thus is a good
-	 * delimiter for splitting via {@link String#split(String)}. Useful for saving to file.
-	 *
-	 * @return {@inheritDoc}
-	 * @see #fromString(String)
-	 */
+
 	@Override
-	public String toString()
-	{
-		return name + "|" + description + "|" + pk;
+	@NonNull
+	public String toString() {
+		return GSON.toJson(this);
 	}
+
 	/**
-	 * Returns a {@link Category} from its String representation produced by {@link #toString()}.
+	 * Returns a {@link Category} from JSON.
 	 *
-	 * @param string String produced by {@link #toString()}.
+	 * @param json String produced by {@link #toString()}.
 	 * @return {@link Category} created from the String.
-	 * @see #toString()
 	 */
-	public static Category fromString(String string)
+	public static Category fromJSON(String json)
 	{
-		String[] parts = string.split("\\|", -1);
-		String name = parts[0];
-		String description = parts[1];
-		int pk = Integer.valueOf(parts[2]);
-		return new Category(pk, name, description);
+		return GSON.fromJson(json, Category.class);
+	}
+
+	public static Category withPk(String pk) {
+		return new Category(pk, null);
 	}
 }

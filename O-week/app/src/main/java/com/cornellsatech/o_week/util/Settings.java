@@ -13,7 +13,6 @@ import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.models.StudentType;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -26,7 +25,7 @@ public final class Settings
 	private static final String KEY_ALL_EVENTS = "allEvents";
 	private static final String KEY_SELECTED_EVENTS = "selectedEvents";
 	private static final String KEY_CATEGORIES = "categories";
-	private static final String KEY_VERSION = "version";
+	private static final String KEY_TIMESTAMP = "timestamp";
 	private static final String KEY_STUDENT_TYPE = "studentType";
 	private static final String KEY_COLLEGE_TYPE = "collegeType";
 
@@ -37,7 +36,6 @@ public final class Settings
 
 	/**
 	 * Saves the student information from app initial settings to disk.
-	 * @param context
 	 * @param studentType whether a student is a transfer or freshman
 	 * @param collegeType the name of the college the student is in.
 	 */
@@ -69,26 +67,21 @@ public final class Settings
 		return CollegeType.valueOf(collegeTypeStringRepresentation);
 	}
 
-
-
 	/**
 	 * Saves {@link UserData#allEvents} to disk.
-	 * @param context
 	 */
 	public static void setAllEvents(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
 		Set<String> eventStrings = new HashSet<>();
-		for (List<Event> eventsForDay : UserData.allEvents.values())
-			for (Event event : eventsForDay)
-				eventStrings.add(event.toString());
+		for (Event event : UserData.allEvents)
+			eventStrings.add(event.toString());
 		editor.putStringSet(KEY_ALL_EVENTS, eventStrings);
 		editor.apply();
 	}
 	/**
 	 * Returns all saved events.
-	 * @param context
 	 * @return A set of saved events.
 	 */
 	public static Set<Event> getAllEvents(Context context)
@@ -96,51 +89,28 @@ public final class Settings
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		Set<String> eventStrings = preferences.getStringSet(KEY_ALL_EVENTS, new HashSet<String>());
 		Set<Event> allEvents = new HashSet<>(eventStrings.size());
-
 		for (String eventString : eventStrings)
-			allEvents.add(Event.fromString(eventString));
+			allEvents.add(Event.fromJSON(eventString));
 		return allEvents;
 	}
+
 	/**
-	 * Saves the {@link Event#pk} of all events in {@link UserData#selectedEvents}.
-	 * @param context
+	 * Saves the {@link Event#getPk()} of all events in {@link UserData#selectedEvents}.
 	 */
 	public static void setSelectedEvents(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
-		Set<String> selectedEventsPks = new HashSet<>();
-		for (List<Event> selectedEventsForDay : UserData.selectedEvents.values())
-			for (Event selectedEvent : selectedEventsForDay)
-				selectedEventsPks.add(String.valueOf(selectedEvent.pk));
+		Set<String> selectedEventsPks = new HashSet<>(UserData.selectedEvents.size());
+		for (Event event : UserData.selectedEvents)
+			selectedEventsPks.add(event.getPk());
 		editor.putStringSet(KEY_SELECTED_EVENTS, selectedEventsPks);
 		editor.apply();
 	}
 	/**
-	 * Returns all selected events based on the saved {@link Event#pk} and events retrieved using
-	 * {@link #getAllEvents(Context)}.
+	 * Returns all selected events' pks (as strings, since the only data structure we can store are
+	 * sets of strings).
 	 *
-	 * Behavior:
-	 * 1. Update - if a selected event is updated (the {@link Event#pk} is unchanged), it remains selected.
-	 * 2. Deletion - selected events are "unselected" after deletion. We simply won't find the event
-	 *               in {@link #getAllEvents(Context)}.
-	 * @param context
-	 * @return Set of all selected events.
-	 */
-	public static Set<Event> getSelectedEvents(Context context)
-	{
-		Set<String> selectedEventPks = getSelectedEventsPks(context);
-		Set<Event> allEvents = getAllEvents(context);
-		Set<Event> selectedEvents = new HashSet<>(selectedEventPks.size());
-		for (Event event : allEvents)
-			if (selectedEventPks.contains(String.valueOf(event.pk)))
-				selectedEvents.add(event);
-		return selectedEvents;
-	}
-	/**
-	 * Returns all selected events' pks (as strings, since the only data structure we can store are sets of strings).
-	 *
-	 * @param context
 	 * @return Set of pks of all selected events.
 	 */
 	public static Set<String> getSelectedEventsPks(Context context)
@@ -150,7 +120,6 @@ public final class Settings
 	}
 	/**
 	 * Saves {@link UserData#categories} to disk.
-	 * @param context
 	 */
 	public static void setCategories(Context context)
 	{
@@ -164,7 +133,7 @@ public final class Settings
 	}
 	/**
 	 * Returns all saved categories.
-	 * @param context
+	 *
 	 * @return Set of saved categories.
 	 */
 	public static Set<Category> getCategories(Context context)
@@ -172,44 +141,36 @@ public final class Settings
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		Set<String> categoryStrings = preferences.getStringSet(KEY_CATEGORIES, new HashSet<String>());
 		Set<Category> categories = new HashSet<>(categoryStrings.size());
-
 		for (String categoryString : categoryStrings)
-			categories.add(Category.fromString(categoryString));
+			categories.add(Category.fromJSON(categoryString));
 		return categories;
 	}
 	/**
-	 * Saves the current event database version. If the saved version does not match the database's,
-	 * an update is in store.
+	 * Saves the latest timestamp of events' retrieval.
 	 *
-	 * @param version The current version of events saved on disk. The version number should increase as
-	 *                changes are made on the database.
-	 * @param context
+	 * @param timestamp The time the current version of the database was retrieved.
 	 */
-	public static void setVersion(int version, Context context)
+	public static void setTimestamp(long timestamp, Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		SharedPreferences.Editor editor = preferences.edit();
-		editor.putInt(KEY_VERSION, version);
+		editor.putLong(KEY_TIMESTAMP, timestamp);
 		editor.apply();
 	}
 	/**
-	 * Returns the database version of saved events.
-	 * @param context
-	 * @return The version of events downloaded from the database, or 0 by default. This version will
+	 * Returns the time events were last retrieved.
+	 * @return The timestamp downloaded from the database, or 0 by default. This timestamp will
 	 *         be provided to the database so it can tell us what to update.
 	 */
-	public static int getVersion(Context context)
+	public static long getTimestamp(Context context)
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		return preferences.getInt(KEY_VERSION, 0);  //default version value = 0
+		return preferences.getLong(KEY_TIMESTAMP, 0);  //default version value = 0
 	}
 
 	/**
 	 * Returns whether or not the user wants to receive reminders.
 	 * Change default value of along with {@link R.xml#preferences}.
-	 *
-	 * @param context
-	 * @return See method description.
 	 */
 	public static boolean getReceiveReminders(Context context)
 	{
@@ -219,9 +180,6 @@ public final class Settings
 	/**
 	 * Returns the number of hours before an event starts to notify the user.
 	 * Change default value of <code>notifyMeText</code> along with {@link R.xml#preferences}.
-	 *
-	 * @param context
-	 * @return See method description.
 	 */
 	public static int getNotifyMe(Context context)
 	{
@@ -238,12 +196,10 @@ public final class Settings
 	 * This should change should {@link R.array#settings_notify_me_titles} change.
 	 *
 	 * @param notifyMeValue The current string value of {@link com.cornellsatech.o_week.SettingsFragment#notifyMe}
-	 * @param context
-	 * @return See method description.
 	 */
 	public static int getNotifyMe(String notifyMeValue, Context context)
 	{
-		String choices[] = context.getResources().getStringArray(R.array.settings_notify_me_titles);
+		String[] choices = context.getResources().getStringArray(R.array.settings_notify_me_titles);
 		int index = linearSearch(choices, notifyMeValue);
 		switch (index)
 		{

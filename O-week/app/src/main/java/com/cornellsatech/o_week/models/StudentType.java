@@ -9,22 +9,16 @@ public enum StudentType {
     FRESHMAN,
     NOTSET;
 
-    public String toString(){
-        return name();
-    }
-
 	/**
 	 * Returns the {@link StudentType} corresponding to the pk of the category.
 	 * If the pk of anything changes on the database, this must be updated.
 	 *
-	 * @param categoryPk {@link Category#pk}
+	 * @param categoryPk {@link Category#getPk()}
 	 * @return {@link #TRANSFER} or {@link #NOTSET}
 	 */
-	public static StudentType toStudentType(int categoryPk)
+	public static StudentType toStudentType(String categoryPk)
 	{
-		if (categoryPk == 14)
-			return TRANSFER;
-		return NOTSET;
+		return categoryPk.equals("B8AE27DD-DCD0-EF66-FC3B05EB37B392D7") ? TRANSFER : NOTSET;
 	}
 }
 

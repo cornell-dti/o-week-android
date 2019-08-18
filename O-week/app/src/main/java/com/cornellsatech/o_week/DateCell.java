@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.view.View;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cornellsatech.o_week.util.NotificationCenter;
@@ -49,21 +48,12 @@ public class DateCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		dayNum.setText(date.toString("dd"));
 		weekDay.setText(DateTimeFormat.forPattern("E").print(date).toUpperCase());
 
-		if (UserData.selectedDate.isEqual(date))
+		if (UserData.selectedDate != null && UserData.selectedDate.isEqual(date))
 			setClick();
 		else
 			unClick();
 	}
 
-	/**
-	 * Returns the {@link #date} this cell currently represents.
-	 * @return {@link #date}
-	 */
-	@Nullable
-	public LocalDate getDate()
-	{
-		return date;
-	}
 	/**
 	 * Selects this cell, changing its colors and propagating an event for listeners to catch. The
 	 * event ({@link NotificationCenter.EventDateChanged}) will contain a reference to this date.

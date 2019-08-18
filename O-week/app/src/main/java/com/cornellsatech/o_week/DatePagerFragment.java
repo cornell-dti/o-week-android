@@ -14,11 +14,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.google.common.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Displays either {@link FeedFragment} or {@link ScheduleFragment} through {@link DatePagerAdapter}.
@@ -27,13 +31,16 @@ import com.google.common.eventbus.Subscribe;
  * {@link #type}: Whether the feed or the schedule will be displayed.
  * {@link #datePager}: View that displays the multiple pages of feed/schedule.
  */
-public class DatePagerFragment extends Fragment implements ViewPager.OnPageChangeListener
+public class DatePagerFragment extends Fragment
 {
 	private static final String TAG = DatePagerFragment.class.getSimpleName();
 	private static final String TYPE_BUNDLE_KEY = "type";
 	private DatePagerAdapter.Type type;
-	private ViewPager datePager;
+	private ViewPager2 datePager;
 	private MenuItem filterMenu;
+	private List<Category> categories;
+	private String[] filters;
+	private boolean[] checkedFilters;
 
 	/**
 	 * Create an instance of {@link DatePagerFragment} on the given type.
@@ -58,11 +65,6 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	/**
 	 * Set up {@link DatePagerAdapter} to display feed or schedule, depending on {@link #type}.
 	 * {@link #type} will be retrieved from the bundle.
-	 *
-	 * @param inflater {@inheritDoc}
-	 * @param container {@inheritDoc}
-	 * @param savedInstanceState {@inheritDoc}
-	 * @return {@inheritDoc}
 	 */
 	@Nullable
 	@Override
@@ -76,10 +78,8 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 		else
 			Log.e(TAG, "onCreateView: type not found");
 
-		DatePagerAdapter adapter = new DatePagerAdapter(getChildFragmentManager(), type);
 		datePager = view.findViewById(R.id.viewPager);
-		datePager.setAdapter(adapter);
-		datePager.addOnPageChangeListener(this);
+		setDatePagerAdapter();
 		//trigger a call to onDateChanged so this fragment starts out with the correct date
 		onDateChanged(null);
 
@@ -88,6 +88,25 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 
 		NotificationCenter.DEFAULT.register(this);
 		return view;
+	}
+
+	private void setDatePagerAdapter()
+	{
+		DatePagerAdapter adapter = new DatePagerAdapter(this, type);
+		datePager.setAdapter(adapter);
+		datePager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback()
+		{
+			/**
+			 * Send page change events when the user swipes to a new page.
+			 * @param position The index of the new page.
+			 */
+			@Override
+			public void onPageSelected(int position)
+			{
+				UserData.selectedDate = UserData.sortedDates.get(position);
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventDateChanged());
+			}
+		});
 	}
 
 	/**
@@ -100,25 +119,8 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 		NotificationCenter.DEFAULT.unregister(this);
 	}
 
-	//do nothing for these events
 	@Override
-	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-	@Override
-	public void onPageScrollStateChanged(int state) {}
-
-	/**
-	 * Send page change events when the user swipes to a new page.
-	 * @param position The index of the new page.
-	 */
-	@Override
-	public void onPageSelected(int position)
-	{
-		UserData.selectedDate = UserData.DATES.get(position);
-		NotificationCenter.DEFAULT.post(new NotificationCenter.EventDateChanged());
-	}
-
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
+	public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
 	{
 		inflater.inflate(R.menu.menu_of_feed, menu);
 		filterMenu = menu.findItem(R.id.filterMenu);
@@ -133,16 +135,13 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	 * @return {@inheritDoc}
 	 */
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item)
+	public boolean onOptionsItemSelected(@NonNull MenuItem item)
 	{
-		switch (item.getItemId())
-		{
-			case R.id.filterMenu:
-				showFilterDialog();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
+		if (item.getItemId() == R.id.filterMenu) {
+			showFilterDialog();
+			return true;
 		}
+		return super.onOptionsItemSelected(item);
 	}
 
 
@@ -154,23 +153,21 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 		builder.setTitle(R.string.menu_filter);
+		if (categories == null || filters == null || checkedFilters == null)
+			cacheCategories();
 
-		builder.setMultiChoiceItems(UserData.getFilters(getContext()), UserData.getCheckedFilters(), new DialogInterface.OnMultiChoiceClickListener()
+		builder.setMultiChoiceItems(filters, checkedFilters, new DialogInterface.OnMultiChoiceClickListener()
 		{
 			@Override
 			public void onClick(DialogInterface dialogInterface, int index, boolean b)
 			{
 				//row 0 is reserved for "required events"
 				if (index == 0)
-				{
 					UserData.filterRequired = !UserData.filterRequired;
-				}
 				else
 				{
-					int categoryPk = UserData.categories.get(index - 1).pk;
-					if (UserData.selectedFilters.contains(categoryPk))
-						UserData.selectedFilters.remove(categoryPk);
-					else
+					String categoryPk = categories.get(index - 1).getPk();
+					if (!UserData.selectedFilters.remove(categoryPk))
 						UserData.selectedFilters.add(categoryPk);
 				}
 
@@ -191,6 +188,29 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 		});
 		builder.setPositiveButton(R.string.dialog_positive_button, null);
 		builder.show();
+	}
+
+	private void cacheCategories()
+	{
+		categories = new ArrayList<>(UserData.categories);
+		Collections.sort(categories);
+
+		String[] filters = new String[categories.size() + 1];
+		//index 0 represents filter for "required events"
+		filters[0] = getString(R.string.filter_show_required_events);
+		boolean[] checkedFilters = new boolean[categories.size() + 1];
+		//index 0 represents filter for "required events"
+		checkedFilters[0] = UserData.filterRequired;
+
+		for (int i = 1; i < filters.length; i++)
+		{
+			Category category = categories.get(i - 1);
+			filters[i] = category.getCategory();
+			checkedFilters[i] = UserData.selectedFilters.contains(category.getPk());
+		}
+
+		this.filters = filters;
+		this.checkedFilters = checkedFilters;
 	}
 
 	/**
@@ -214,15 +234,27 @@ public class DatePagerFragment extends Fragment implements ViewPager.OnPageChang
 	}
 
 	/**
+	 * Refresh dates shown in pager and selected date.
+	 */
+	@Subscribe
+	public void onInternetUpdate(NotificationCenter.EventInternetUpdate eventNewDates)
+	{
+		setDatePagerAdapter();
+		cacheCategories();
+		onDateChanged(null); // refresh selected date too
+	}
+
+	/**
 	 * Flip the page to the location of the new date.
-	 * @param event Ignored.
 	 */
 	@Subscribe
 	public void onDateChanged(NotificationCenter.EventDateChanged event)
 	{
-		int position = UserData.DATES.indexOf(UserData.selectedDate);
+		int position = UserData.sortedDates.indexOf(UserData.selectedDate);
+		if (position == -1)
+			return;
 		if (position == datePager.getCurrentItem())
 			return;
-		datePager.setCurrentItem(position, true);
+		datePager.setCurrentItem(position, false);
 	}
 }

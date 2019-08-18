@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-    buildToolsVersion '29.0.0'
+    buildToolsVersion '29.0.2'
     defaultConfig {
         applicationId "com.cornellsatech.o_week"
         minSdkVersion 21
@@ -22,13 +22,29 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-beta03'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.guava:guava:28.0-android'
     //import Joda-Time (immutable time objects)
     implementation 'net.danlew:android.joda:2.10.2'
+    //import JSON parsing
+    implementation 'com.google.code.gson:gson:2.8.5'
     //import PreferencesFragmentCompat so Settings Activity can show up in Tab Bar
     implementation 'androidx.preference:preference:1.1.0-rc01'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'com.google.android.gms:play-services-places:17.0.0'
+    //annotation library
+    compileOnly 'org.projectlombok:lombok:1.18.8'
+    annotationProcessor 'org.projectlombok:lombok:1.18.8'
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == "androidx") {
+            if (!requested.name.startsWith("multidex")) {
+                details.useVersion "${targetSdk}.+"
+            }
+        }
+    }
 }

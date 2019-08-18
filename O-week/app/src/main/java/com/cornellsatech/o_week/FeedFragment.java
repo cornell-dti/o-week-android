@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,7 +16,6 @@ import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.util.NotificationCenter;
 
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 /**
  * Displays a list of events, ordered chronologically. This is a {@link Fragment} so that it can be
@@ -54,15 +54,10 @@ public class FeedFragment extends Fragment
 	 * Listens for event clicks and opens {@link DetailsActivity} upon a click.
 	 *
 	 * Retrieves {@link #date} from the bundle.
-	 *
-	 * @param inflater {@inheritDoc}
-	 * @param container {@inheritDoc}
-	 * @param savedInstanceState {@inheritDoc}
-	 * @return {@inheritDoc}
 	 */
 	@Nullable
 	@Override
-	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState)
 	{
 		View view = inflater.inflate(R.layout.fragment_feed, container, false);
 		setHasOptionsMenu(true);
@@ -106,15 +101,16 @@ public class FeedFragment extends Fragment
 	 */
 	private void scrollToNextEvent()
 	{
-		LocalDate date = LocalDate.now();
-		LocalTime now = LocalTime.now();
+		long now = System.currentTimeMillis();
 
-		if (!date.isEqual(UserData.selectedDate))
+		if (UserData.selectedDate == null)
+			return;
+		if (!LocalDate.now().isEqual(UserData.selectedDate))
 			return;
 		for (int i = 0; i < feedAdapter.events.size(); i++)
 		{
 			Event event = feedAdapter.events.get(i);
-			if (event.startTime.isBefore(now))
+			if (event.getStart() < now)
 				continue;
 
 			feedRecycler.scrollToPosition(i);

@@ -3,6 +3,7 @@ package com.cornellsatech.o_week;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -18,8 +19,9 @@ public class DatePickerAdapter extends RecyclerView.Adapter<DateCell>
 	 * @param viewType {@inheritDoc}
 	 * @return {@link DateCell}
 	 */
+	@NonNull
 	@Override
-	public DateCell onCreateViewHolder(ViewGroup parent, int viewType)
+	public DateCell onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
 	{
 		LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 		return new DateCell(inflater.inflate(R.layout.cell_date_picker, parent, false));
@@ -31,19 +33,19 @@ public class DatePickerAdapter extends RecyclerView.Adapter<DateCell>
 	 * @param position {@inheritDoc}
 	 */
 	@Override
-	public void onBindViewHolder(DateCell holder, int position)
+	public void onBindViewHolder(@NonNull DateCell holder, int position)
 	{
 		holder.setIsRecyclable(false);
-		holder.configure(UserData.DATES.get(position));
+		holder.configure(UserData.sortedDates.get(position));
 	}
 
 	/**
 	 * Returns total number of dates that will be shown in the {@link RecyclerView}.
-	 * @return Size of {@link UserData#DATES}
+	 * @return Size of {@link UserData#sortedDates}
 	 */
 	@Override
 	public int getItemCount()
 	{
-		return UserData.DATES.size();
+		return UserData.sortedDates.size();
 	}
 }

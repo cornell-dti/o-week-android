@@ -49,7 +49,7 @@ import java.util.Queue;
  * {@link #eventsContainer}: Holds all events. Redrawn whenever a date changes or an event is selected
  *                           or unselected. Separated from {@link #scheduleContainer} so time lines
  *                           are not also redrawn every time, saving processing power.
- * {@link #pkToEvent}: Returns the {@link Event} for the given {@link Event#pk}. Used in {@link #idToEvent(int)},
+ * {@link #pkHashToEvent}: Returns the {@link Event} for the given {@link Event#pk}. Used in {@link #idToEvent(int)},
  *                     which helps the app determine the event a user clicks.
  * {@link #HOUR_HEIGHT}: The height (dp) of an event that spans 1 hour.
  * {@link #HOUR_TEXT_HEIGHT}: The size (sp) or the hour text (for example: 1:00 PM). Used in calculation
@@ -65,7 +65,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	private RelativeLayout scheduleContainer;
 	private PercentRelativeLayout eventsContainer;
 	private final List<View> timeLines = new ArrayList<>();
-	private final SparseArray<Event> pkToEvent = new SparseArray<>();
+	private final SparseArray<Event> pkHashToEvent = new SparseArray<>();
 	private int HOUR_HEIGHT;
 	private int HOUR_TEXT_HEIGHT;
 	private int EVENT_PADDING;
@@ -147,6 +147,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		scrollToNow();
 		return view;
 	}
+
 	/**
 	 * Unregister as listener to avoid memory leaks.
 	 */
@@ -177,8 +178,12 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	 */
 	private void drawCells()
 	{
-		List<Event> selectedEvents = UserData.selectedEvents.get(date);
+		List<Event> selectedEvents = new ArrayList<>();
+		for (Event event : UserData.selectedEvents)
+			if (event.getStartDate().equals(date))
+				selectedEvents.add(event);
 		Collections.sort(selectedEvents);
+
 		if (selectedEvents.isEmpty())
 			return;
 		drawEvent(1, new SparseArray<Event>(), new ArrayDeque<>(selectedEvents));
@@ -219,7 +224,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 			newNumSlots += 1;
 
 		//before processing future events, create the schedule cell for this event so future schedule cells can reference it in recursion
-		LayoutInflater inflater = getActivity().getLayoutInflater();
+		LayoutInflater inflater = LayoutInflater.from(getContext());
 		View scheduleCell = inflater.inflate(R.layout.cell_schedule, eventsContainer, false);
 		scheduleCell.setId(eventToId(event));
 
@@ -245,15 +250,15 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		TextView required = scheduleCell.findViewById(R.id.requiredLabel);
 		TextView time = scheduleCell.findViewById(R.id.timeText);
 		TextView title = scheduleCell.findViewById(R.id.titleText);
-		TextView caption = scheduleCell.findViewById(R.id.captionText);
+		TextView location = scheduleCell.findViewById(R.id.locationText);
 		if (UserData.requiredForUser(event))
 			required.setVisibility(View.VISIBLE);
-		time.setText(event.startTime.toString("h:mm") + " - " + event.endTime.toString("h:mm a"));
-		title.setText(event.title);
-		caption.setText(event.caption);
-		compressEventText(scheduleCell, title, caption, time);
+		time.setText(event.getStartTime().toString("h:mm") + " - " + event.getEndTime().toString("h:mm a"));
+		title.setText(event.getName());
+		location.setText(event.getLocation());
+		compressEventText(scheduleCell, title, location, time);
 		eventsContainer.addView(scheduleCell);
-		pkToEvent.put(event.pk, event);
+		pkHashToEvent.put(event.getPk().hashCode(), event);
 
 		//the parent event wants to know if any new events have been added to the right of it, but not beneath it. Therefore, only let the parent know of slots that are added, not replaced. This way it expands to the right by the correct value.
 		SparseArray<Event> parentEventForSlot = eventForSlot.clone();
@@ -317,7 +322,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 
 		//top margin
 		layoutParams.addRule(PercentRelativeLayout.ALIGN_PARENT_TOP);
-		layoutParams.topMargin = (int) marginTopForStartTime(event.startTime);
+		layoutParams.topMargin = (int) marginTopForStartTime(event.getStartTime());
 
 		//width
 		layoutParams.getPercentLayoutInfo().widthPercent = widthPercent(event, slot, numSlots, newEventForSlot);
@@ -329,17 +334,17 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	}
 
 	/**
-	 * Changes the visibility of the time and caption text based on how much space is available
-	 * within the schedule cell. The title will be shown with the highest priority, then the caption,
+	 * Changes the visibility of the time and location text based on how much space is available
+	 * within the schedule cell. The title will be shown with the highest priority, then the location,
 	 * and then the time.
 	 *
 	 * @param scheduleCell Container for event view
 	 * @param title TextView of event title
-	 * @param caption TextView of event caption
+	 * @param location TextView of event location
 	 * @param time TextView of event time
 	 * @see #drawEvent(int, SparseArray, Queue)
 	 */
-	private void compressEventText(final View scheduleCell, final TextView title, final TextView caption, final TextView time)
+	private void compressEventText(final View scheduleCell, final TextView title, final TextView location, final TextView time)
 	{
 		title.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener()
 		{
@@ -363,23 +368,23 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 				{
 					//only have room to show title
 					title.setMaxLines(numLinesAvailable);
-					caption.setVisibility(View.GONE);
+					location.setVisibility(View.GONE);
 					time.setVisibility(View.GONE);
 				}
 				else if (numLinesRemaining == 1)
 				{
-					//only have 1 line left to show caption
-					caption.setMaxLines(1);
+					//only have 1 line left to show location
+					location.setMaxLines(1);
 					time.setVisibility(View.GONE);
 				}
 				else if (numLinesRemaining == 2)
 				{
-					//2 lines, one for time, one for caption
-					caption.setMaxLines(1);
+					//2 lines, one for time, one for location
+					location.setMaxLines(1);
 					time.setMaxLines(1);
 				}
 				//can't really handle the other logic, since we don't know how many lines
-				//caption or time take up
+				//location or time take up
 
 				return true;
 			}
@@ -434,12 +439,12 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	private boolean canUseSlot(int slot, Event event, SparseArray<Event> eventForSlot)
 	{
 		return eventForSlot.get(slot) == null
-				|| minutesBetween(event.endTime, eventForSlot.get(slot).startTime) >= 0
-				|| minutesBetween(eventForSlot.get(slot).endTime, event.startTime) >= 0;
+				|| event.getStart() - eventForSlot.get(slot).getEnd() >= 0
+				|| eventForSlot.get(slot).getStart() - event.getEnd() >= 0;
 	}
 	/**
 	 * Distance from the top for a given event based on its start time.
-	 * @param startTime {@link Event#startTime}
+	 * @param startTime {@link Event#getStartTime()}
 	 * @return Distance from the top (in pixels)
 	 */
 	private float marginTopForStartTime(LocalTime startTime)
@@ -476,7 +481,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	 */
 	private int heightForEvent(Event event)
 	{
-		int minutes = minutesBetween(event.startTime, event.endTime);
+		int minutes = minutesBetween(event.getStart(), event.getEnd());
 		double height = ((double) HOUR_HEIGHT) / 60.0 * ((double) minutes);
 		return (int) height;
 	}
@@ -511,9 +516,9 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		return hour + 1;
 	}
 	/**
-	 * Returns the view ID of an event, which is based on {@link Event#pk}, known to be unique. However,
-	 * since view IDs 0 to 24 (+1) may already be occupied by hours, we must add 31 so the view IDs
-	 * do not conflict.
+	 * Returns the view ID of an event, which is based on {@link Event#getPk()}, known to be unique.
+	 * However, since view IDs 0 to 24 (+1) may already be occupied by hours, we must add 31 so the
+	 * view IDs do not conflict.
 	 *
 	 * @param event Event that we want to know the view ID of.
 	 * @return The view ID of the event.
@@ -521,7 +526,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	@IdRes
 	private int eventToId(Event event)
 	{
-		return event.pk + 31;
+		return event.getPk().hashCode() + 31;
 	}
 	/**
 	 * Returns the event that is associated with the a view's ID.
@@ -531,7 +536,7 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	private Event idToEvent(int id)
 	{
 		int pk = id - 31;
-		return pkToEvent.get(pk);
+		return pkHashToEvent.get(pk);
 	}
 
 	/**
@@ -545,9 +550,9 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 		if (!date.isEqual(today.toLocalDate()))
 			return false;
 
-		LocalTime now = today.toLocalTime();
-		return minutesBetween(event.startTime, now) >= 0 &&
-				minutesBetween(now, event.endTime) >= 0;
+		long now = System.currentTimeMillis();
+		return minutesBetween(event.getStart(), now) >= 0 &&
+				minutesBetween(now, event.getEnd()) >= 0;
 	}
 	/**
 	 * Returns the number of minutes between 2 given times. Note that this accounts for events that cross
@@ -565,6 +570,13 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 			return Minutes.minutesBetween(endTime, startTime).getMinutes();
 		else
 			return Minutes.minutesBetween(startTime, endTime).getMinutes();
+	}
+
+	/**
+	 * See {@link #minutesBetween(LocalTime, LocalTime)}, but for milliseconds.
+	 */
+	private int minutesBetween(long start, long end) {
+		return (int) (end - start) / 60000;
 	}
 	/**
 	 * Opens {@link DetailsActivity} for an event if the event's corresponding scheduleCell was clicked.
@@ -595,12 +607,11 @@ public class ScheduleFragment extends Fragment implements View.OnClickListener
 	}
 	/**
 	 * Listener for an update from the database.
-	 * @param eventReload Ignored.
 	 */
 	@Subscribe
-	public void onEventReload(NotificationCenter.EventReload eventReload)
+	public void onInternetUpdate(NotificationCenter.EventInternetUpdate e)
 	{
-		redrawEvents();
+	    redrawEvents();
 	}
 	/**
 	 * Removes all scheduleCells and redraws them.

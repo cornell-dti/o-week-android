@@ -22,7 +22,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	private final TextView startTimeText;
 	private final TextView endTimeText;
 	private final TextView titleText;
-	private final TextView captionText;
+	private final TextView locationText;
 	private final TextView requiredLabel;
 	private final Context context;
 	private Event event;
@@ -38,7 +38,7 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 		startTimeText = itemView.findViewById(R.id.startTimeText);
 		endTimeText = itemView.findViewById(R.id.endTimeText);
 		titleText = itemView.findViewById(R.id.titleText);
-		captionText = itemView.findViewById(R.id.captionText);
+		locationText = itemView.findViewById(R.id.locationText);
 		requiredLabel = itemView.findViewById(R.id.requiredLabel);
 		itemView.setOnClickListener(this);
 		context = itemView.getContext();
@@ -51,10 +51,10 @@ public class FeedCell extends RecyclerView.ViewHolder implements View.OnClickLis
 	public void configure(Event event)
 	{
 		this.event = event;
-		startTimeText.setText(event.startTime.toString(Event.DISPLAY_PADDED_TIME_FORMAT));
-		endTimeText.setText(event.endTime.toString(Event.DISPLAY_PADDED_TIME_FORMAT));
-		titleText.setText(event.title);
-		captionText.setText(event.caption);
+		startTimeText.setText(event.getStartTime().toString(Event.DISPLAY_PADDED_TIME_FORMAT));
+		endTimeText.setText(event.getEndTime().toString(Event.DISPLAY_PADDED_TIME_FORMAT));
+		titleText.setText(event.getName());
+		locationText.setText(event.getLocation());
 		setVisible(UserData.requiredForUser(event), requiredLabel);
 	}
 	/**

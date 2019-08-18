@@ -1,9 +1,7 @@
 package com.cornellsatech.o_week;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,12 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.cornellsatech.o_week.models.Event;
@@ -27,18 +22,12 @@ import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
 import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBufferResponse;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 
 /**
  * Displays a user-selected event in a separate page. An {@link android.app.Activity} is used instead
@@ -47,7 +36,7 @@ import com.google.android.gms.tasks.Task;
  * {@link #EVENT_KEY}: See {@link #onCreate(Bundle)}.
  * {@link #event}: The event displayed to the user.
  * {@link #coordinatorLayout}: Layout that will be shouldActUpon to
- * {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout, boolean)}.
+ * {@link Internet#getImageForEvent(Event, ImageView, CoordinatorLayout)}.
  * A reference to the {@link CoordinatorLayout} is necessary to display
  * {@link com.google.android.material.snackbar.Snackbar}.
  */
@@ -58,7 +47,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	private CoordinatorLayout coordinatorLayout;
 	private ImageView eventImage;
 	private TextView titleText;
-	private TextView captionText;
+	private TextView locationText;
 	private TextView timeText;
 	private TextView descriptionText;
 	private TextView additionalText;
@@ -69,11 +58,6 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	private TextView moreButton;
 	private View moreButtonGradient;
 	private Button directionsButton;
-	private GeoDataClient geoDataClient;
-	@Nullable
-	private String placeName;
-	@Nullable
-	private String placeAddress;
 
 	private static final String TAG = DetailsActivity.class.getSimpleName();
 	private static final int MAP_ZOOM = 16;
@@ -108,9 +92,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		//get the event
-		event = Event.fromString(getIntent().getExtras().getString(EVENT_KEY));
-
-		geoDataClient = Places.getGeoDataClient(this);
+		event = Event.fromJSON(getIntent().getExtras().getString(EVENT_KEY));
 
 		findViews();
 		setEventData();
@@ -124,7 +106,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		coordinatorLayout = findViewById(R.id.coordinatorLayout);
 		eventImage = findViewById(R.id.eventImage);
 		titleText = findViewById(R.id.titleText);
-		captionText = findViewById(R.id.captionText);
+		locationText = findViewById(R.id.locationText);
 		timeText = findViewById(R.id.timeText);
 		horizontalBreakBar = findViewById(R.id.horizontalBreakBar);
 		requiredLabel = findViewById(R.id.requiredLabel);
@@ -152,13 +134,13 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 			return;
 		}
 
-		setTitle(event.readableDate());
+		setTitle(event.getStartDate().toString(Event.DISPLAY_DATE_FORMAT));
 
-		titleText.setText(event.title);
-		captionText.setText(event.caption);
-		descriptionText.setText(event.description);
-		timeText.setText(event.startTime.toString(Event.DISPLAY_TIME_FORMAT) + " - " + event.endTime.toString(Event.DISPLAY_TIME_FORMAT));
-		if (UserData.selectedEventsContains(event))
+		titleText.setText(event.getName());
+		locationText.setText(event.getLocation());
+		descriptionText.setText(event.getDescription());
+		timeText.setText(event.getStartTime().toString(Event.DISPLAY_TIME_FORMAT) + " - " + event.getEndTime().toString(Event.DISPLAY_TIME_FORMAT));
+		if (UserData.selectedEvents.contains(event))
 			addButton.setText(R.string.button_text_event_added);
 		addButton.setBackgroundResource(R.drawable.bg_button_selected_ripple);
 		addButton.setOnClickListener(this);
@@ -201,7 +183,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 			}
 		});
 
-		if (!event.additional.isEmpty())
+		if (!event.getAdditional().isEmpty())
 		{
 			additionalText.setVisibility(View.VISIBLE);
 			additionalText.setText(event.formattedAdditionalText());
@@ -217,7 +199,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	 */
 	private void configureRequired()
 	{
-		if (!(event.required || event.categoryRequired))
+		if (!(event.isFirstYearRequired() || event.isTransferRequired()))
 		{
 			requiredLabel.setVisibility(View.GONE);
 			requirementDetails.setVisibility(View.GONE);
@@ -226,27 +208,22 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		else
 		{
 			//change color of RQ label based on whether or not it's required for this user
-			int requiredLabelBg = UserData.requiredForUser(event) ? R.drawable.required_label : R.drawable.required_label_gray;
+			boolean requiredForUser = UserData.requiredForUser(event);
+			int requiredLabelBg = requiredForUser ? R.drawable.required_label :
+					R.drawable.required_label_gray;
 			requiredLabel.setBackground(ContextCompat.getDrawable(this, requiredLabelBg));
-
-			if (event.required)
-				requirementDetails.setText(R.string.required_for_all);
-			else
-				requirementDetails.setText(getString(R.string.required_for_category, UserData.categoryForPk(event.category).name));
+			requirementDetails.setText(requiredForUser ? R.string.required_for_you :
+					R.string.required_for_others);
 		}
 	}
 
 	/**
-	 * Set the image, asking the user for permission to save the image on disk if necessary.
+	 * Clear the previous image and set the new one.
 	 */
 	private void configureImage()
 	{
-		//we must know if we can write the image we downloaded to file
-		boolean canWriteToFile = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-		if (!canWriteToFile)
-			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
-
-		Internet.getImageForEvent(event, eventImage, coordinatorLayout, canWriteToFile);
+		eventImage.setImageResource(0); // clear image from cache
+		Internet.getImageForEvent(event, eventImage, coordinatorLayout);
 	}
 
 	/**
@@ -262,25 +239,21 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 		switch (pressedButton.getId())
 		{
 			case R.id.addButton:
-				boolean selected;
-				if (UserData.selectedEventsContains(event))
+				if (UserData.selectedEvents.remove(event))
 				{
-					UserData.removeFromSelectedEvents(event);
 					Notifications.unscheduleForEvent(event, this);
 					addButton.setText(R.string.button_text_event_not_added);
 					Toast.makeText(this, R.string.toast_text_event_removed, Toast.LENGTH_SHORT).show();
-					selected = false;
 				}
 				else
 				{
-					UserData.insertToSelectedEvents(event);
+					UserData.selectedEvents.add(event);
 					if (Settings.getReceiveReminders(this))
 						Notifications.scheduleForEvent(event, this);
 					addButton.setText(R.string.button_text_event_added);
 					Toast.makeText(this, R.string.toast_text_event_added, Toast.LENGTH_SHORT).show();
-					selected = true;
 				}
-				NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(event, selected));
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged());
 				break;
 			case R.id.moreButton:
 				descriptionText.setMaxLines(Integer.MAX_VALUE);
@@ -295,22 +268,6 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	}
 
 	/**
-	 * This runs when the user answers the dialog that asks for file-writing permissions. If the user
-	 * grants us permission this time, re-download the image and save it.
-	 *
-	 * @param requestCode  {@inheritDoc}
-	 * @param permissions  {@inheritDoc}
-	 * @param grantResults {@inheritDoc}
-	 */
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
-	{
-		//reload the image, this time saving to file
-		if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-			Internet.getImageForEvent(event, eventImage, coordinatorLayout, true);
-	}
-
-	/**
 	 * Save the selected events to file in case the user checked/unchecked the {@link #addButton}.
 	 */
 	@Override
@@ -321,34 +278,14 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	}
 
 	/**
-	 * Loads {@link Event#placeID} onto the map, adds a marker.
-	 *
-	 * @param map {@inheritDoc}
+	 * Loads {@link Event#getLocation()} onto the map, adds a marker.
 	 */
 	@Override
 	public void onMapReady(final GoogleMap map)
 	{
-		geoDataClient.getPlaceById(event.placeID).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>()
-		{
-			@Override
-			public void onComplete(@NonNull Task<PlaceBufferResponse> task)
-			{
-
-				if (!task.isSuccessful()) {
-					Log.e(TAG, "onMapReady: place not found");
-					return;
-				}
-
-				PlaceBufferResponse places = task.getResult();
-				Place place = places.get(0);
-				placeName = place.getName().toString();
-				placeAddress = place.getAddress().toString();
-				LatLng position = place.getLatLng();
-				map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
-				map.addMarker(new MarkerOptions().position(position).title(event.caption));
-				places.release();
-			}
-		});
+		LatLng position = new LatLng(event.getLatitude(), event.getLongitude());
+		map.moveCamera(CameraUpdateFactory.newLatLngZoom(position, MAP_ZOOM));
+		map.addMarker(new MarkerOptions().position(position).title(event.getLocation()));
 	}
 
 	/**
@@ -356,10 +293,8 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	 */
 	private void startMap()
 	{
-		if (placeName == null || placeAddress == null)
-			return;
-
-		Uri uri = Uri.parse("geo:0,0?q=" + placeName + ", " + placeAddress);
+		Uri uri = Uri.parse("geo:0,0?q=" + event.getLatitude() + "," + event.getLongitude() +
+				"(" + Uri.encode(event.getLocation()) + ")");
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		intent.setPackage("com.google.android.apps.maps");
 		startActivity(intent);

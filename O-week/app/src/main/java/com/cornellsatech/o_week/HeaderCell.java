@@ -16,8 +16,6 @@ public class HeaderCell extends RecyclerView.ViewHolder
 
 	/**
 	 * Initializes header cell with title
-	 *
-	 * @param itemView {@inheritDoc}
 	 */
 	public HeaderCell(View itemView)
 	{
@@ -28,8 +26,6 @@ public class HeaderCell extends RecyclerView.ViewHolder
 	/**
 	 * If first header, set title to {@link com.cornellsatech.o_week.R.string#header_my_calendar}.
 	 * Else, set title to {@link com.cornellsatech.o_week.R.string#header_all_events}
-	 *
-	 * @param isFirstHeader
 	 */
 	public void configure(boolean isFirstHeader)
 	{

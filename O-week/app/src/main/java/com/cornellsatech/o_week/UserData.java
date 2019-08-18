@@ -2,6 +2,7 @@ package com.cornellsatech.o_week;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -9,19 +10,21 @@ import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.models.StudentType;
+import com.cornellsatech.o_week.models.VersionUpdate;
 import com.cornellsatech.o_week.util.Callback;
 import com.cornellsatech.o_week.util.Internet;
 import com.cornellsatech.o_week.util.NotificationCenter;
+import com.cornellsatech.o_week.util.Notifications;
 import com.cornellsatech.o_week.util.Settings;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.google.common.base.Joiner;
 
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,11 +33,9 @@ import java.util.Set;
  * Handles all data shared between classes. Many of these variables have associated {@link NotificationCenter}
  * events that should be fired when they are changed, so do so when changing their values.
  *
- * {@link #allEvents}: All events on disk, sorted by date.
- * {@link #selectedEvents}: All events selected by the user, sorted by date.
+ * {@link #allEvents}: All events on disk.
+ * {@link #selectedEvents}: All events selected by the user.
  * {@link #categories}: All categories on disk.
- * {@link #DATES}: Dates of the orientation. Determined from {@link #YEAR}, {@link #MONTH}, {@link #START_DAY},
- *                 and {@link #END_DAY}.
  * {@link #selectedDate}: The date to display events for.
  * {@link #selectedFilters}: An integer set that represents all the currently selected filters.
  *                               appear in the feed.
@@ -44,153 +45,48 @@ import java.util.Set;
  */
 public final class UserData
 {
-	public static final Map<LocalDate, List<Event>> allEvents;
-	public static final Map<LocalDate, List<Event>> selectedEvents;
-	public static List<Category> categories = new ArrayList<>();
-	public static final List<LocalDate> DATES;
+	public static Set<Event> allEvents = new HashSet<>();
+	public static final Set<Event> selectedEvents = new HashSet<>();
+	public static Set<Category> categories = new HashSet<>();
+	public static final Map<String, String> resourceNameLink = new HashMap<>();
+	public static List<LocalDate> sortedDates = new ArrayList<>();
 	public static LocalDate selectedDate;
-	public final static Set<Integer> selectedFilters = new HashSet<>();
+	public static final Set<String> selectedFilters = new HashSet<>();
 	public static boolean filterRequired = false;
-	private static CollegeType collegeType;
-	private static StudentType studentType;
-	private static final int YEAR = 2018;
-	private static final int MONTH = 8;
-	private static final int START_DAY = 17;    //Dates range: [START_DAY, END_DAY], inclusive
-	private static final int END_DAY = 29;      //Note: END_DAY must > START_DAY
+	private static CollegeType collegeType = CollegeType.NOTSET;
+	private static StudentType studentType = StudentType.NOTSET;
 	private static final String TAG = UserData.class.getSimpleName();
-
-	/**
-	 * Initialize {@link #DATES} and lists for maps of events
-	 */
-	static
-	{
-		ImmutableList.Builder<LocalDate> tempDates = ImmutableList.builder();
-		ImmutableMap.Builder<LocalDate, List<Event>> tempAllEvents = ImmutableMap.builder();
-		ImmutableMap.Builder<LocalDate, List<Event>> tempSelectedEvents = ImmutableMap.builder();
-		LocalDate today = LocalDate.now();
-		for (int i = START_DAY; i <= END_DAY; i++)
-		{
-			LocalDate date = new LocalDate(YEAR, MONTH, i);
-			if (date.isEqual(today))
-				selectedDate = date;
-			tempDates.add(date);
-			tempAllEvents.put(date, new ArrayList<Event>());
-			tempSelectedEvents.put(date, new ArrayList<Event>());
-		}
-		DATES = tempDates.build();
-		allEvents = tempAllEvents.build();
-		selectedEvents = tempSelectedEvents.build();
-
-		if (selectedDate == null)
-			selectedDate = DATES.get(0);
-	}
 
 	//suppress instantiation
 	private UserData(){}
 
 	/**
-	 * Returns true if the event is selected.
-	 * @param event The event that we want to check is selected.
-	 * @return See method description.
-	 */
-	public static boolean selectedEventsContains(Event event)
-	{
-		List<Event> eventsForDate = selectedEvents.get(event.date);
-		return eventsForDate != null && eventsForDate.contains(event);
-	}
-	/**
-	 * Adds event to {@link #allEvents} for the correct date according to {@link Event#date}.
-	 * The date should match a date in {@link #DATES}.
-	 * @param event Event to add.
-	 */
-	public static void appendToAllEvents(Event event)
-	{
-		List<Event> eventsForDate = allEvents.get(event.date);
-		if (eventsForDate == null)
-			return;
-		if (!eventsForDate.contains(event))
-			eventsForDate.add(event);
-	}
-	/**
-	 * Removes event form {@link #allEvents}.
-	 * @param event Event to remove.
-	 */
-	public static void removeFromAllEvents(Event event)
-	{
-		List<Event> eventsForDate = allEvents.get(event.date);
-		if (eventsForDate != null)
-			eventsForDate.remove(event);
-	}
-	/**
-	 * Adds event to {@link #selectedEvents}. The date should match a date in {@link #DATES}.
-	 * @param event Event to add.
-	 * @return True if the event was added
-	 */
-	@CanIgnoreReturnValue
-	public static boolean insertToSelectedEvents(Event event)
-	{
-		List<Event> eventsForDate = selectedEvents.get(event.date);
-		if (eventsForDate == null)
-		{
-			Log.e(TAG, "insertToSelectedEvents: attempted to add event with date outside orientation");
-			return false;
-		}
-		if (eventsForDate.contains(event))
-			return false;
-
-		eventsForDate.add(event);
-		return true;
-	}
-	/**
-	 * Removes event from {@link #selectedEvents}.
-	 * @param event Event to remove.
-	 */
-	public static void removeFromSelectedEvents(Event event)
-	{
-		List<Event> eventsForDate = selectedEvents.get(event.date);
-		if (eventsForDate == null)
-			Log.e(TAG, "removeFromSelectedEvents: No selected events for date");
-		else
-			eventsForDate.remove(event);
-	}
-	/**
-	 * Clears all selected events.
-	 */
-	private static void clearSelectedEvents()
-	{
-		for (List<Event> eventsOfDay : selectedEvents.values())
-			eventsOfDay.clear();
-	}
-	/**
 	 * Linear search for an event given its pk value.
-	 * @param pk {@link Event#pk}
+	 * @param pk {@link Event#getPk()}
 	 * @return Event. May be null.
 	 */
 	@Nullable
-	public static Event eventForPk(int pk)
-	{
-		for (List<Event> eventsOfDay : allEvents.values())
-			for (Event event : eventsOfDay)
-				if (event.pk == pk)
-					return event;
+	public static Event eventForPk(String pk) {
+		for (Event event : allEvents)
+			if (event.getPk().equals(pk))
+				return event;
 		Log.e(TAG, "eventForPk: Event not found for given pk");
 		return null;
 	}
-	/**
-	 * Linear search for a category given its pk value.
-	 * @param pk {@link Category#pk}
-	 * @return Category. May be null.
-	 * @see #eventForPk(int)
-	 */
-	@Nullable
-	public static Category categoryForPk(int pk)
+
+	private static void populateSelectedEvents(Set<String> selectedEventsPks)
 	{
-		for (Category category : categories)
-			if (category.pk == pk)
-				return category;
-		Log.e(TAG, "categoryForPk: Category not found for given pk");
-		return null;
+		Log.i(TAG, "Cleared selected events: " + selectedEvents.size() + ", new size: " + selectedEventsPks.size());
+        Set<String> previousSelectedEventsPks = new HashSet<>();
+        for (Event event : selectedEvents)
+            previousSelectedEventsPks.add(event.getPk());
+        previousSelectedEventsPks.addAll(selectedEventsPks);
+		selectedEvents.clear();
+		for (Event event : allEvents)
+			if (previousSelectedEventsPks.contains(event.getPk()))
+				selectedEvents.add(event);
 	}
+
 	/**
 	 * Loads {@link #allEvents}, {@link #selectedEvents}, {@link #categories}.
 	 * 1. Retrieves all events and categories from disk, adding them to {@link #allEvents}, {@link #categories}.
@@ -203,53 +99,100 @@ public final class UserData
 	 */
 	public static void loadData(final Context context)
 	{
-		final Set<Event> events = Settings.getAllEvents(context);
-		for (Event event : events)
-			appendToAllEvents(event);
+		loadStudentCollegeTypes(context);
 
-		Set<Event> selectedEvents = Settings.getSelectedEvents(context);
-		for (Event event : selectedEvents)
-			insertToSelectedEvents(event);
+		allEvents = Settings.getAllEvents(context);
+		loadDates();
+		final Set<String> selectedEventsPks = Settings.getSelectedEventsPks(context);
+		populateSelectedEvents(selectedEventsPks);
 
-		Set<Category> categories = Settings.getCategories(context);
-		UserData.categories = new ArrayList<>(categories);
+		categories = Settings.getCategories(context);
 
-		sortEventsAndCategories();
-
-		Internet.getUpdatesForVersion(Settings.getVersion(context), context, new Callback<Integer>()
+		Internet.getUpdatesForVersion(Settings.getTimestamp(context),
+                new Callback<VersionUpdate>()
 		{
-			//versionNum is 0 if failed
+			//timestamp is 0 if failed
 			@Override
-			public void execute(Integer versionNum)
+			public void execute(VersionUpdate update)
 			{
-				//save all the new data if available
-				if (versionNum == 0)
-					return;
+				if (update == null || update.getTimestamp() == 0)
+                {
+                    NotificationCenter.DEFAULT.post(new NotificationCenter.EventInternetUpdate());
+                    return;
+                }
+
+				//update categories; this works because categories are compared using pk
+				categories.addAll(update.getCategories().getChanged());
+				//delete categories
+				Set<Category> categoriesToDelete = new HashSet<>(update.getCategories().getDeleted().size());
+				for (String pk : update.getCategories().getDeleted())
+					categoriesToDelete.add(Category.withPk(pk));
+				categories.removeAll(categoriesToDelete);
+
+				//keep track of all changed events to notify the user
+				Map<String, String> changedEventsPkName = new HashMap<>();
+				//update/remove notifications
+				boolean remindersOn = Settings.getReceiveReminders(context);
+				//update events
+				for (Event event : update.getEvents().getChanged())
+				{
+					changedEventsPkName.put(event.getPk(), event.getName());
+					allEvents.add(event);
+
+					//reschedule the event
+					if (selectedEvents.contains(event))
+					{
+						selectedEvents.add(event);
+						if (remindersOn)
+							Notifications.scheduleForEvent(event, context);
+					}
+				}
+				//delete events
+				Iterator<Event> eventsIterator = allEvents.iterator();
+				while (eventsIterator.hasNext())
+				{
+					Event event = eventsIterator.next();
+					if (update.getEvents().getDeleted().contains(event.getPk()))
+					{
+						changedEventsPkName.put(event.getPk(), event.getName());
+						eventsIterator.remove();
+
+						//remove the event from notification
+						if (remindersOn)
+							Notifications.unscheduleForEvent(event, context);
+					}
+				}
+
+                loadDates();
+
+				//send a toast to alert the user that their events were updated
+				if (changedEventsPkName.size() != 0)
+				{
+					//show toast only for changed events that you HAD selected
+					List<String> selectedChangedEventsTitles = new ArrayList<>();
+					for (String pk : selectedEventsPks)
+					{
+						String selectedChangedEventTitle = changedEventsPkName.get(pk);
+						if (selectedChangedEventTitle != null)
+							selectedChangedEventsTitles.add(selectedChangedEventTitle);
+					}
+					if (!selectedChangedEventsTitles.isEmpty())
+					{
+						String toastText = context.getString(R.string.toast_events_changed, Joiner.on(", ").join(selectedChangedEventsTitles));
+						Toast.makeText(context, toastText, Toast.LENGTH_LONG).show();
+					}
+				}
 
 				//re-add selected events, since events might have been updated
-				clearSelectedEvents();
-				Set<Event> selectedEvents = Settings.getSelectedEvents(context);
-				for (Event selectedEvent : selectedEvents)
-					insertToSelectedEvents(selectedEvent);
-
-				//sort everything again, since things have been updated
-				sortEventsAndCategories();
+				Log.i(TAG, "Clearing at end of update");
+				populateSelectedEvents(selectedEventsPks);
 				Settings.setAllEvents(context);
 				Settings.setCategories(context);
-				Settings.setVersion(versionNum, context);
+				Settings.setTimestamp(update.getTimestamp(), context);
+				NotificationCenter.DEFAULT.post(new NotificationCenter.EventInternetUpdate());
 			}
 		});
-
-		loadStudentCollegeTypes(context);
-	}
-	/**
-	 * Sorts {@link #allEvents} and {@link #categories}.
-	 */
-	private static void sortEventsAndCategories()
-	{
-		for (List<Event> events : allEvents.values())
-			Collections.sort(events);
-		Collections.sort(UserData.categories);
+		Internet.getResources();
 	}
 
 	/**
@@ -264,6 +207,15 @@ public final class UserData
 		studentType = Settings.getStudentSavedType(context);
 	}
 
+	private static void loadDates()
+	{
+		Set<LocalDate> dates = new HashSet<>();
+		for (Event event : allEvents)
+			dates.add(event.getStartDate());
+		sortedDates = new ArrayList<>(dates);
+		Collections.sort(sortedDates);
+	}
+
 	/**
 	 * Checks whether the given event is required for the current user
 	 * @param event
@@ -271,46 +223,17 @@ public final class UserData
 	 */
 	public static boolean requiredForUser(Event event)
 	{
-		if (event.required)
-			return true;
-
-		if (!event.categoryRequired)
+		if (!event.hasCategory(collegeType))
 			return false;
 
-		boolean collegeRequired = CollegeType.toCollegeType(event.category) == collegeType;
-		boolean studentTypeRequired = StudentType.toStudentType(event.category) == studentType;
-		return collegeRequired || studentTypeRequired;
-	}
+		switch (studentType)
+		{
+			case FRESHMAN:
+				return event.isFirstYearRequired();
+			case TRANSFER:
+				return event.isTransferRequired();
+		}
 
-	/**
-	 * Returns an array of Strings of filters available to the user for {@link FeedFragment}.
-	 * @param context Context to get the string for "Show required events" {@link com.cornellsatech.o_week.R.string#filter_show_required_events}
-	 * @return See method description.
-	 */
-	public static String[] getFilters(Context context)
-	{
-		String[] filters = new String[categories.size() + 1];
-		//index 0 represents filter for "required events"
-		filters[0] = context.getString(R.string.filter_show_required_events);
-		for (int i = 1; i < filters.length; i++)
-			filters[i] = categories.get(i - 1).name;
-		return filters;
-	}
-
-	/**
-	 * Returns an array of booleans that represents whether the filter is checked.
-	 *
-	 * @see #getFilters(Context)
-	 * @return See method description
-	 */
-	public static boolean[] getCheckedFilters()
-	{
-		boolean[] filters = new boolean[categories.size() + 1];
-		//index 0 represents filter for "required events"
-		filters[0] = filterRequired;
-		//all other indices represent categories, in order.
-		for (int i = 0; i < categories.size(); i++)
-			filters[i+1] = selectedFilters.contains(categories.get(i).pk);
-		return filters;
+		return false;
 	}
 }

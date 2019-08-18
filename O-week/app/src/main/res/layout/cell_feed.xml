@@ -51,7 +51,7 @@
         tools:text="Event title that is really really really long" />
 
     <TextView
-        android:id="@+id/captionText"
+        android:id="@+id/locationText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin"

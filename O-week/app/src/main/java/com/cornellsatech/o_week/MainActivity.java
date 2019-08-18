@@ -155,7 +155,16 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 		datePickerAdapter.notifyDataSetChanged();
 
 		//scroll to the new date
-		int position = UserData.DATES.indexOf(UserData.selectedDate);
+		int position = UserData.sortedDates.indexOf(UserData.selectedDate);
 		datePickerRecycler.scrollToPosition(position);
 	}
+
+    /**
+     * Refresh dates shown in date picker.
+     */
+    @Subscribe
+    public void onInternetUpdate(NotificationCenter.EventInternetUpdate eventNewDates)
+    {
+        onDateChanged(null);
+    }
 }

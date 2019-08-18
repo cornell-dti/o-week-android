@@ -3,6 +3,7 @@ package com.cornellsatech.o_week;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,7 +20,7 @@ import com.cornellsatech.o_week.util.Settings;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.eventbus.Subscribe;
 
-import java.util.List;
+import lombok.Setter;
 
 /**
  * Controls interactions of the user initial settings. (student type, whether is international, which college)
@@ -35,15 +36,15 @@ public class InitialSettingsActivity extends AppCompatActivity
 	private ConstraintLayout constraintLayout;
 	private ViewPager pager;
 	private InitialSettingsPagerAdapter adapter;
+	@Setter
 	private StudentType studentType = StudentType.NOTSET;
+	@Setter
 	private CollegeType collegeType = CollegeType.NOTSET;
 	private boolean waitingOnEventDownload = false;
 	private static final String TAG = InitialSettingsActivity.class.getSimpleName();
 
 	/**
 	 * Initialize the view pager for initial settings. the view pager is locked so that user cannot scroll to bypass the selection.
-	 *
-	 * @param savedInstanceState
 	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -99,7 +100,7 @@ public class InitialSettingsActivity extends AppCompatActivity
 	 */
 	private void attemptFinish()
 	{
-		if (Settings.getVersion(this) == 0)
+		if (Settings.getTimestamp(this) == 0)
 		{
 			waitingOnEventDownload = true;
 			showRetryDownloadSnackbar();
@@ -120,17 +121,13 @@ public class InitialSettingsActivity extends AppCompatActivity
 	 */
 	private void addRequiredEvents()
 	{
-		for (List<Event> eventsForDay : UserData.allEvents.values())
-		{
-			for (Event e : eventsForDay)
-			{
-				if (!UserData.requiredForUser(e))
-					continue;
-				UserData.insertToSelectedEvents(e);
-				NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged(e, true));
-			}
-		}
-
+		Log.i(TAG, "Checking selected events: " + UserData.selectedEvents.size());
+		for (Event event : UserData.allEvents)
+			if (UserData.requiredForUser(event))
+				UserData.selectedEvents.add(event);
+		if (!UserData.selectedEvents.isEmpty())
+			NotificationCenter.DEFAULT.post(new NotificationCenter.EventSelectionChanged());
+		Log.i(TAG, "Selected events: " + UserData.selectedEvents.size());
 		Notifications.scheduleForEvents(this);
 	}
 
@@ -147,40 +144,18 @@ public class InitialSettingsActivity extends AppCompatActivity
 	}
 
 	/**
-	 * Sets {@link #studentType}
-	 *
-	 * @param s
-	 */
-	public void setStudentType(StudentType s)
-	{
-		studentType = s;
-	}
-
-	/**
-	 * Sets {@link #collegeType}
-	 *
-	 * @param c
-	 */
-	public void setCollegeType(CollegeType c)
-	{
-		collegeType = c;
-	}
-
-	/**
-	 * Listens to {@link com.cornellsatech.o_week.util.NotificationCenter.EventReload} events, which
-	 * indicate that an attempt to download events has completed.
+	 * Listens to {@link com.cornellsatech.o_week.util.NotificationCenter.EventInternetUpdate}
+	 * events, which indicate that an attempt to download events has completed.
 	 * If {@link #waitingOnEventDownload} is true, then the user has completed the tutorial but
 	 * the events have yet to finish downloading. Tell the user and let him try again.
-	 *
-	 * @param e Ignored.
 	 */
 	@Subscribe
-	public void onEventsReload(NotificationCenter.EventReload e)
+	public void onInternetUpdate(NotificationCenter.EventInternetUpdate e)
 	{
 		if (waitingOnEventDownload)
 		{
 			//download successful
-			if (Settings.getVersion(this) != 0)
+			if (Settings.getTimestamp(this) != 0)
 				attemptFinish();
 			//download failed
 			else

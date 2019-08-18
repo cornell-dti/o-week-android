@@ -4,13 +4,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -30,14 +30,9 @@ public class InitialSettingsPage2Fragment extends Fragment implements View.OnCli
 
 	/**
 	 * Sets up the views
-	 *
-	 * @param inflater
-	 * @param container
-	 * @param savedInstanceState
-	 * @return
 	 */
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 	{
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.initial_settings_college, container, false);
 		createCollegeButtons(rootView);

@@ -25,8 +25,8 @@ public class AlarmReceiver extends BroadcastReceiver
 	@Override
 	public void onReceive(Context context, Intent intent)
 	{
-		int eventPk = intent.getIntExtra(EVENT_PK_KEY, -1);
-		if (eventPk == -1)
+		String eventPk = intent.getStringExtra(EVENT_PK_KEY);
+		if (eventPk == null)
 		{
 			Log.e(TAG, "onReceive: No pk received");
 			return;

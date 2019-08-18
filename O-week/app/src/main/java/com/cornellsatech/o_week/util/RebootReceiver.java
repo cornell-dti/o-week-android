@@ -8,8 +8,6 @@ public class RebootReceiver extends BroadcastReceiver
 {
 	/**
 	 * Runs when device is rebooted. Recreates all notifications.
-	 * @param context
-	 * @param intent Ignored.
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent)

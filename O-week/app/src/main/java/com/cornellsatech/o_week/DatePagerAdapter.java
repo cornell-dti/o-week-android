@@ -2,15 +2,15 @@ package com.cornellsatech.o_week;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 /**
  * Allows for swiping between pages of {@link FeedFragment} and {@link ScheduleFragment}.
  * {@link #type}: Whether this will display pages of feed or schedule.
  */
-public class DatePagerAdapter extends FragmentPagerAdapter
+public class DatePagerAdapter extends FragmentStateAdapter
 {
 	private static final String TAG = DatePagerAdapter.class.getSimpleName();
     private final Type type;
@@ -18,12 +18,12 @@ public class DatePagerAdapter extends FragmentPagerAdapter
 	/**
 	 * Set the {@link #type} of pages we'll be displaying, either feed or schedule.
 	 *
-	 * @param fm {@link Fragment#getChildFragmentManager()} if this is inside another fragment.
+	 * @param fragment Parent
 	 * @param type {@link Type}
 	 */
-	public DatePagerAdapter(FragmentManager fm, Type type)
+	public DatePagerAdapter(Fragment fragment, Type type)
     {
-        super(fm);
+        super(fragment);
         this.type = type;
     }
 
@@ -33,14 +33,15 @@ public class DatePagerAdapter extends FragmentPagerAdapter
 	 * @return Fragment.
 	 */
 	@Override
-    public Fragment getItem(int position)
+	@NonNull
+    public Fragment createFragment(int position)
     {
         switch (type)
         {
             case Feed:
-                return FeedFragment.newInstance(UserData.DATES.get(position));
+                return FeedFragment.newInstance(UserData.sortedDates.get(position));
             case Schedule:
-	            return ScheduleFragment.newInstance(UserData.DATES.get(position));
+	            return ScheduleFragment.newInstance(UserData.sortedDates.get(position));
 	        default:
                 Log.e(TAG, "getItem: unknown type");
                 return null;
@@ -52,9 +53,9 @@ public class DatePagerAdapter extends FragmentPagerAdapter
 	 * @return Number of days in orientation.
 	 */
 	@Override
-    public int getCount()
+    public int getItemCount()
     {
-        return UserData.DATES.size();
+        return UserData.sortedDates.size();
     }
 
 	/**

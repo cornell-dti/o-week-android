@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.view.View;
 
 import androidx.annotation.DimenRes;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
@@ -24,7 +25,7 @@ public class SpacingItemDecor extends RecyclerView.ItemDecoration
 	}
 
 	@Override
-	public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state)
+	public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state)
 	{
 		outRect.left = leftMargin;
 		outRect.right = rightMargin;
