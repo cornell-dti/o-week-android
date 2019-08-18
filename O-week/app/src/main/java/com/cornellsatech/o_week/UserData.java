@@ -121,7 +121,10 @@ public final class UserData
                     return;
                 }
 
+				Log.i(TAG, "Received timestamp: " + update.getTimestamp());
+				Log.i(TAG, "Changed events: " + update.getEvents().getChanged().size());
 				//update categories; this works because categories are compared using pk
+				categories.removeAll(update.getCategories().getChanged());
 				categories.addAll(update.getCategories().getChanged());
 				//delete categories
 				Set<Category> categoriesToDelete = new HashSet<>(update.getCategories().getDeleted().size());
@@ -134,13 +137,14 @@ public final class UserData
 				//update/remove notifications
 				boolean remindersOn = Settings.getReceiveReminders(context);
 				//update events
+				allEvents.removeAll(update.getEvents().getChanged());
+				allEvents.addAll(update.getEvents().getChanged());
 				for (Event event : update.getEvents().getChanged())
 				{
 					changedEventsPkName.put(event.getPk(), event.getName());
-					allEvents.add(event);
 
 					//reschedule the event
-					if (selectedEvents.contains(event))
+					if (selectedEvents.remove(event))
 					{
 						selectedEvents.add(event);
 						if (remindersOn)
@@ -183,9 +187,6 @@ public final class UserData
 					}
 				}
 
-				//re-add selected events, since events might have been updated
-				Log.i(TAG, "Clearing at end of update");
-				populateSelectedEvents(selectedEventsPks);
 				Settings.setAllEvents(context);
 				Settings.setCategories(context);
 				Settings.setTimestamp(update.getTimestamp(), context);

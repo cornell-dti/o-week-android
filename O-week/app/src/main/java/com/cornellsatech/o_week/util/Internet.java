@@ -48,6 +48,7 @@ public final class Internet
 	 */
 	public static void getUpdatesForVersion(long timestamp, final Callback<VersionUpdate> onCompletion)
 	{
+        Log.i(TAG, "Updating with timestamp: " + timestamp);
 		new GET("https://us-east1-oweek-1496849141291.cloudfunctions.net/version?timestamp="
 				+ timestamp, new Callback<String>()
 		{
