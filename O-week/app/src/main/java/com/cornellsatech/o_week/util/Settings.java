@@ -12,7 +12,10 @@ import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.models.StudentType;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,6 +31,7 @@ public final class Settings
 	private static final String KEY_TIMESTAMP = "timestamp";
 	private static final String KEY_STUDENT_TYPE = "studentType";
 	private static final String KEY_COLLEGE_TYPE = "collegeType";
+	private static final String KEY_RESOURCES = "resources";
 
 	private static final String TAG = Settings.class.getSimpleName();
 
@@ -166,6 +170,36 @@ public final class Settings
 	{
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		return preferences.getLong(KEY_TIMESTAMP, 0);  //default version value = 0
+	}
+
+	public static void setResources(Map<String, String> resources, Context context)
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences.Editor editor = preferences.edit();
+		Set<String> resourceNameLinkStrings = new HashSet<>(resources.size());
+		for (Map.Entry<String, String> entry : resources.entrySet())
+		{
+			String name = entry.getKey();
+			String link = entry.getValue();
+			resourceNameLinkStrings.add(name + "|" + link);
+		}
+		editor.putStringSet(KEY_RESOURCES, resourceNameLinkStrings);
+		editor.apply();
+	}
+
+	public static Map<String, String> getResources(Context context)
+	{
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		Set<String> resourceNameLinkStrings = preferences.getStringSet(KEY_RESOURCES, Collections.<String>emptySet());
+		Map<String, String> resourceNameLinks = new HashMap<>(resourceNameLinkStrings.size());
+		for (String resourceNameLinkString : resourceNameLinkStrings)
+		{
+			String[] parts = resourceNameLinkString.split("\\|");
+			String name = parts[0];
+			String link = parts[1];
+			resourceNameLinks.put(name, link);
+		}
+		return resourceNameLinks;
 	}
 
 	/**

@@ -60,7 +60,7 @@ public final class Internet
 		}).execute();
 	}
 
-	public static void getResources() {
+	public static void getResources(final Context context) {
 		new GET("https://us-east1-oweek-1496849141291.cloudfunctions.net/getResources", new Callback<String>()
 		{
 			@Override
@@ -76,6 +76,8 @@ public final class Internet
 						String link = resource.getString("link");
 						UserData.resourceNameLink.put(name, link);
 					}
+
+					Settings.setResources(UserData.resourceNameLink, context);
 				}
 				catch (JSONException e)
 				{

@@ -48,7 +48,7 @@ public final class UserData
 	public static Set<Event> allEvents = new HashSet<>();
 	public static final Set<Event> selectedEvents = new HashSet<>();
 	public static Set<Category> categories = new HashSet<>();
-	public static final Map<String, String> resourceNameLink = new HashMap<>();
+	public static Map<String, String> resourceNameLink = new HashMap<>();
 	public static List<LocalDate> sortedDates = new ArrayList<>();
 	public static LocalDate selectedDate;
 	public static final Set<String> selectedFilters = new HashSet<>();
@@ -101,7 +101,11 @@ public final class UserData
 	{
 		loadStudentCollegeTypes(context);
 
-		allEvents = Settings.getAllEvents(context);
+        resourceNameLink = Settings.getResources(context);
+        if (resourceNameLink.isEmpty())
+            Internet.getResources(context);
+
+        allEvents = Settings.getAllEvents(context);
 		loadDates();
 		final Set<String> selectedEventsPks = Settings.getSelectedEventsPks(context);
 		populateSelectedEvents(selectedEventsPks);
@@ -193,7 +197,6 @@ public final class UserData
 				NotificationCenter.DEFAULT.post(new NotificationCenter.EventInternetUpdate());
 			}
 		});
-		Internet.getResources();
 	}
 
 	/**
