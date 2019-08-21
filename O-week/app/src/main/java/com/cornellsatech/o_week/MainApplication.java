@@ -28,6 +28,8 @@ public class MainApplication extends Application
 				Settings.getStudentSavedCollegeType(this) == CollegeType.NOTSET)
 		{
 			Intent intent = new Intent(this, InitialSettingsActivity.class);
+			// TODO This fixes the crash for now (this may mess up activity history though)
+			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			startActivity(intent);
 		}
 	}
