@@ -19,6 +19,7 @@ public class MainApplication extends Application
 	public void onCreate()
 	{
 		super.onCreate();
+		Settings.clearAllForNewVersion(this);
 		JodaTimeAndroid.init(this);
 		UserData.loadData(this);
 

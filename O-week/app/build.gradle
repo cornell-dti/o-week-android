@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion '29.0.2'
     defaultConfig {
         applicationId "com.cornellsatech.o_week"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 8
         versionName "3.3.2"
     }
@@ -36,15 +36,4 @@ dependencies {
     //annotation library
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
-}
-
-configurations.all {
-    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        def requested = details.requested
-        if (requested.group == "androidx") {
-            if (!requested.name.startsWith("multidex")) {
-                details.useVersion "${targetSdk}.+"
-            }
-        }
-    }
 }

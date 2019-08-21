@@ -2,6 +2,7 @@ package com.cornellsatech.o_week.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -26,6 +27,7 @@ import java.util.Set;
 public final class Settings
 {
 	//Keys to saved data.
+	private static final String KEY_CLEARED_VERSION = "clear";
 	private static final String KEY_ALL_EVENTS = "allEvents";
 	private static final String KEY_SELECTED_EVENTS = "selectedEvents";
 	private static final String KEY_CATEGORIES = "categories";
@@ -267,6 +269,31 @@ public final class Settings
 			default:
 				Log.e(TAG, "getNotifyMe: Unexpected index selected in list");
 				return 0;
+		}
+	}
+
+	/**
+	 * Deletes all stored data if version number does not match saved version. Prevents old data from
+	 * crashing app if it isn't backwards compatible.
+	 */
+	public static void clearAllForNewVersion(Context context)
+	{
+		try
+		{
+			SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+			String versionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+			String clearedVersion = preferences.getString(KEY_CLEARED_VERSION, "");
+			if (clearedVersion.equals(versionName))
+				return; // already cleared for this version
+
+			preferences.edit()
+					.clear()
+					.putString(KEY_CLEARED_VERSION, versionName)
+					.apply();
+		}
+		catch (PackageManager.NameNotFoundException e)
+		{
+			Log.e(TAG, "Could not find app version name");
 		}
 	}
 
