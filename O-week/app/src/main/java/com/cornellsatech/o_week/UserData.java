@@ -207,8 +207,15 @@ public final class UserData
 	 */
 	public static void loadStudentCollegeTypes(Context context)
 	{
-		collegeType = Settings.getStudentSavedCollegeType(context);
-		studentType = Settings.getStudentSavedType(context);
+		try
+		{
+			collegeType = Settings.getStudentSavedCollegeType(context);
+			studentType = Settings.getStudentSavedType(context);
+		}
+		catch (IllegalArgumentException e)
+		{
+			Log.e(TAG, "Could not load college/student type.", e);
+		}
 	}
 
 	private static void loadDates()

@@ -11,6 +11,7 @@ import com.cornellsatech.o_week.models.Category;
 import com.cornellsatech.o_week.models.CollegeType;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.models.StudentType;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,7 +58,8 @@ public final class Settings
 	 */
 	public static StudentType getStudentSavedType(Context context){
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		String studentTypeStringRepresentation = preferences.getString(KEY_STUDENT_TYPE, "NOTSET");
+		String studentTypeStringRepresentation = preferences.getString(KEY_STUDENT_TYPE,
+				StudentType.NOTSET.toString());
 		return StudentType.valueOf(studentTypeStringRepresentation);
 	}
 
@@ -67,7 +69,8 @@ public final class Settings
 	 */
 	public static CollegeType getStudentSavedCollegeType(Context context){
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		String collegeTypeStringRepresentation = preferences.getString(KEY_COLLEGE_TYPE, "NOTSET");
+		String collegeTypeStringRepresentation = preferences.getString(KEY_COLLEGE_TYPE,
+				CollegeType.NOTSET.toString());
 		return CollegeType.valueOf(collegeTypeStringRepresentation);
 	}
 
@@ -93,8 +96,15 @@ public final class Settings
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		Set<String> eventStrings = preferences.getStringSet(KEY_ALL_EVENTS, new HashSet<String>());
 		Set<Event> allEvents = new HashSet<>(eventStrings.size());
-		for (String eventString : eventStrings)
-			allEvents.add(Event.fromJSON(eventString));
+		try
+		{
+			for (String eventString : eventStrings)
+				allEvents.add(Event.fromJSON(eventString));
+		}
+		catch (JsonSyntaxException e)
+		{
+			Log.e(TAG, "Could not load events from settings.", e);
+		}
 		return allEvents;
 	}
 
@@ -145,8 +155,15 @@ public final class Settings
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		Set<String> categoryStrings = preferences.getStringSet(KEY_CATEGORIES, new HashSet<String>());
 		Set<Category> categories = new HashSet<>(categoryStrings.size());
-		for (String categoryString : categoryStrings)
-			categories.add(Category.fromJSON(categoryString));
+		try
+		{
+			for (String categoryString : categoryStrings)
+				categories.add(Category.fromJSON(categoryString));
+		}
+		catch (JsonSyntaxException e)
+		{
+			Log.e(TAG, "Could not load catgories from settings.", e);
+		}
 		return categories;
 	}
 	/**
