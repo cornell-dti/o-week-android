@@ -54,6 +54,7 @@ public class Event implements Comparable<Event>
 	private LocalDate startDate;
 	private LocalTime startTime;
 	private LocalTime endTime;
+
 	private final List<String> categories;
 	private final boolean firstYearRequired;
 	private final boolean transferRequired;
@@ -65,6 +66,10 @@ public class Event implements Comparable<Event>
 	public static final String DISPLAY_PADDED_TIME_FORMAT = "hh:mm a";
 	public static final String DISPLAY_DATE_FORMAT = "EEEE, MMM d";
 	private static final String TAG = Event.class.getSimpleName();
+
+	public List<String> getCategories() {
+		return categories;
+	}
 
 	public LocalDate getStartDate()
 	{

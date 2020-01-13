@@ -16,6 +16,7 @@ import com.cornellsatech.o_week.R;
 import com.cornellsatech.o_week.UserData;
 import com.cornellsatech.o_week.models.Event;
 import com.cornellsatech.o_week.models.VersionUpdate;
+import com.cornellsatech.o_week.models.VersionUpdateWithTags;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.common.io.CharStreams;
 
@@ -46,16 +47,16 @@ public final class Internet
 	 * @param timestamp Current version of database on file. Should be 0 if never downloaded from database.
 	 * @param onCompletion Function to execute when data is processed. String in parameter is new version.
 	 */
-	public static void getUpdatesForVersion(long timestamp, final Callback<VersionUpdate> onCompletion)
+	public static void getUpdatesForVersion(long timestamp, final Callback<VersionUpdateWithTags> onCompletion)
 	{
         Log.i(TAG, "Updating with timestamp: " + timestamp);
-		new GET("https://us-east1-oweek-1496849141291.cloudfunctions.net/version?timestamp="
+		new GET("https://us-east1-janorientation-1e0ef.firebaseio.com/version?timestamp="
 				+ timestamp, new Callback<String>()
 		{
 			@Override
 			public void execute(String msg)
 			{
-				onCompletion.execute(msg.isEmpty() ? null : VersionUpdate.fromJSON(msg));
+				onCompletion.execute(msg.isEmpty() ? null : VersionUpdateWithTags.fromJSON(msg));
 			}
 		}).execute();
 	}
