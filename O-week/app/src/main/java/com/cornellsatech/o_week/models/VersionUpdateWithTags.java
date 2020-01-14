@@ -5,10 +5,14 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,15 +58,15 @@ public class VersionUpdateWithTags {
                 String location = eventJson.getString("EVENT_LOCATION");
                 double lat = eventJson.getDouble("EVENT_LOCATION_LAT");
                 double lon = eventJson.getDouble("EVENT_LOCATION_LON");
-                // Time parsing
-                SimpleDateFormat sdf = new SimpleDateFormat("MMMMM, DD YYYY HH:mm:ss");
                 JSONObject timeObj = eventJson.getJSONObject("EVENT_TIMES");
                 String startTimeStr = timeObj.getString("TIME_START");
-                Date startDate = sdf.parse(startTimeStr, new ParsePosition(0));
-                long startDateLong = startDate.getTime();
+                // Time parsing
+                DateTimeFormatter sdf = DateTimeFormat.forPattern("MMM, dd YYYY HH:mm:ss");
+                DateTime startDate = sdf.parseDateTime(startTimeStr);
+                long startDateLong = startDate.getMillis();
                 String endTimeStr = timeObj.getString("TIME_END");
-                Date endDate = sdf.parse(endTimeStr, new ParsePosition(0));
-                long endDateLong = endDate.getTime();
+                DateTime endDate = sdf.parseDateTime(endTimeStr);
+                long endDateLong = endDate.getMillis();
                 JSONArray categoriesJson = eventJson.getJSONArray("EVENT_TAGS");
                 List<String> categories = new ArrayList<>();
                 for(int z = 0; z < categoriesJson.length(); z++){
