@@ -47,11 +47,10 @@ public final class Internet
 	 * @param timestamp Current version of database on file. Should be 0 if never downloaded from database.
 	 * @param onCompletion Function to execute when data is processed. String in parameter is new version.
 	 */
-	public static void getUpdatesForVersion(long timestamp, final Callback<VersionUpdateWithTags> onCompletion)
+	public static void getUpdatesForVersion(long timestamp, final Callback<VersionUpdate> onCompletion)
 	{
         Log.i(TAG, "Updating with timestamp: " + timestamp);
-		new GET("https://us-east1-janorientation-1e0ef.firebaseio.com/version?timestamp="
-				+ timestamp, new Callback<String>()
+		new GET("http://10.0.2.2:3000/events/", new Callback<String>()
 		{
 			@Override
 			public void execute(String msg)
