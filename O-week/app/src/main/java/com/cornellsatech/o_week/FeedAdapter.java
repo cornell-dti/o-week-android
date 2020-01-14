@@ -1,5 +1,6 @@
 package com.cornellsatech.o_week;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -143,7 +144,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedCell>
 
 			if (!Collections.disjoint(UserData.selectedFilters, event.getCategories()))
 				continue;
-			if (UserData.filterRequired && UserData.requiredForUser(event))
+
+			boolean containsRequired = event.getCategories().contains("Required");
+			if (UserData.filterRequired && containsRequired)
 				continue;
 			eventsIterator.remove();
 		}

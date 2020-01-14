@@ -2,6 +2,8 @@ package com.cornellsatech.o_week.models;
 
 import android.util.JsonReader;
 import android.util.Log;
+
+import com.cornellsatech.o_week.UserData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -44,7 +46,7 @@ public class VersionUpdateWithTags {
             json = new JSONObject(jsonStr);
             JSONArray eventsArr = json.getJSONArray("EVENTS");
             List<Event> events = new ArrayList<>();
-            Set<String> categoryStrs = new HashSet<>();
+            HashSet<String> categoryStrs = new HashSet<>();
             for(int i = 0; i < eventsArr.length(); i++){
 
                 JSONObject eventJson = eventsArr.getJSONObject(i);
@@ -69,22 +71,28 @@ public class VersionUpdateWithTags {
                 long endDateLong = endDate.getMillis();
                 JSONArray categoriesJson = eventJson.getJSONArray("EVENT_TAGS");
                 List<String> categories = new ArrayList<>();
+                boolean isRequired = false;
                 for(int z = 0; z < categoriesJson.length(); z++){
                     String categoryStr = categoriesJson.getString(z);
-                    categoryStrs.add(categoryStr);
+                    if(categoryStr.trim().equalsIgnoreCase("Required")){
+                        isRequired = true;
+                    } else {
+                        if(!categoryStrs.contains(categoryStr) ){
+                            categoryStrs.add(categoryStr);
+                        }
+                    }
                     categories.add(categoryStr);
                 }
                 boolean firstYearReq = false;
-                boolean transferReq = true;
 
-                Event e = new Event(pk, name, description, url, img, add, location, lon, lat, startDateLong, endDateLong, categories, firstYearReq, transferReq);
+                Event e = new Event(pk, name, description, url, img, add, location, lon, lat, startDateLong, endDateLong, categories, firstYearReq, isRequired);
                 events.add(e);
             }
             List<Category> updatedCategories = new ArrayList<>();
             List<String> categoriesStr = new ArrayList<>(categoryStrs);
             Collections.sort(categoriesStr);
             for(int i = 0; i < categoriesStr.size(); i++){
-                updatedCategories.add(new Category(String.valueOf(i), categoriesStr.get(i)));
+                updatedCategories.add(new Category(categoriesStr.get(i), categoriesStr.get(i)));
             }
             VersionUpdate.EventUpdate eu = new VersionUpdate.EventUpdate(events, new ArrayList<String>());
             VersionUpdate.CategoryUpdate cu = new VersionUpdate.CategoryUpdate(updatedCategories, new ArrayList<String>());
