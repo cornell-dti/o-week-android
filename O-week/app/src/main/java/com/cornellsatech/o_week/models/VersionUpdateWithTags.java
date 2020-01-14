@@ -44,7 +44,7 @@ public class VersionUpdateWithTags {
             for(int i = 0; i < eventsArr.length(); i++){
 
                 JSONObject eventJson = eventsArr.getJSONObject(i);
-                String pk = String.valueOf(eventJson.getInt("EVENT_ID"));
+                String pk = eventJson.getString("EVENT_ID");
                 String name = eventJson.getString("EVENT_TITLE");
                 String description = eventJson.getString("EVENT_DESCRIPTION");
                 String url = eventJson.getString("EVENT_EXTERNAL_URL");

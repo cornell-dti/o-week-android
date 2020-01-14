@@ -50,7 +50,7 @@ public final class Internet
 	public static void getUpdatesForVersion(long timestamp, final Callback<VersionUpdate> onCompletion)
 	{
         Log.i(TAG, "Updating with timestamp: " + timestamp);
-		new GET("http://scraperjanorientationcornell.herokuapp.com/events/", new Callback<String>()
+		new GET("https://scraperjanorientationcornell.herokuapp.com/events/", new Callback<String>()
 		{
 			@Override
 			public void execute(String msg)
