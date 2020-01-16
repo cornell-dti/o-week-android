@@ -83,9 +83,8 @@ public class VersionUpdateWithTags {
                     }
                     categories.add(categoryStr);
                 }
-                boolean firstYearReq = false;
 
-                Event e = new Event(pk, name, description, url, img, add, location, lon, lat, startDateLong, endDateLong, categories, firstYearReq, isRequired);
+                Event e = new Event(pk, name, description, url, img, add, location, lon, lat, startDateLong, endDateLong, categories, isRequired);
                 events.add(e);
             }
             List<Category> updatedCategories = new ArrayList<>();

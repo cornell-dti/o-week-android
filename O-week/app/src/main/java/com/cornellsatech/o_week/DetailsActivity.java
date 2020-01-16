@@ -202,7 +202,7 @@ public class DetailsActivity extends AppCompatActivity implements OnMapReadyCall
 	 */
 	private void configureRequired()
 	{
-		if (!(event.isFirstYearRequired() || event.isTransferRequired()))
+		if (!(event.isRequired()))
 		{
 			requiredLabel.setVisibility(View.GONE);
 			requirementDetails.setVisibility(View.GONE);

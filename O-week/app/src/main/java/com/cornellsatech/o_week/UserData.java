@@ -240,9 +240,9 @@ public final class UserData
 		switch (studentType)
 		{
 			case FRESHMAN:
-				return event.isFirstYearRequired();
+				return event.isFirstYear() && event.isRequired();
 			case TRANSFER:
-				return event.isTransferRequired();
+				return event.isTransfer() && event.isRequired();
 		}
 
 		return false;

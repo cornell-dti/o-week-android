@@ -56,8 +56,8 @@ public class Event implements Comparable<Event>
 	private LocalTime endTime;
 
 	private final List<String> categories;
-	private final boolean firstYearRequired;
-	private final boolean transferRequired;
+	private final boolean isRequired;
+
 	private static final Gson GSON = new GsonBuilder()
             .addSerializationExclusionStrategy(new EventExclusionStrategy())
             .addDeserializationExclusionStrategy(new EventExclusionStrategy())
@@ -93,6 +93,14 @@ public class Event implements Comparable<Event>
 	public boolean hasCategory(CollegeType college)
 	{
 		return categories.contains(CollegeType.collegeToPk.get(college));
+	}
+
+	public boolean isFirstYear() {
+		return categories.contains(StudentType.studentTypeToCategory.get(StudentType.FRESHMAN));
+	}
+
+	public boolean isTransfer() {
+		return categories.contains(StudentType.studentTypeToCategory.get(StudentType.TRANSFER));
 	}
 
 	/**

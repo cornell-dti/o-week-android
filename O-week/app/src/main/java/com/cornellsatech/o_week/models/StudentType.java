@@ -1,5 +1,8 @@
 package com.cornellsatech.o_week.models;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.ImmutableBiMap;
+
 /**
  * Enum to represent whether a student is a freshman or a transfer student
  */
@@ -7,18 +10,13 @@ package com.cornellsatech.o_week.models;
 public enum StudentType {
     TRANSFER,
     FRESHMAN,
-    NOTSET;
+	NOTSET;
+	
 
-	/**
-	 * Returns the {@link StudentType} corresponding to the pk of the category.
-	 * If the pk of anything changes on the database, this must be updated.
-	 *
-	 * @param categoryPk {@link Category#getPk()}
-	 * @return {@link #TRANSFER} or {@link #NOTSET}
-	 */
-	public static StudentType toStudentType(String categoryPk)
-	{
-		return categoryPk.equals("B8AE27DD-DCD0-EF66-FC3B05EB37B392D7") ? TRANSFER : NOTSET;
-	}
+    public static BiMap<StudentType, String> studentTypeToCategory = ImmutableBiMap
+			.<StudentType, String>builder()
+            .put(FRESHMAN, "First-Year Students")
+            .put(TRANSFER, "Transfer Students")
+            .build();
 }
 
