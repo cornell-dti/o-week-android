@@ -234,7 +234,8 @@ public final class UserData
 	 */
 	public static boolean requiredForUser(Event event)
 	{
-		if (!event.hasCategory(collegeType))
+		boolean isRequiredAll = event.getCategories().contains("University Events") && event.isRequired();
+		if (!event.hasCategory(collegeType) && !isRequiredAll)
 			return false;
 
 		switch (studentType)
